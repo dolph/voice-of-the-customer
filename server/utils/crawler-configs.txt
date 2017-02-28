@@ -1,0 +1,14 @@
+Phones
+======
+seed: 'https://forums.att.com/t5/Phones-Devices/ct-p/gsmgprs',
+acceptExpr: ['^http.*/t5/Phones-Devices.*', '^http.*/Apple', '^http.*/Android', '^http.*/Windows-Phone'],
+rejectExpr: ['^http.*/m-p/[0-9]+/.*', '^http.*/m-p/[0-9]+\\?.*', '^http.*/m-p/[0-9]+#.*', '^http.*\\?.*'],
+extractExpr: ['^http.*/td-p/.*[0-9][^/.]'],
+
+TV
+==
+seed: 'https://forums.att.com/t5/TV-Forum/ct-p/att_tv',
+acceptExpr: ['^http.*/t5/DIRECTV/.*', '^http.*/t5/U-verse-TV/.*', '^http.*/t5/DIRECTV-Account/bd-p/.*', '^http.*/t5/DIRECTV-Account/.*/(td-p|m-p)/.*',
+  '^http.*/t5/U-verse-TV-Account/.*/(td-p|m-p)/.*'],
+rejectExpr: ['^http.*/m-p/[0-9]+/.*', '^http.*/m-p/[0-9]+\\?.*', '^http.*/m-p/[0-9]+#.*', '^http.*\\?.*'],
+extractExpr: ['^http.*/(td-p|m-p)/.*[0-9][^/.]'],

@@ -1,0 +1,32 @@
+{
+  "name": "contact",
+  "plural": "contacts",
+  "base": "Model",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {},
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {
+    "loadContact": {
+      "accepts": [
+        {
+          "arg": "file",
+          "type": "file",
+          "required": true
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    }
+  }
+}

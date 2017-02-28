@@ -1,0 +1,32 @@
+{
+  "name": "conversation",
+  "plural": "conversations",
+  "base": "Model",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {},
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {
+    "message": {
+      "http": {
+        "verb": "post"
+      },
+      "accepts": [
+        {
+          "arg": "message",
+          "type": "object",
+          "required": true
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      }
+    }
+  }
+}

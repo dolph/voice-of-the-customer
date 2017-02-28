@@ -1,0 +1,22 @@
+<div>
+  <div *ngIf="isError" class="alert alert-danger">
+    <p>{{errorMsg}}</p>
+  </div>
+  <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+    <div class="form-group">
+      <label for="username" class="base--h5 basic-header">Username</label>
+      <input type="text" class="form-control base--input" id="username" formControlName="username" placeholder="Username">
+      <small [hidden]="loginForm.controls.username.valid || (loginForm.controls.username.pristine && !submitted)">
+        Username is required.
+      </small>
+    </div>
+    <div class="form-group">
+      <label for="password" class="base--h5 basic-header">Password</label>
+      <input type="password" class="form-control base--input" id="password" formControlName="password" placeholder="Password  ">
+      <small [hidden]="loginForm.controls.password.valid || (loginForm.controls.password.pristine && !submitted)">
+        Password is required.
+      </small>
+    </div>
+    <button type="submit" class="base--button base--button_submit" [disabled]="!loginForm.valid">Submit</button>
+  </form>
+</div>
