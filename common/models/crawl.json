@@ -1,0 +1,71 @@
+{
+  "name": "crawl",
+  "plural": "crawls",
+  "base": "Model",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "forceId": false,
+  "properties": {},
+  "validations": [],
+  "relations": {},
+  "acls": [
+    {
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY",
+      "property": "*"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "*"
+    }
+  ],
+  "methods": {
+    "start": {
+      "accepts": [
+        {
+          "arg": "options",
+          "type": "object",
+          "required": true,
+          "http": {
+            "source": "body"
+          }
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    },
+    "cancel": {
+      "accepts": [],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    },
+    "status": {
+      "accepts": [],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    }
+  }
+}

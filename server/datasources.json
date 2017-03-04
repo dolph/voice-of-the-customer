@@ -3,5 +3,21 @@
     "name": "db",
     "connector": "memory",
     "file": "mem_db.json"
+  },
+  "cloudant-voc-content": {
+    "url": "${CLOUDANT_CONNECTION_URL}",
+    "database": "${CLOUDANT_VOC_CONTENT_DB_NAME}",
+    "username": "${CLOUDANT_USERNAME}",
+    "password": "${CLOUDANT_PASSWORD}",
+    "name": "cloudant-voc-content",
+    "connector": "cloudant"
+  },
+  "cloudant-crawl-config": {
+    "url": "${CLOUDANT_CONNECTION_URL}",
+    "database": "${CLOUDANT_CRAWL_CONFIG_DB_NAME}",
+    "username": "${CLOUDANT_USERNAME}",
+    "password": "${CLOUDANT_PASSWORD}",
+    "name": "cloudant-crawl-config",
+    "connector": "cloudant"
   }
 }

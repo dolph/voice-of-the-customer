@@ -16,11 +16,11 @@ import { RouterModule, Routes, RouterOutlet } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 import { LoopbackLoginComponent } from './auth/loopback/lb-login.component';
 
-import { HomeComponent } from './home.component';
+import { HomeComponent } from './home.component'
 
 const APP_ROUTES: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: '', component: HomeComponent },
+  { path: 'home', component: HomeComponent },
   { path: 'login', component: LoopbackLoginComponent },
   { path: '**', component: LoopbackLoginComponent }
 ];

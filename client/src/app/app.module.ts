@@ -9,6 +9,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home.component';
 
+import { DashboardModule } from './dashboard/dashboard.module'
+import { SharedModule } from './shared/shared.module';
+import { ChartModule } from './dashboard/charts/chart.module'
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,7 +22,10 @@ import { HomeComponent } from './home.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AuthModule
+    AuthModule,
+    DashboardModule,
+    SharedModule.forRoot(),
+    ChartModule
   ],
   providers: [{provide: LocationStrategy, useClass: PathLocationStrategy}, AuthGuard],
   bootstrap: [AppComponent]

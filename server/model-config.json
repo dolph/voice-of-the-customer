@@ -42,12 +42,24 @@
       }
     }
   },
-  "contact": {
+  "conversation": {
     "dataSource": null,
     "public": true
   },
-  "conversation": {
+  "crawl": {
     "dataSource": null,
+    "public": true
+  },
+  "voc-content": {
+    "dataSource": "cloudant-voc-content",
+    "public": true
+  },
+  "discovery": {
+    "dataSource": null,
+    "public": true
+  },
+  "crawl-config": {
+    "dataSource": "cloudant-crawl-config",
     "public": true
   }
 }

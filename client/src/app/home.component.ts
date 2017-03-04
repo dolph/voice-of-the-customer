@@ -15,11 +15,17 @@ import { Router } from '@angular/router';
 
 import { LoopbackLoginService } from './auth/loopback/lb-login.service';
 
+import { DashboardComponent } from './dashboard/index'
+import { ChartComponent } from './dashboard/charts/chart.component'
+
 @Component({
   selector: 'app-home',
   templateUrl: `
-    <h2 class="base--h2">This is the Home Page</h2>
-    <button class="base--button" (click)="submitLogout()">Logout</button>
+    <top-nav></top-nav>
+    <sidebar-cmp></sidebar-cmp>
+    <section class="main-container" [ngClass]="{sidebarPushRight: isActive}">
+    	<chart-cmp></chart-cmp>
+    </section>
   `,
 })
 @Injectable()
