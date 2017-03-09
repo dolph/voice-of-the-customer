@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
   constructor(private router: Router, private authService: LoopbackLoginService) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
-    return true; // this.authService.isAuthenticated();
+    return this.authService.isAuthenticated();
   }
 
 }
