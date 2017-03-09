@@ -33,6 +33,26 @@
       "http": {
         "verb": "post"
       }
+    },
+    "getBrandPerceptionOverTime": {
+      "accepts": [
+        {
+          "arg": "startDt",
+          "type": "Date"
+        },
+        {
+          "arg": "endDt",
+          "type": "Date"
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
     }
   }
 }

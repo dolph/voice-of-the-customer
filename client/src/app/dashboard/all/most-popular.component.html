@@ -1,0 +1,23 @@
+<div class="panel panel-default ibm-panel">
+  <div class="panel-heading ibm-panel__heading">
+    <h3>{{options.title}}</h3>
+  </div>
+  <div class="panel-body ibm-panel__body">
+    <div class="row" *ngFor="let product of options.products" style="margin-bottom:40px">
+      <div class="col-md-3">
+        <span class="ibm-text--small pull-right">{{product.name}}</span>
+      </div>
+      <div class="col-md-8">
+        <div class="progress progress-medium">
+          <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="product.value"
+              aria-valuemin="0" aria-valuemax="100" [style.width]="product.value + '%'" [style.background-color]="product.color">
+          </div>
+        </div>
+        <div style="position:relative;width:100%">
+          <span class="ibm-text--small" style="position: absolute;right:0" [style.width]="(120 - product.value) + '%'">{{product.value}} Mentions</span>
+        </div>
+      </div>
+      <div class="col-md-1"></div>
+    </div>
+  </div>
+</div>

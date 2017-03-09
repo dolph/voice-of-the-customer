@@ -32,9 +32,11 @@ VocContentUtils.prototype.enrichContentBatchTask = function (task, done) {
     'limit': task.limit,
     'skip': task.skip,
     'include_docs': true,
-    'reduce': false
+    'reduce': false,
+    'key': 'call'
   }
-  vocContentDB.view('voc-content', 'source-url-view', options, (err, success) => {
+  // vocContentDB.view('voc-content', 'source-url-view', options, (err, success) => {
+  vocContentDB.view('voc-content', 'source-view', options, (err, success) => {
     if (err) {
       done()
     } else {

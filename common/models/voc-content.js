@@ -13,7 +13,7 @@ module.exports = function (Voccontent) {
     enrichmentQueue.drain(() => {
       console.log('Enrichment Completed.')
     })
-    vocContentDB.view('voc-content', 'tags-view', { reduce: true }, (err, success) => {
+    vocContentDB.view('voc-content', 'source-view', { group: true, key: 'call' }, (err, success) => {
       if (err) {
         cb(err)
       } else {

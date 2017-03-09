@@ -1,40 +1,38 @@
-import { NgModule } from '@angular/core';
+/*
+# Copyright 2016 IBM Corp. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");  you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and
+# limitations under the License.
+*/
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { DropdownModule, ModalModule } from 'ng2-bootstrap';
+import { NgModule } from '@angular/core';
 
-import { HomeModule } from './home/home.module';
-import { ChartModule } from './charts/chart.module';
-import { BlankPageModule } from './blank-page/blankPage.module';
-import { TableModule } from './tables/table.module';
-import { FormModule } from './forms/forms.module';
-import { GridModule } from './grid/grid.module';
-import { BSComponentModule } from './bs-component/bsComponent.module';
-import { BSElementModule } from './bs-element/bsElement.module';
+import { DropdownModule } from 'ng2-bootstrap/dropdown';
 
-import { DashboardComponent } from './dashboard.component';
+import { AllChannelsComponent } from './all/all-channels.component';
+import { AudioCallsComponent } from './calls/audio-calls.component';
+import { ChatsComponent } from './chats/chats.component';
+import { ForumsComponent } from './forums/forums.component';
+import { BrandPerceptionComponent } from './all/brand-perception.component';
+import { BrandSentimentComponent } from './all/brand-sentiment.component';
+import { ProductsMentionedComponent } from './all/products-mentioned.component';
+import { MostPopularComponent } from './all/most-popular.component';
 
-import {TopNavComponent} from '../shared/index';
-import {SidebarComponent} from '../shared/index';
-
+import { DiscoveryService } from '../shared/discovery/discovery.service';
 
 @NgModule({
-    imports: [
-        CommonModule,
-    	RouterModule,
-    	DropdownModule.forRoot(),
-        ModalModule,
-    	HomeModule,
-        ChartModule,
-        TableModule,
-        FormModule,
-        GridModule,
-    	BSComponentModule,
-        BSElementModule,
-        BlankPageModule
-    ],
-    declarations: [DashboardComponent, TopNavComponent, SidebarComponent],
-    exports: [DashboardComponent, TopNavComponent, SidebarComponent]
+  imports:      [ CommonModule, RouterModule, DropdownModule.forRoot() ],
+  declarations: [ AllChannelsComponent, AudioCallsComponent, ChatsComponent, ForumsComponent, BrandPerceptionComponent, BrandSentimentComponent, ProductsMentionedComponent, MostPopularComponent ],
+  providers: [ DiscoveryService ]
 })
 
-export class DashboardModule { }
+export class DashboardModule {
+  constructor() { }
+}

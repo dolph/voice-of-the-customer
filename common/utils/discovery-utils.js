@@ -15,6 +15,16 @@ var discovery = new watson.DiscoveryV1({
 
 var DiscoveryUtils = function () { }
 
+DiscoveryUtils.prototype.query = function (params, cb) {
+  discovery.query(params, function (err, data) {
+    if (err) {
+      cb(err)
+    } else {
+      cb(null, data)
+    }
+  })
+}
+
 DiscoveryUtils.prototype.addDocumentsBatchTask = function (task, done) {
   // Initialize the required variables
   var vocContent = app.models.vocContent
@@ -59,14 +69,21 @@ DiscoveryUtils.prototype.addDocumentsBatchTask = function (task, done) {
                   // Poll for status of 'available' for each id in the list
                   poll(function (id, cb) {
                     checkDocumentStatus(id).then((status) => {
-                      cb(status === 'available' || status === 'failed')
+                      if (status.status === 'failed') {
+                        console.log(JSON.stringify(status, null, 2))
+                      }
+                      cb(status.status === 'available' || status.status === 'failed')
                     }, (err) => {
                       console.log('Error returned from WDS status check: ' + err)
                       cb(false)
                     })
                   }, id, 60000, 10000).then((status) => {
                     if (status.error) {
+                      delete checkStatusIds[status.id]
                       console.log(status.error + 'error occurred on id ' + status.id)
+                      if (Object.keys(checkStatusIds).length === 0) {
+                        done()
+                      }
                     } else {
                       delete checkStatusIds[status.id]
                       if (Object.keys(checkStatusIds).length === 0) {
@@ -111,7 +128,7 @@ function checkDocumentStatus (documentId, cb) {
         password: process.env.DISCOVERY_PASSWORD
       }
     }
-    request(options, function (err, response, body) {
+    request(options, function (err, response, status) {
       try {
         if (err) {
           reject(err)
@@ -119,7 +136,7 @@ function checkDocumentStatus (documentId, cb) {
           if (response.statusCode !== 200) {
             reject('HTTP Error code returned from Discovery: ' + response.statusCode)
           } else {
-            resolve(body.status)
+            resolve(status)
           }
         }
       } catch (err) {
@@ -145,6 +162,9 @@ function addVocConent (doc, done) {
         doc.contact_date = dt.getTime()
       }
     }
+    // Redact ATT in the content.
+    doc.text = doc.text.replace(/ATT/ig, 'WWireless')
+    doc.text = doc.text.replace(/AT&T/ig, 'WWireless')
     // Same the json to the tmp folder
     var tempPath = os.tmpdir() + '/' + doc.cloudant_id + '.json'
     fs.writeFile(tempPath, JSON.stringify(doc), 'utf8', (err) => {
@@ -203,7 +223,7 @@ function poll (fn, id, timeout, interval) {
     // If the condition is met, we're done!
     fn(id, function (result) {
       if (result) {
-        resolve({ 'id': id })
+        resolve({ 'id': id, status: result })
       } else {
         // If the condition isn't met but the timeout hasn't elapsed, go again
         if (Number(new Date()) < endTime) {

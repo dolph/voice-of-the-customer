@@ -1,5 +1,13 @@
-<top-nav></top-nav>
-<sidebar-cmp></sidebar-cmp>
-<section class="main-container" [ngClass]="{sidebarPushRight: isActive}">	
-	<router-outlet></router-outlet>
-</section>
+<div class="ibm-tabs ibm-tabs--background-gray-80">
+  <!-- Nav tabs -->
+  <ul class="ibm-tabs__tabs" role="tablist">
+    <li role="presentation" class="ibm-tabs__tab" routerLinkActive="ibm-tabs__tab--active"><a routerLink="/home/all-channels" aria-controls="all-channels" role="tab" data-toggle="tab">All Channels</a></li>
+    <li role="presentation" class="ibm-tabs__tab" routerLinkActive="ibm-tabs__tab--active"><a routerLink="/home/audio-calls" aria-controls="audio-calls" role="tab" data-toggle="tab">Audio Calls</a></li>
+    <li role="presentation" class="ibm-tabs__tab" routerLinkActive="ibm-tabs__tab--active"><a routerLink="/home/forums" aria-controls="forums" role="tab" data-toggle="tab">Forums</a></li>
+    <li role="presentation" class="ibm-tabs__tab" routerLinkActive="ibm-tabs__tab--active"><a routerLink="/home/chats" aria-controls="chat-logs" role="tab" data-toggle="tab">Chat Logs</a></li>
+  </ul>
+  <!-- Tab panes -->
+  <div class="tab-content ibm-tabs__content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

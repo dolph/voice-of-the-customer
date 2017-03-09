@@ -12,6 +12,8 @@
     "babel-polyfill": "^6.20.0",
     "body-parser": "^1.15.2",
     "cfenv": "^1.0.3",
+    "cheerio": "^0.22.0",
+    "cloudant": "^1.7.1",
     "compression": "^1.0.3",
     "cors": "^2.5.2",
     "crawler": "^1.0.3",

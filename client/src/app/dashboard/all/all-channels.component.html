@@ -1,0 +1,32 @@
+<div role="tabpanel" class="tab-pane active ibm-tabs__content-panel ibm-tabs__content-panel--active" id="all-channels">
+  <div class="dashboard-title">
+    <h1><span>Today's Highlights</span></h1>
+    <span class="h1-text--right">Last updated: 3/6/17 10:59am</span>
+    <hr style="clear:both;"/>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <app-brand-perception></app-brand-perception>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <app-brand-sentiment></app-brand-sentiment>
+    </div>
+    <div class="col-md-4">
+      <app-products-mentioned [options]="negativeMentions"></app-products-mentioned>
+    </div>
+    <div class="col-md-4">
+      <app-products-mentioned [options]="positiveMentions"></app-products-mentioned>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <app-most-popular [options]="popularTopics"></app-most-popular>
+    </div>
+    <div class="col-md-6">
+      <app-most-popular [options]="popularFeatures"></app-most-popular>
+    </div>
+  </div>
+
+</div>

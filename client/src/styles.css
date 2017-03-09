@@ -1,1 +1,55 @@
-/* You can add global styles to this file, and also import other style files */
+body { padding-top: 55px; }
+
+.dashboard-title {
+  padding-bottom: 10px;
+  overflow: hidden;
+}
+
+h1 {
+  margin-bottom: 5px;
+  float: left;
+}
+
+h1 span {
+  padding: 1px 5px 3px 5px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.h1-text--right {
+  margin-left: 20px;
+  margin-top: 10px;
+  padding: 10px 10px 10px 20px;
+  border-left: 1px solid #c6c6c6;
+  display:inline-block;
+}
+
+.c3-line {
+  stroke-width: 5px !important;
+}
+
+.c3-circle {
+    r: 7 !important;
+}
+
+.y-grid-line {
+  opacity: .5;
+}
+
+.progress-thin {
+  margin-bottom: 12px !important;
+  height: 8px !important;
+  margin-top: 4px !important;
+}
+
+.progress-medium {
+  margin-bottom: 2px !important;
+  height: 14px !important;
+}
+
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}

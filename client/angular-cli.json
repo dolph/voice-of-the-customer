@@ -19,10 +19,18 @@
       "mobile": false,
       "styles": [
         "styles.css",
-        "./assets/sass/app.scss"
+        "../node_modules/bootstrap/dist/css/bootstrap.css",
+        "../node_modules/font-awesome/css/font-awesome.css",
+        "assets/css/ibm-colors.css",
+        "assets/css/ibm-elements.css",
+        "assets/css/ibm-fonts.css",
+        "assets/css/ibm-patterns.css",
+        "../node_modules/c3/c3.css"
       ],
       "scripts": [
-        "../node_modules/jquery/dist/jquery.min.js"
+        "../node_modules/jquery/dist/jquery.min.js",
+        "../node_modules/c3/c3.js",
+        "../node_modules/d3/d3.js"
       ],
       "environments": {
         "source": "environments/environment.ts",
@@ -46,7 +54,7 @@
     }
   },
   "defaults": {
-    "styleExt": "scss",
+    "styleExt": "css",
     "prefixInterfaces": false,
     "inline": {
       "style": false,

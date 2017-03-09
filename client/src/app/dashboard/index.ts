@@ -1,5 +1,6 @@
-/**
-*	This barrel file provides the export for the lazy loaded DashboardComponent.
-*/
-export * from './dashboard.component';
-export * from './dashboard.routes';
+export * from './dashboard.module'
+export * from './dashboard.component'
+export * from './all/all-channels.component'
+export * from './calls/audio-calls.component'
+export * from './chats/chats.component'
+export * from './forums/forums.component'

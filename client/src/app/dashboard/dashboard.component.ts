@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-/**
-*	This class represents the lazy loaded DashboardComponent.
-*/
+import { Router } from '@angular/router';
 
 @Component({
-	selector: 'dashboard-cmp',
-	templateUrl: 'dashboard.component.html'
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html'
 })
+export class DashboardComponent implements OnInit {
 
-export class DashboardComponent { }
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+}
