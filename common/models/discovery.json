@@ -34,8 +34,113 @@
         "verb": "post"
       }
     },
+    "getMostPopularFeatures": {
+      "accepts": [
+        {
+          "arg": "startDt",
+          "type": "Date"
+        },
+        {
+          "arg": "endDt",
+          "type": "Date"
+        },
+        {
+          "arg": "count",
+          "type": "number",
+          "default": 5
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    },
+    "getMostPopularTopics": {
+      "accepts": [
+        {
+          "arg": "startDt",
+          "type": "Date"
+        },
+        {
+          "arg": "endDt",
+          "type": "Date"
+        },
+        {
+          "arg": "count",
+          "type": "number",
+          "default": 5
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    },
+    "getProductMentions": {
+      "accepts": [
+        {
+          "arg": "startDt",
+          "type": "Date"
+        },
+        {
+          "arg": "endDt",
+          "type": "Date"
+        },
+        {
+          "arg": "sentiment",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    },
+    "getCurrentBrandSentiment": {
+      "accepts": [
+        {
+          "arg": "startDt",
+          "type": "Date"
+        },
+        {
+          "arg": "endDt",
+          "type": "Date"
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    },
     "getBrandPerceptionOverTime": {
       "accepts": [
+        {
+          "arg": "interval",
+          "type": "string",
+          "required": true
+        },
+        {
+          "arg": "sentiment",
+          "type": "string",
+          "required": true
+        },
         {
           "arg": "startDt",
           "type": "Date"

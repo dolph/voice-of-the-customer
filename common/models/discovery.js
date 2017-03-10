@@ -11,49 +11,138 @@ var app = require('../../server/server')
 const BATCHSIZE = 10
 
 module.exports = function (Discovery) {
-  Discovery.getBrandPerceptionOverTime = function (startDt, endDt, cb) {
-    wdsQueryUtils.getTimeSeriesCounts('1month', function (err, totals) {
-      if (err) {
-        cb(err)
-      } else {
-        let queryOptions = {
-          environment_id: process.env.DISCOVERY_ENV_ID,
-          collection_id: process.env.DISCOVERY_COLLECTION_ID,
-          count: 1,
-          aggregation: 'term(enriched_text.docSentiment.type).timeslice(contact_date,1month)'
+  Discovery.getMostPopularFeatures = function (startDt, endDt, count, cb) {
+    let filter = getDateFilter(startDt, endDt)
+    let params = {
+      filter: filter,
+      count: 1,
+      aggregation: 'nested(enriched_text.entities).filter(enriched_text.entities.type:"Physical_Feature").term(enriched_text.entities.text,count:' + count + ')'
+    }
+    wdsQueryUtils.getCounts(params).then((result) => {
+      let termResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
+      let total = termResults.matching_results
+      let products = termResults.results
+      var response = [
+      ]
+      for (let product of products) {
+        let p = {
+          name: product.key,
+          count: product.matching_results,
+          percentage: Math.round(((product.matching_results / total) * 100).toFixed(2))
         }
-        wdsQueryUtils.query(queryOptions, (err, data) => {
-          if (err) {
-            cb(err)
-          } else {
-            let aggregation = data.aggregations[0].results
-            let positiveByDate
-            for (let sentiment of aggregation) {
-              if (sentiment.key === 'positive') {
-                positiveByDate = sentiment.aggregations[0].results
-                break
-              }
-            }
-            var response = [
-              ['Months'],
-              ['Percentage']
-            ]
-            if (positiveByDate) {
-              for (var byDate of positiveByDate) {
-                if (totals[byDate.key]) {
-                  let dt = new Date(byDate.key)
-                  response[0].push(dt)
-                  console.log('devide ' + byDate.matching_results + ' by ' + totals[byDate.key])
-                  let percentage = Math.round((byDate.matching_results / totals[byDate.key]) * 100)
-                  response[1].push(percentage)
-                }
-              }
-            }
-            cb(null, response)
-          }
-        })
+        response.push(p)
       }
+      cb(null, response)
     })
+  }
+
+  Discovery.getMostPopularTopics = function (startDt, endDt, count, cb) {
+    let filter = getDateFilter(startDt, endDt)
+    let params = {
+      filter: filter,
+      count: 1,
+      aggregation: 'nested(enriched_text.concepts).term(enriched_text.concepts.text,count:' + count + ')'
+    }
+    wdsQueryUtils.getCounts(params).then((result) => {
+      let termResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
+      let total = termResults.matching_results
+      let products = termResults.results
+      var response = [
+      ]
+      for (let product of products) {
+        let p = {
+          name: product.key,
+          count: product.matching_results,
+          percentage: Math.round(((product.matching_results / total) * 100).toFixed(2))
+        }
+        response.push(p)
+      }
+      cb(null, response)
+    })
+  }
+
+  Discovery.getProductMentions = function (startDt, endDt, sentiment, cb) {
+    let filter = getDateFilter(startDt, endDt)
+    let params = {
+      filter: filter,
+      count: 1,
+      aggregation: 'nested(enriched_text.entities).filter(enriched_text.entities.type:"Product",enriched_text.entities.sentiment.type:"' + sentiment + '").term(enriched_text.entities.text)'
+    }
+    wdsQueryUtils.getCounts(params).then((result) => {
+      let termResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
+      let total = termResults.matching_results
+      let products = termResults.results
+      var response = [
+      ]
+      for (let product of products) {
+        let p = {
+          name: product.key,
+          count: product.matching_results,
+          percentage: Math.round(((product.matching_results / total) * 100).toFixed(2))
+        }
+        response.push(p)
+      }
+      cb(null, response)
+    })
+  }
+
+  Discovery.getCurrentBrandSentiment = function (startDt, endDt, cb) {
+    let filter = getDateFilter(startDt, endDt)
+    let params = {
+      filter: filter,
+      aggregation: 'term(enriched_text.docSentiment.type)'
+    }
+    wdsQueryUtils.getCounts(params).then((result) => {
+      let termResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
+      let total = termResults.matching_results
+      let sentiments = termResults.results
+      var response = [
+      ]
+      for (let sentiment of sentiments) {
+        let rounded = (sentiment.matching_results / total).toFixed(2)
+        let percentage = Math.round(rounded * 100)
+        response.push([sentiment.key, percentage])
+      }
+      cb(null, response)
+    }, (err) => cb(err))
+  }
+
+  Discovery.getBrandPerceptionOverTime = function (interval, sentiment, startDt, endDt, cb) {
+    let filter = getDateFilter(startDt, endDt)
+    let aggregation = 'timeslice(contact_date,' + interval + ').nested(enriched_text.docSentiment).term(enriched_text.docSentiment.type)'
+    let params = {
+      aggregation: aggregation,
+      filter: filter
+    }
+    wdsQueryUtils.getCounts(params).then((result) => {
+      let timesliceResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'timeslice')
+      let sentimentByIntervals = timesliceResults.results
+      var response = [
+        ['Date'],
+        ['Percentage']
+      ]
+
+      for (let sentimentByInterval of sentimentByIntervals) {
+        let total = sentimentByInterval.matching_results
+        let dt = new Date(sentimentByInterval.key)
+        let count = 0
+        let sentimentResults = wdsQueryUtils.extractResultsForType(sentimentByInterval.aggregations[0], 'term')
+        for (let sentiments of sentimentResults.results) {
+          if (sentiments.key === sentiment) {
+            count = sentiments.matching_results
+            break
+          }
+        }
+        response[0].push(dt)
+        let percentage = Math.round(((count / total) * 100).toFixed(2))
+        if (!percentage) {
+          console.log('count = ' + count + ' total = ' + total)
+          percentage = 0
+        }
+        response[1].push(percentage)
+      }
+      cb(null, response)
+    }, (err) => cb(err))
   }
 
   Discovery.addContent = function (cb) {
@@ -85,5 +174,21 @@ module.exports = function (Discovery) {
         cb(null, tasks)
       }
     })
+  }
+
+  function getDateFilter (startDt, endDt) {
+    let sdt
+    if (startDt) {
+      sdt = new Date(startDt)
+    }
+    let edt = new Date()
+    if (endDt) {
+      edt = new Date(endDt)
+    }
+    let filter
+    if (sdt & edt) {
+      filter = 'contact_date>' + sdt.getTime() + ',contact_date<=' + edt.getTime()
+    }
+    return filter
   }
 }

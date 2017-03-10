@@ -1,23 +1,46 @@
-<div class="login-page">
-  <div *ngIf="isError" class="alert alert-danger">
-    <p>{{errorMsg}}</p>
+<nav class="navbar ibm-navbar ibm-navbar--black" style="height:50px;">
+  <div class="navbar-header ibm-navbar__header">
+    <button type="button" class="navbar-toggle collapsed ibm-navbar__btn" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand ibm-navbar__brand" href="#"><strong>W Wireless</strong> Cognitive Dashboard</a>
   </div>
-	<div class="row">
-		<div class="col-lg-4 col-lg-offset-4">
-        	<img src="assets/img/SB-admin.png" width="150px" class="user-avatar" />
-			<h1>Voice of the Customer</h1>
-			<form [formGroup]="loginForm" (ngSubmit)="submitLogin()" role="form">
-				<div class="form-content">
-					<div class="form-group">
-            <input type="text" class="form-control input-underline input-lg" id="username" formControlName="username" placeholder="Username">
-					</div>
+</nav>
+<div *ngIf="isError" class="alert alert-danger">
+  <p>{{errorMsg}}</p>
+</div>
+<div class="container">
+  <div class="absolute-center absolute-center is-responsive">
+    <div class="login-page">
+    	<div class="row">
+    		<div class="col-xs-12">
+    			<h1 style="width:100%;font-weight: bold;">Welcome back</h1>
+          <p style="font-size:16px;">Please sign in to begin viewing today's highlights</p>
+        </div>
+      </div>
+      <div class="row">
+    		<div class="col-xs-12">
+  			<form [formGroup]="loginForm" (ngSubmit)="submitLogin()" role="form">
+  				<div class="form-content">
 
-					<div class="form-group">
-            <input type="password" class="form-control input-underline input-lg" id="password" formControlName="password" placeholder="Password  ">
-					</div>
-				</div>
-        <button type="submit" class="btn rounded-btn" [disabled]="!loginForm.valid">Submit</button>
-			</form>
-		</div>
-	</div>
+            <div class="form-group">
+              <label style="font-size:10px" for="username">User name</label>
+              <input type="text" class="form-control input-underline input-lg" id="username" formControlName="username" placeholder="Enter user name">
+  					</div>
+
+  					<div class="form-group">
+              <label style="font-size:10px" for="password">Password</label>
+              <input type="password" class="form-control input-underline input-lg" id="password" formControlName="password" placeholder="Enter password  ">
+  					</div>
+
+  				</div>
+          <button type="submit" class="btn rounded-btn pull-right" [disabled]="!loginForm.valid">Continue</button>
+  			</form>
+  		</div>
+  	 </div>
+    </div>
+  </div>
 </div>

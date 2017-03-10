@@ -17,7 +17,8 @@ import { LoopbackLoginService } from './lb-login.service';
 
 @Component({
   selector: 'wsl-lb-login',
-  templateUrl: './lb-login.component.html'
+  templateUrl: './lb-login.component.html',
+  styleUrls: ['./lb-login.component.css']
 })
 export class LoopbackLoginComponent {
 

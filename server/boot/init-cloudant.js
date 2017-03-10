@@ -14,7 +14,8 @@ var cloudantConfig = require('../config/cloudant-config.json')
 var debug = require('debug')('loopback:init-cloudant')
 
 module.exports = function (app, cb) {
-  debug('Initializing Cloudant')
+  console.log('*** Checking Cloudant')
+  let start = new Date()
   // Get the credentials from the VCAP file sitting in the environment
   var re = new RegExp('Cloudant.*')
   var cloudantCredentials = wslEnv.getAppEnv().getService(re)['credentials']
@@ -29,11 +30,13 @@ module.exports = function (app, cb) {
     if (needSync) {
       cloudantInitializer.syncCloudantConfig(checkResult).then(function (createResult) {
         debug(createResult)
+        console.log('*** It took ' + ((new Date() - start) / 1000) + ' seconds to check Cloudant...')
         console.log('*** Synchronization completed. ***')
         console.log('*** Application should be terminated.  This is required for the indexes to be created the next time the app starts up ***')
         cb()
       })
     } else {
+      console.log('*** It took ' + ((new Date() - start) / 1000) + ' seconds to check Cloudant...')
       cb()
     }
   }, function (err) {

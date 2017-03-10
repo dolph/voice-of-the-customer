@@ -162,9 +162,16 @@ function addVocConent (doc, done) {
         doc.contact_date = dt.getTime()
       }
     }
-    // Redact ATT in the content.
+    // Redact ATT and DirectTV in the content.
     doc.text = doc.text.replace(/ATT/ig, 'WWireless')
     doc.text = doc.text.replace(/AT&T/ig, 'WWireless')
+    doc.text = doc.text.replace(/DirecTV/ig, 'WTelevision')
+    doc.text = doc.text.replace(/Direct TV/ig, 'WTelevision')
+    doc.text = doc.text.replace(/Directv/ig, 'WTelevision')
+    doc.text = doc.text.replace(/direct tv/ig, 'WTelevision')
+    doc.text = doc.text.replace(/directv/ig, 'WTelevision')
+    // Make the text lower case
+    doc.text = doc.text.toLowerCase()
     // Same the json to the tmp folder
     var tempPath = os.tmpdir() + '/' + doc.cloudant_id + '.json'
     fs.writeFile(tempPath, JSON.stringify(doc), 'utf8', (err) => {
