@@ -8,96 +8,47 @@ declare var c3:any
 })
 export class AllChannelsComponent implements OnInit {
 
+  private showPerceptionAnalysis:boolean = false
+
   private negativeMentions = {
     title: 'Products Negatively Mentioned',
+    subtitle: 'Percentage of negative mentions of product overall',
     color: '#de1f80',
-    products: [
-      {
-        name: 'Product One',
-        value: 91
-      },
-      {
-        name: 'Product Two',
-        value: 84
-      },
-      {
-        name: 'Product Tree',
-        value: 53
-      },
-      {
-        name: 'Product Four',
-        value: 21
-      },
-      {
-        name: 'Product Five',
-        value: 9
-      }
-    ]
+    sentiment: 'negative',
+    data: []
   }
 
   private positiveMentions = {
     title: 'Products Positively Mentioned',
+    subtitle: 'Percentage of positive mentions of product overall',
     color: '#36cfbf',
-    products: [
-      {
-        name: 'Product Three',
-        value: 70
-      },
-      {
-        name: 'Product Four',
-        value: 50
-      }
-    ]
+    sentiment: 'positive',
+    data: []
   }
 
   private popularTopics = {
     title: 'Most Popular Topics',
-    products: [
-      {
-        name: 'Product One',
-        value: 70,
-        color: '#d8a7ff'
-      },
-      {
-        name: 'Product Two',
-        value: 50,
-        color: '#ba8dfb'
-      },
-      {
-        name: 'Product Three',
-        value: 50,
-        color: '#b168ea'
-      },
-      {
-        name: 'Product Four',
-        value: 50,
-        color: '#733c9b'
-      },
-      {
-        name: 'Product Five',
-        value: 50,
-        color: '#562c73'
-      }
-    ]
+    type: 'topics',
+    data: []
   }
 
   private popularFeatures = {
     title: 'Most Popular Features',
-    products: [
-      {
-        name: 'Product Three',
-        value: 70,
-        color: '#36cfbf'
-      },
-      {
-        name: 'Product Four',
-        value: 50,
-        color: '#36cfbf'
-      }
-    ]
+    type: 'features',
+    data: []
   }
 
   constructor() { }
+
+  private openPerceptionAnalysis(data) {
+    console.log('in triggerPerceptionAnalysis ' + data)
+    this.showPerceptionAnalysis = true
+  }
+
+  private closePerceptionAnalysis(data) {
+    console.log('in triggerPerceptionAnalysis ' + data)
+    this.showPerceptionAnalysis = false
+  }
 
   ngOnInit() {
   }

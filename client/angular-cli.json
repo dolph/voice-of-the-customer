@@ -30,7 +30,8 @@
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/c3/c3.js",
-        "../node_modules/d3/d3.js"
+        "../node_modules/d3/d3.js",
+        "../node_modules/moment/moment.js"
       ],
       "environments": {
         "source": "environments/environment.ts",

@@ -61,12 +61,18 @@ module.exports = function (Discovery) {
     })
   }
 
-  Discovery.getProductMentions = function (startDt, endDt, sentiment, cb) {
+  Discovery.getProductMentions = function (startDt, endDt, sentiment, count, cb) {
     let filter = getDateFilter(startDt, endDt)
+    if (!count) {
+      count = 5
+    }
     let params = {
       filter: filter,
       count: 1,
-      aggregation: 'nested(enriched_text.entities).filter(enriched_text.entities.type:"Product",enriched_text.entities.sentiment.type:"' + sentiment + '").term(enriched_text.entities.text)'
+      aggregation: 'nested(enriched_text.entities)' +
+        '.filter(enriched_text.entities.type:"Product"' +
+        ',enriched_text.entities.sentiment.type:"' + sentiment + '")' +
+        '.term(enriched_text.entities.text,count:' + count + ')'
     }
     wdsQueryUtils.getCounts(params).then((result) => {
       let termResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
@@ -90,10 +96,12 @@ module.exports = function (Discovery) {
     let filter = getDateFilter(startDt, endDt)
     let params = {
       filter: filter,
-      aggregation: 'term(enriched_text.docSentiment.type)'
+      aggregation: 'term(enriched_text.docSentiment.type)',
+      count: 1
     }
     wdsQueryUtils.getCounts(params).then((result) => {
-      let termResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
+      // console.log(JSON.stringify(result))
+      let termResults = wdsQueryUtils.extractResultsForType(result, 'term')
       let total = termResults.matching_results
       let sentiments = termResults.results
       var response = [
@@ -133,10 +141,10 @@ module.exports = function (Discovery) {
             break
           }
         }
-        response[0].push(dt)
+        response[0].push(dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate())
         let percentage = Math.round(((count / total) * 100).toFixed(2))
         if (!percentage) {
-          console.log('count = ' + count + ' total = ' + total)
+          // console.log('count = ' + count + ' total = ' + total)
           percentage = 0
         }
         response[1].push(percentage)

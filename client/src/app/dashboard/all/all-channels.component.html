@@ -1,12 +1,8 @@
 <div role="tabpanel" class="tab-pane active ibm-tabs__content-panel ibm-tabs__content-panel--active" id="all-channels">
-  <div class="dashboard-title">
-    <h1><span>Today's Highlights</span></h1>
-    <span class="h1-text--right">Last updated: 3/6/17 10:59am</span>
-    <hr style="clear:both;"/>
-  </div>
   <div class="row">
     <div class="col-md-12">
-      <app-brand-perception></app-brand-perception>
+      <app-brand-perception (perceptionAnalysisOpen)="openPerceptionAnalysis($event)"></app-brand-perception>
+      <app-perception-analysis *ngIf="showPerceptionAnalysis" (perceptionAnalysisClose)="closePerceptionAnalysis($event)"></app-perception-analysis>
     </div>
   </div>
   <div class="row">

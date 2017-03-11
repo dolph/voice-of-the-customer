@@ -26,11 +26,14 @@ import { ProductsMentionedComponent } from './all/products-mentioned.component';
 import { MostPopularComponent } from './all/most-popular.component';
 
 import { DiscoveryService } from '../shared/discovery/discovery.service';
+import { SampleDataService } from '../shared/discovery/sample-data.service';
+
+import { PerceptionAnalysisComponent } from './all/perception-analysis.component';
 
 @NgModule({
   imports:      [ CommonModule, RouterModule, DropdownModule.forRoot() ],
-  declarations: [ AllChannelsComponent, AudioCallsComponent, ChatsComponent, ForumsComponent, BrandPerceptionComponent, BrandSentimentComponent, ProductsMentionedComponent, MostPopularComponent ],
-  providers: [ DiscoveryService ]
+  declarations: [ AllChannelsComponent, AudioCallsComponent, ChatsComponent, ForumsComponent, BrandPerceptionComponent, BrandSentimentComponent, ProductsMentionedComponent, MostPopularComponent, PerceptionAnalysisComponent ],
+  providers: [ DiscoveryService, SampleDataService ]
 })
 
 export class DashboardModule {

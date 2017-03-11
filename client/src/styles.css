@@ -1,8 +1,20 @@
-body { padding-top: 55px; }
+body {
+  padding-top: 55px;
+}
+
+.dashboard-container {
+  padding-left: 30px;
+  padding-right: 30px;
+}
 
 .dashboard-title {
   padding-bottom: 10px;
   overflow: hidden;
+}
+
+.dashboard-title hr {
+  margin-top: 5px;
+  margin-bottom: 5px
 }
 
 h1 {
@@ -17,12 +29,19 @@ h1 span {
   border-radius: 3px;
 }
 
+.right-border {
+  border-right-style: solid;
+  border-right-width: thin;
+  border-right-color: white;
+}
+
 .h1-text--right {
   margin-left: 20px;
   margin-top: 10px;
   padding: 10px 10px 10px 20px;
   border-left: 1px solid #c6c6c6;
   display:inline-block;
+  float: right;
 }
 
 .c3-line {
@@ -52,4 +71,106 @@ h1 span {
     display: inline-block;
     vertical-align: middle;
     float: none;
+}
+
+.arrow_box {
+    top:-10px;
+    left:50px;
+    position: relative;
+    background: #333;
+    border: 1px solid #333; /*set border colour here*/
+    width: 90%;
+    height: 250px;
+    border-radius: 3px;
+    -webkit-filter: drop-shadow(0 1px 10px rgb(216, 167, 255)); /*set shadow colour  and size here*/
+    -moz-box-shadow: 0 1px 10px rgb(216, 167, 255);
+    filter: drop-shadow(0 1px 10px rgb(216, 167, 255));
+}
+
+.arrow_box_container {
+  padding-top: 10px !important;
+  margin-left: 20px !important;
+  margin-right: 20px !important;
+}
+
+.arrow_box h2 {
+  color: white !important;
+}
+
+.perception-percentage-large {
+    font-size: 72px;
+    color: white;
+    margin-bottom: 3px;
+    line-height: 1em;
+}
+
+.perception-percentage-medium {
+    font-size: 48px;
+    color: white;
+    margin-bottom: 3px;
+    line-height: 1em;
+}
+
+.perception-text-container {
+  display: table-cell;
+  vertical-align: bottom;
+  height: 64px;
+  width: 100%;
+}
+
+.perception-percentage-sign {
+  color: #ffffff;
+  font-size: 18px;
+  height: 100%;
+  vertical-align: text-bottom;
+}
+
+.perception-statement {
+  color: #ffffff;
+  font-size: 12px;
+  height: 100%;
+  vertical-align: text-bottom;
+}
+
+.perception-down-arrow {
+  color: rgb(222, 31, 128);
+  vertical-align: text-bottom;
+}
+
+.white-line {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #ffffff;
+}
+
+.close-btn {
+    position: absolute;
+    top: -10px;
+    right: 5px;
+}
+
+.arrow_box:after,
+.arrow_box:before {
+    bottom: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.arrow_box:after {
+    border-color: rgba(255, 255, 255, 0);
+    border-bottom-color: #333;
+    border-width: 19px;
+    left: 70%;
+    margin-left: -19px;
+}
+.arrow_box:before {
+    border-color: rgba(113, 158, 206, 0);
+    border-bottom-color: rgb(216, 167, 255);
+    border-width: 20px;
+    left: 70%;
+    margin-left: -20px;
 }

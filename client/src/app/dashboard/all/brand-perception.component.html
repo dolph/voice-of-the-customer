@@ -5,13 +5,14 @@
       <div class="col-sm-4 text-right">
         <div class="btn-group ibm-dropdown-group" dropdown>
           <button id="single-button" type="button" class="btn btn-default ibm-btn ibm-btn--small ibm-btn--secondary" dropdownToggle>
-            Select a Date Range <span class="caret"></span>
+            {{currentDateRange}} <span class="caret"></span>
           </button>
           <ul dropdownMenu role="menu" aria-labelledby="single-button">
-            <li role="menuitem"><a class="dropdown-item">Previous 12 Months</a></li>
-            <li role="menuitem"><a class="dropdown-item">This Year</a></li>
-            <li role="menuitem"><a class="dropdown-item">This Month</a></li>
-            <li role="menuitem"><a class="dropdown-item">The last 4 weeks</a></li>
+            <li role="menuitem"><a class="dropdown-item" (click)="setDateType('last12months')">Previous 12 Months</a></li>
+            <li role="menuitem"><a class="dropdown-item" (click)="setDateType('thisyear')">This Year</a></li>
+            <li role="menuitem"><a class="dropdown-item" (click)="setDateType('thismonth')">This Month</a></li>
+            <li role="menuitem"><a class="dropdown-item" (click)="setDateType('last4weeks')">The last 4 weeks</a></li>
+            <li role="menuitem"><a class="dropdown-item" (click)="setDateType('last14days')">The last 14 days</a></li>
           </ul>
         </div>
       </div>
