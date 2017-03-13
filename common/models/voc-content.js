@@ -4,30 +4,36 @@ var Async = require('async')
 
 var vocContentUtils = require('../utils/voc-content-utils')
 
-const BATCHSIZE = 100
+const BATCHSIZE = 25
+const SOURCES = ['forum', 'call', 'chat']
 
 module.exports = function (Voccontent) {
-  Voccontent.enrichContent = function (cb) {
+  Voccontent.preEnrichContent = function (cb) {
     var vocContentDB = vocContentUtils.getVocContentDBConnection(Voccontent.getDataSource().settings.url)
-    var enrichmentQueue = Async.queue(vocContentUtils.enrichContentBatchTask, 1)
-    enrichmentQueue.drain(() => {
-      console.log('Enrichment Completed.')
+    var preEnrichmentQueue = Async.queue(vocContentUtils.preEnrichContentTask, 1)
+    preEnrichmentQueue.drain(() => {
+      console.log('Pre-Enrichment Completed.')
     })
-    vocContentDB.view('voc-content', 'source-view', { group: true, key: 'call' }, (err, success) => {
+    vocContentDB.view('voc-content', 'all-docs-view', { reduce: true }, (err, success) => {
       if (err) {
         cb(err)
       } else {
         var count = success.rows[0].value
         var skip = 0
         var tasks = 0
+        var sourceIdx = 0
         while (skip < count) {
-          enrichmentQueue.push({ limit: BATCHSIZE, skip: skip }, (err) => {
+          preEnrichmentQueue.push({ limit: BATCHSIZE, skip: skip, source: SOURCES[sourceIdx] }, (err) => {
             if (err) {
               console.log('Error in task. ' + err)
             }
           })
+          sourceIdx++
+          if (sourceIdx > 2) {
+            sourceIdx = 0
+          }
           tasks++
-          skip += 100
+          skip += BATCHSIZE
         }
         cb(null, tasks)
       }

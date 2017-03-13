@@ -1,16 +1,54 @@
 'use strict'
 
 var Async = require('async')
+var moment = require('moment')
 var discoveryUtils = require('../utils/discovery-utils')
 var wdsQueryUtils = require('../utils/wds-query-utils')
 var vocContentUtils = require('../utils/voc-content-utils')
-var os = require('os')
 
 var app = require('../../server/server')
 
 const BATCHSIZE = 10
 
 module.exports = function (Discovery) {
+  Discovery.getPerceptionAnalysis = function (ofDate, cb) {
+    let endDt = moment(ofDate)
+    let startDt = moment(endDt).subtract(1, 'months')
+    let promises = []
+    // Build the start date query
+    let startFilter = getDateFilter((startDt.startOf('day')).toDate(), (startDt.endOf('day')).toDate())
+    let startParams = {
+      filter: startFilter,
+      count: 0,
+      aggregation: 'nested(enriched_text.docSentiment).term(enriched_text.docSentiment.type)'
+    }
+    promises.push(wdsQueryUtils.getCounts(startParams))
+    // Build the end date Query
+    let endFilter = getDateFilter((endDt.startOf('day')).toDate(), (endDt.endOf('day')).toDate())
+    let endParams = {
+      filter: endFilter,
+      count: 0,
+      aggregation: 'nested(enriched_text.docSentiment).term(enriched_text.docSentiment.type)'
+    }
+    promises.push(wdsQueryUtils.getCounts(endParams))
+    Promise.all(promises).then((result) => {
+      let startScore = getSentimentPercentageFromArray(wdsQueryUtils.getSentimentPercentageArray(result[0]), 'positive')
+      let endScore = getSentimentPercentageFromArray(wdsQueryUtils.getSentimentPercentageArray(result[1]), 'positive')
+      let diff = Math.abs(endScore - startScore)
+      let change = endScore <= startScore ? 'drop' : 'rise'
+      let response = {
+        changePercentage: diff,
+        change: change,
+        changeText: change + ' in positive perception in 30 days',
+        fromPercentage: startScore,
+        from: startDt.format('MMM Do YYYY'),
+        toPercentage: endScore,
+        to: endDt.format('MMM Do YYYY')
+      }
+      cb(null, response)
+    })
+  }
+
   Discovery.getMostPopularFeatures = function (startDt, endDt, count, cb) {
     let filter = getDateFilter(startDt, endDt)
     let params = {
@@ -20,8 +58,12 @@ module.exports = function (Discovery) {
     }
     wdsQueryUtils.getCounts(params).then((result) => {
       let termResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
-      let total = termResults.matching_results
       let products = termResults.results
+      let total = 0
+      // recalculate the total based on only the number of items returned
+      for (let product of products) {
+        total += product.matching_results
+      }
       var response = [
       ]
       for (let product of products) {
@@ -45,8 +87,12 @@ module.exports = function (Discovery) {
     }
     wdsQueryUtils.getCounts(params).then((result) => {
       let termResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
-      let total = termResults.matching_results
       let products = termResults.results
+      let total = 0
+      // recalculate the total based on only the number of items returned
+      for (let product of products) {
+        total += product.matching_results
+      }
       var response = [
       ]
       for (let product of products) {
@@ -76,8 +122,8 @@ module.exports = function (Discovery) {
     }
     wdsQueryUtils.getCounts(params).then((result) => {
       let termResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
-      let total = termResults.matching_results
       let products = termResults.results
+      let total = termResults.matching_results
       var response = [
       ]
       for (let product of products) {
@@ -156,32 +202,56 @@ module.exports = function (Discovery) {
   Discovery.addContent = function (cb) {
     var Voccontent = app.models.vocContent
     var vocContentDB = vocContentUtils.getVocContentDBConnection(Voccontent.getDataSource().settings.url)
-    var addDocumentsQueue = Async.queue(discoveryUtils.addDocumentsBatchTask, 1)
+    var addDocumentsQueue = Async.queue(discoveryUtils.addDocumentsTask, 1)
     // Indication that the job is completed.
     addDocumentsQueue.drain(() => {
       console.log('WDS Load Completed.')
     })
-    console.log('Temp files will be saved to ' + os.tmpdir())
     // Query Cloudant for all the documents.  Limit is 10 to support the free version of Discovery loading limit.
-    vocContentDB.view('voc-content', 'source-url-view', { reduce: true }, (err, success) => {
+    vocContentDB.view('voc-content', 'no-wds-id-view', { reduce: true }, (err, success) => {
       if (err) {
         cb(err)
       } else {
-        var count = success.rows[0].value
-        var skip = 989
+        console.log(JSON.stringify(success))
+        // Limit the load to 10K
+        var count = success.rows[0].value > 10000 ? 9000 : success.rows[0].value
+        var submitted = 0
         var tasks = 0
-        while (skip < count) {
-          addDocumentsQueue.push({ limit: BATCHSIZE, skip: skip }, (err) => {
+        while (submitted < count) {
+          addDocumentsQueue.push({ limit: BATCHSIZE, skip: 0 }, (err) => {
+            console.log('Task completed... ' + addDocumentsQueue.length())
             if (err) {
               console.log('Error in task. ' + err)
             }
           })
           tasks++
-          skip += BATCHSIZE
+          submitted += BATCHSIZE
         }
         cb(null, tasks)
       }
     })
+  }
+
+  function getPerceptionAnalysisResult (start, end) {
+    let result = {
+      title: 'Change in positive perception',
+      direction: 'perception-down-arrow',
+      directionColor: '#dc267f',
+      changePercentage: 61,
+      changeText: 'drop in positive perception in 30 days',
+      fromPercentage: 74,
+      fromText: 'positive sentiment 9/1',
+      toPercentage: 28,
+      toText: 'positive sentiment 10/1'
+    }
+  }
+
+  function getSentimentPercentageFromArray (sentimentArray, type) {
+    for (let sentiment of sentimentArray) {
+      if (sentiment[0] === type) {
+        return sentiment[1]
+      }
+    }
   }
 
   function getDateFilter (startDt, endDt) {

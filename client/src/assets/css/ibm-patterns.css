@@ -169,12 +169,12 @@
 /* Tabs */
 .ibm-tabs {}
 	.ibm-tabs__tabs {margin: 0; padding: 0;}
-		.ibm-tabs__tab {display: inline-block; list-style: none; margin-left: -4px;}
+		.ibm-tabs__tab {display: inline-block; list-style: none; margin-left: -4px; margin-right: 50px;}
 		.ibm-tabs__tab:first-child {margin-left: 0;}
 			.ibm-tabs__tab a {display: block; padding: .6em 1em .3em; color: #777677;}
-			.ibm-tabs__tab a:hover {box-shadow: inset 0 -4px 0 0 #4178BE; border: 0; color: #4178BE; text-decoration: none;}
-		.ibm-tabs__tab--active a {border-left: 1px solid #E0E0E0; border-right: 1px solid #E0E0E0; border-bottom: 1px solid #fff; color: #323232; box-shadow: inset 0 4px 0 0 #8180f4;}
-		.ibm-tabs__tab--active a:hover {border-left: 1px solid #E0E0E0; border-right: 1px solid #E0E0E0; border-bottom: 1px solid #fff; box-shadow: inset 0 4px 0 0 #8180f4; color: #323232; cursor: default;}
+			.ibm-tabs__tab a:hover {box-shadow: inset 0 -4px 0 0 #35D6BB; border: 0; color: #000000; font-weight:bold; text-decoration: none;}
+		.ibm-tabs__tab--active a {border-left: 0px solid #E0E0E0; border-right: 0px solid #E0E0E0; border-bottom: 4px solid #35D6BB; color: #323232; box-shadow: inset 0 0px 0 0 #35D6BB;}
+		.ibm-tabs__tab--active a:hover {border-left: 0px solid #E0E0E0; border-right: 0px solid #E0E0E0; border-bottom: 4px solid #35D6BB; box-shadow: inset 0 0px 0 0 #35D6BB; color: #323232; cursor: default;}
 	.ibm-tabs__content {clear: left; border-top: 1px solid #E0E0E0; margin-top: -1px; padding-top: 1em;}
 		.ibm-tabs__content-panel {}
 		.ibm-tabs__content-panel--active {}

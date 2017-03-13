@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { DiscoveryService } from '../../shared/discovery/discovery.service';
 
@@ -6,16 +6,14 @@ declare var c3:any
 declare var $:any
 
 @Component({
-  selector: 'app-brand-perception',
-  templateUrl: './brand-perception.component.html'
+  selector: 'app-vol-calls-over-time',
+  templateUrl: './vol-calls-over-time.component.html'
 })
-export class BrandPerceptionComponent implements OnInit {
-
-  @Output() perceptionAnalysisOpen = new EventEmitter<any>();
+export class VolCallsOverTimeComponent implements OnInit {
 
   private dateType: string = 'last12months'
   private currentDateRange: string = 'Last 12 Months'
-  private brandPerceptionOverTimeColumns = []
+  private callVolumeOverTimeColumns = []
 
   constructor(private discoveryService: DiscoveryService) { }
 
@@ -52,9 +50,9 @@ export class BrandPerceptionComponent implements OnInit {
     let self = this
     this.discoveryService.getBrandPerceptionOverTime('positive', this.dateType).subscribe((response) => {
       // console.log(JSON.stringify(response))
-      this.brandPerceptionOverTimeColumns = response
+      this.callVolumeOverTimeColumns = response
       var chart = c3.generate({
-        bindto: '#brand-perception-chart',
+        bindto: '#vol-calls-over-time-chart',
         legend: {
           show: false
         },
@@ -63,10 +61,15 @@ export class BrandPerceptionComponent implements OnInit {
         },
         data: {
             x: 'Date',
-            columns: this.brandPerceptionOverTimeColumns,
+            columns: [
+              ['Date', "2016-04-01", "2016-05-01", "2016-06-01", "2016-07-01", "2016-08-01", "2016-09-01"],
+              ['Volume', 300, 350, 300, 200, 100, 400]],
             onclick: function (d, element) {
               d.cx = Math.round($(element).attr('cx'))
-              self.perceptionAnalysisOpen.emit(d);
+            },
+            types: {
+                Date: 'area',
+                Volume: 'area-spline'
             }
         },
         axis: {

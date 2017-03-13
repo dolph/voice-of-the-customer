@@ -18,7 +18,7 @@ VocContentUtils.prototype.getVocContentDBConnection = function (url) {
   return _getVocContentDBConnection(url)
 }
 
-VocContentUtils.prototype.enrichContentBatchTask = function (task, done) {
+VocContentUtils.prototype.preEnrichContentTask = function (task, done) {
   // Initialize all the required variables
   var vocContent = app.models.vocContent
   var vocContentDB = _getVocContentDBConnection(vocContent.getDataSource().settings.url)
@@ -32,37 +32,78 @@ VocContentUtils.prototype.enrichContentBatchTask = function (task, done) {
     'limit': task.limit,
     'skip': task.skip,
     'include_docs': true,
-    'reduce': false,
-    'key': 'call'
+    'reduce': false
   }
-  // vocContentDB.view('voc-content', 'source-url-view', options, (err, success) => {
-  vocContentDB.view('voc-content', 'source-view', options, (err, success) => {
+  vocContentDB.view('voc-content', 'all-docs-view', options, (err, success) => {
     if (err) {
-      done()
+      done(err)
     } else {
       var cnt = success.rows.length
-      console.log('Retrieving ' + cnt + ' docs took ' + (new Date() - start) + ' milliseconds.')
       for (let row of success.rows) {
         updateWithIntentsAndEntities(row.doc).then((success) => {
-          console.log('Doc ' + success._id + ' updated which is ' + cnt + ' of ' + updates)
-          bulkRequest.docs.push(success)
-          updates++
-          if ((updates + errors) >= cnt) {
-            if (errors === 0) {
-              bulkUpdate(bulkRequest).then((success) => {
-                done()
-              }, (err) => {
-                done(err)
-              })
-            } else {
-              done('Error occured.')
+          updateSource(success, task.source).then((success) => {
+            bulkRequest.docs.push(success)
+            updates++
+            if ((updates + errors) >= cnt) {
+              if (errors === 0) {
+                bulkUpdate(bulkRequest).then((success) => {
+                  console.log('Retrieving and Update of ' + cnt + ' docs took ' + (new Date() - start) + ' milliseconds.')
+                  done()
+                }, (err) => {
+                  done(err)
+                })
+              } else {
+                done('Error occured.')
+              }
             }
-          }
+          }, (err) => {
+            console.log(err)
+            errors++
+          })
         }, (err) => {
           console.log(err)
           errors++
         })
       }
+    }
+  })
+}
+
+function updateSource (doc, source) {
+  return new Promise(function (resolve, reject) {
+    try {
+      doc['loopback__model__name'] = 'voc-content'
+      doc.source = source
+      doc.contact_duration = getRandomInt(5, 60)
+      resolve(doc)
+    } catch (err) {
+      reject(err)
+    }
+  })
+}
+
+function getRandomInt (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function updateWithIntentsAndEntities (doc) {
+  return new Promise(function (resolve, reject) {
+    try {
+      conversation.message({
+        workspace_id: process.env.CONVERSATION_WORKSPACE,
+        input: { 'text': doc.text.length > 2048 ? doc.text.substring(0, 2048) : doc.text }
+      }, function (err, response) {
+        if (err) {
+          console.log(doc.text)
+          reject('Error calling conversation: ' + err)
+        } else {
+          doc.intents = response.intents
+          doc.entities = response.entities
+          resolve(doc)
+        }
+      })
+    } catch (err) {
+      reject(err)
     }
   })
 }
@@ -100,37 +141,19 @@ function bulkUpdate (bulkRequest, done) {
   })
 }
 
-function _getVocContentDBConnection (url) {
-  var dbUrl = url
-  var cloudant = Cloudant(dbUrl)
-  var vocContentDB = cloudant.db.use(process.env.CLOUDANT_VOC_CONTENT_DB_NAME)
-  return vocContentDB
-}
-
-function updateWithIntentsAndEntities (doc, cb) {
-  return new Promise(function (resolve, reject) {
-    conversation.message({
-      workspace_id: process.env.CONVERSATION_WORKSPACE,
-      input: { 'text': doc.text.length > 2048 ? doc.text.substring(0, 2048) : doc.text }
-    }, function (err, response) {
-      if (err) {
-        console.log(doc.text)
-        reject('Error calling conversation: ' + err)
-      } else {
-        doc.intents = response.intents
-        doc.entities = response.entities
-        resolve(doc)
-      }
-    })
-  })
-}
-
 function htmlFromMetadata (metadata, cb) {
   var outHtml = '<!DOCTYPE html><html><body>'
   outHtml += '<title>' + metadata.title + '</title>\n'
   outHtml += '<p>' + metadata.text + '</p>\n'
   outHtml += '</body></html>'
   cb(null, outHtml)
+}
+
+function _getVocContentDBConnection (url) {
+  var dbUrl = url
+  var cloudant = Cloudant(dbUrl)
+  var vocContentDB = cloudant.db.use(process.env.CLOUDANT_VOC_CONTENT_DB_NAME)
+  return vocContentDB
 }
 
 module.exports = new VocContentUtils()

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { DiscoveryService } from '../../shared/discovery/discovery.service';
 
@@ -6,16 +6,14 @@ declare var c3:any
 declare var $:any
 
 @Component({
-  selector: 'app-brand-perception',
-  templateUrl: './brand-perception.component.html'
+  selector: 'app-length-of-calls',
+  templateUrl: './length-of-calls.component.html'
 })
-export class BrandPerceptionComponent implements OnInit {
-
-  @Output() perceptionAnalysisOpen = new EventEmitter<any>();
+export class LengthOfCallsComponent implements OnInit {
 
   private dateType: string = 'last12months'
   private currentDateRange: string = 'Last 12 Months'
-  private brandPerceptionOverTimeColumns = []
+  private lengthOfCallsColumns = []
 
   constructor(private discoveryService: DiscoveryService) { }
 
@@ -52,40 +50,25 @@ export class BrandPerceptionComponent implements OnInit {
     let self = this
     this.discoveryService.getBrandPerceptionOverTime('positive', this.dateType).subscribe((response) => {
       // console.log(JSON.stringify(response))
-      this.brandPerceptionOverTimeColumns = response
+      this.lengthOfCallsColumns = response
       var chart = c3.generate({
-        bindto: '#brand-perception-chart',
+        bindto: '#length-of-calls-chart',
         legend: {
           show: false
         },
         color: {
-            pattern: ['#35D6BB']
+          pattern: ['#35D6BB']
         },
         data: {
-            x: 'Date',
-            columns: this.brandPerceptionOverTimeColumns,
-            onclick: function (d, element) {
-              d.cx = Math.round($(element).attr('cx'))
-              self.perceptionAnalysisOpen.emit(d);
-            }
+          columns: [['Calls', 300, 350, 300, 200, 100, 400]],
+          onclick: function (d, element) {
+            d.cx = Math.round($(element).attr('cx'))
+          },
+          type: 'bar'
         },
-        axis: {
-            x: {
-                type: 'timeseries',
-                tick: {
-                  format: '%Y-%m-%d'
-                }
-            }
-        },
-        grid: {
-          y: {
-              lines: [
-                  {value: 20, text: '20', class: 'y-grid-line'},
-                  {value: 40, text: '40', class: 'y-grid-line'},
-                  {value: 60, text: '60', class: 'y-grid-line'},
-                  {value: 80, text: '80', class: 'y-grid-line'},
-                  {value: 100, text: '100', class: 'y-grid-line'}
-              ]
+        bar: {
+          width: {
+            ratio: 0.5 // this makes bar width 50% of length between ticks
           }
         }
       });

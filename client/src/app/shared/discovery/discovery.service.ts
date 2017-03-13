@@ -18,7 +18,102 @@ const DISCOVERY_URL = '/api/discovery'
 @Injectable()
 export class DiscoveryService {
 
+  private runLocal = true
+
   constructor(private http: Http, private authService: LoopbackLoginService, private sampleDataService: SampleDataService) { }
+
+  public getPerceptionAnalysis(date:string): Observable<any> {
+    return this.sampleDataService.getPerceptionAnalysisData()
+  }
+
+  public getBrandPerceptionOverTime(sentiment:string, dateType:string): Observable<any> {
+    if (!this.runLocal) {
+      let url = DISCOVERY_URL + '/getBrandPerceptionOverTime'
+      let token = this.authService.get().token;
+      let urlWithToken = url + '?access_token=' + token;
+
+      let dateTypeParams = this.getDateTypeParams(dateType)
+
+      let formData = new FormData();
+      formData.append('interval', dateTypeParams.interval)
+      formData.append('sentiment', sentiment)
+      formData.append('startDt', dateTypeParams.startDt)
+      formData.append('endDt', dateTypeParams.endDt)
+
+      return this.http.post(urlWithToken, formData)
+         .map((res:Response) => res.json())
+         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+    } else {
+      return this.sampleDataService.getPerceptionOverTimeData()
+    }
+  }
+
+  public getCurrentBrandSentiment(dateType:string): Observable<any> {
+    if (!this.runLocal) {
+      let url = DISCOVERY_URL + '/getCurrentBrandSentiment'
+      let token = this.authService.get().token;
+      let urlWithToken = url + '?access_token=' + token;
+
+      let dateTypeParams = this.getDateTypeParams(dateType)
+      let formData: FormData = new FormData();
+      formData.append('startDt', dateTypeParams.startDt)
+      formData.append('endDt', dateTypeParams.endDt)
+
+      return this.http.post(urlWithToken, formData)
+         .map((res:Response) => res.json())
+         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+    } else {
+      return this.sampleDataService.getCurrentBrandSentiment()
+    }
+  }
+
+  public getProductMentions(dateType:string, sentiment:string): Observable<any> {
+    if (!this.runLocal) {
+      let url = DISCOVERY_URL + '/getProductMentions'
+      let token = this.authService.get().token;
+      let urlWithToken = url + '?access_token=' + token;
+
+      let dateTypeParams = this.getDateTypeParams(dateType)
+      let formData: FormData = new FormData();
+      formData.append('startDt', dateTypeParams.startDt)
+      formData.append('endDt', dateTypeParams.endDt)
+      formData.append('sentiment', sentiment)
+      formData.append('count', 5)
+
+      return this.http.post(urlWithToken, formData)
+         .map((res:Response) => res.json())
+         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+    } else {
+      return this.sampleDataService.getNegativeProductMentions()
+    }
+  }
+
+  public getMostPopular(type: string, dateType: string): Observable<any> {
+    if (!this.runLocal) {
+      let url = DISCOVERY_URL + '/getMostPopularTopics'
+      if (type == 'features') {
+        url = DISCOVERY_URL + '/getMostPopularFeatures'
+      }
+      let token = this.authService.get().token;
+      let urlWithToken = url + '?access_token=' + token;
+
+      let dateTypeParams = this.getDateTypeParams(dateType)
+      let formData: FormData = new FormData();
+      formData.append('startDt', dateTypeParams.startDt)
+      formData.append('endDt', dateTypeParams.endDt)
+      formData.append('count', 5)
+
+      return this.http.post(urlWithToken, formData)
+         .map((res:Response) => res.json())
+         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+    } else {
+      if (type === 'topics') {
+        return this.sampleDataService.getMostPopularTopics()
+      } else {
+        return this.sampleDataService.getMostPopularFeatures()
+      }
+    }
+  }
 
   private getDateTypeParams(dateType:string) {
     let params = {
@@ -55,79 +150,4 @@ export class DiscoveryService {
     }
     return params
   }
-
-  public getBrandPerceptionOverTime(sentiment:string, dateType:string): Observable<any> {
-    let url = DISCOVERY_URL + '/getBrandPerceptionOverTime'
-    let token = this.authService.get().token;
-    let urlWithToken = url + '?access_token=' + token;
-
-    let dateTypeParams = this.getDateTypeParams(dateType)
-
-    let formData = new FormData();
-    formData.append('interval', dateTypeParams.interval)
-    formData.append('sentiment', sentiment)
-    formData.append('startDt', dateTypeParams.startDt)
-    formData.append('endDt', dateTypeParams.endDt)
-
-    return this.http.post(urlWithToken, formData)
-       .map((res:Response) => res.json())
-       .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
-
-    //return this.sampleDataService.getPerceptionOverTimeData()
-  }
-
-  public getCurrentBrandSentiment(dateType:string): Observable<any> {
-    let url = DISCOVERY_URL + '/getCurrentBrandSentiment'
-    let token = this.authService.get().token;
-    let urlWithToken = url + '?access_token=' + token;
-
-    let dateTypeParams = this.getDateTypeParams(dateType)
-    let formData: FormData = new FormData();
-    formData.append('startDt', dateTypeParams.startDt)
-    formData.append('endDt', dateTypeParams.endDt)
-
-    return this.http.post(urlWithToken, formData)
-       .map((res:Response) => res.json())
-       .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
-    //return this.sampleDataService.getPerceptionOverTimeData()
-  }
-
-  public getProductMentions(dateType:string, sentiment:string): Observable<any> {
-    let url = DISCOVERY_URL + '/getProductMentions'
-    let token = this.authService.get().token;
-    let urlWithToken = url + '?access_token=' + token;
-
-    let dateTypeParams = this.getDateTypeParams(dateType)
-    let formData: FormData = new FormData();
-    formData.append('startDt', dateTypeParams.startDt)
-    formData.append('endDt', dateTypeParams.endDt)
-    formData.append('sentiment', sentiment)
-    formData.append('count', 5)
-
-    return this.http.post(urlWithToken, formData)
-       .map((res:Response) => res.json())
-       .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
-    //return this.sampleDataService.getPerceptionOverTimeData()
-  }
-
-  public getMostPopular(type: string, dateType: string): Observable<any> {
-    let url = DISCOVERY_URL + '/getMostPopularTopics'
-    if (type == 'features') {
-      url = DISCOVERY_URL + '/getMostPopularFeatures'
-    }
-    let token = this.authService.get().token;
-    let urlWithToken = url + '?access_token=' + token;
-
-    let dateTypeParams = this.getDateTypeParams(dateType)
-    let formData: FormData = new FormData();
-    formData.append('startDt', dateTypeParams.startDt)
-    formData.append('endDt', dateTypeParams.endDt)
-    formData.append('count', 5)
-
-    return this.http.post(urlWithToken, formData)
-       .map((res:Response) => res.json())
-       .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
-    //return this.sampleDataService.getPerceptionOverTimeData()
-  }
-
 }

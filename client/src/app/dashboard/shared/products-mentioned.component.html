@@ -1,0 +1,19 @@
+<div class="panel panel-default ibm-panel">
+  <div class="panel-heading ibm-panel__heading">
+    <h3 style="font-size:24px;font-weight:bold;color:#343334">{{options.title}}</h3>
+    <p style="font-size:15px;font-weight: normal;color:#adadad">{{options.subtitle}}</p>
+  </div>
+  <div class="panel-body ibm-panel__body" style="margin-top:20px;">
+    <div class="row" *ngFor="let product of options.data" style="margin-top:5px;line-height:0.4em">
+      <div class="col-md-3">
+        <p class="pull-right" [style.color]="options.color" style="font-size:24px;font-weight:bold;margin-bottom:1.7em">{{product.percentage}}%</p>
+      </div>
+      <div class="col-md-7">
+        <span style="font-size:18px;color:#464646">{{product.name}}</span>
+      </div>
+      <div class="col-md-2">
+        <span><i class="fa fa-search" aria-hidden="true"></i></span>
+      </div>
+    </div>
+  </div>
+</div>

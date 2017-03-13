@@ -1,3 +1,23 @@
 <div role="tabpanel" class="tab-pane active ibm-tabs__content-panel ibm-tabs__content-panel--active" id="all-channels">
-  <h2 class="ibm-border--bottom">Audio Calls Highlights</h2>
+  <div class="row">
+    <div class="col-md-12">
+      <app-vol-calls-over-time></app-vol-calls-over-time>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <app-products-mentioned [options]="negativeMentions"></app-products-mentioned>
+    </div>
+    <div class="col-md-4">
+      <app-products-mentioned [options]="positiveMentions"></app-products-mentioned>
+    </div>
+    <div class="col-md-4">
+      <app-most-popular [options]="popularTopics"></app-most-popular>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <app-length-of-calls></app-length-of-calls>
+    </div>
+  </div>
 </div>

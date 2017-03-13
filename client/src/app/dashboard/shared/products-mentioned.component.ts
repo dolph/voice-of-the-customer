@@ -10,14 +10,14 @@ export class ProductsMentionedComponent implements OnInit {
 
   @Input() options:any
 
-  constructor(private discoveryService: DiscoveryService) { }
+  constructor(private discoveryService: DiscoveryService) {}
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
     this.discoveryService.getProductMentions('last12months', this.options.sentiment).subscribe((response) => {
-      console.log(JSON.stringify(response))
+      // console.log(JSON.stringify(response))
       this.options.data = response
     })
   }

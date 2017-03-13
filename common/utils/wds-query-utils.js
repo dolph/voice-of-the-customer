@@ -16,21 +16,18 @@ var defaultOptions = {
 
 var WdsQueryUtils = function () { }
 
-WdsQueryUtils.prototype.getTimeSeriesCounts = function (params) {
-  let self = this
-  return new Promise(function (resolve, reject) {
-    try {
-      let _aggregation = 'timeslice(contact_date,' + params.interval + ')'
-      if (params.term) {
-        _aggregation = params.term + '.' + _aggregation
-      }
-      let _filter = params.filter
-      let queryOptions = _.merge(params, defaultOptions)
-      self.query(queryOptions).then((result) => resolve(result), (err) => reject(err))
-    } catch (err) {
-      reject(err)
-    }
-  })
+WdsQueryUtils.prototype.getSentimentPercentageArray = function (result) {
+  let termResults = this.extractResultsForType(result, 'term')
+  let total = termResults.matching_results
+  let sentiments = termResults.results
+  var response = [
+  ]
+  for (let sentiment of sentiments) {
+    let rounded = (sentiment.matching_results / total).toFixed(2)
+    let percentage = Math.round(rounded * 100)
+    response.push([sentiment.key, percentage])
+  }
+  return response
 }
 
 WdsQueryUtils.prototype.getCounts = function (params) {

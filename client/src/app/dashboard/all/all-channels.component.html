@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-12">
       <app-brand-perception (perceptionAnalysisOpen)="openPerceptionAnalysis($event)"></app-brand-perception>
-      <app-perception-analysis *ngIf="showPerceptionAnalysis" (perceptionAnalysisClose)="closePerceptionAnalysis($event)"></app-perception-analysis>
+      <app-perception-analysis [options]="perceptionAnalysisOptions" *ngIf="showPerceptionAnalysis" (perceptionAnalysisClose)="closePerceptionAnalysis($event)"></app-perception-analysis>
     </div>
   </div>
   <div class="row">

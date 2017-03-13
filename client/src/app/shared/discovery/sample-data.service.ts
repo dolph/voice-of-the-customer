@@ -7,8 +7,24 @@ export class SampleDataService {
 
   constructor() { }
 
+  public getPerceptionAnalysisData(): Observable<any> {
+    let perceptionAnalysisData = {
+      "changePercentage": 5,
+      "change": "drop",
+      "changeText": "drop in positive perception in 30 days",
+      "fromPercentage": 24,
+      "from": "Feb 11th 2017",
+      "toPercentage": 19,
+      "to": "Mar 11th 2017"
+    }
+    return Observable.create(observer => {
+      observer.next(perceptionAnalysisData)
+      observer.complete()
+    });
+  }
+
   public getPerceptionOverTimeData(): Observable<any> {
-    let brandPerceptionOverTimeColumns = [ [ "Months", "2016-04-01", "2016-05-01", "2016-06-01", "2016-07-01", "2016-08-01",
+    let brandPerceptionOverTimeColumns = [ [ "Date", "2016-04-01", "2016-05-01", "2016-06-01", "2016-07-01", "2016-08-01",
       "2016-09-01", "2016-10-01", "2016-11-01", "2016-12-01", "2017-01-01", "2017-02-01", "2017-03-01" ],
     [ "Percentage", 39, 100, 12, 75, 34, 16, 67, 50, 45, 18, 25, 13 ]]
     return Observable.create(observer => {
@@ -46,9 +62,9 @@ export class SampleDataService {
   }
 
   public getMostPopularTopics(): Observable<any> {
-    let mostPopularTopicsData = [{"name":"Directv","count":54,"percentage":20},
-      {"name":"Direct TV","count":37,"percentage":14},{"name":"DirecTV","count":25,"percentage":9},
-      {"name":"direct tv","count":17,"percentage":6},{"name":"directv","count":17,"percentage":6}]
+    let mostPopularTopicsData = [
+      { "name": "Mobile phone", "count": 355, "percentage": 40 }, { "name": "Telephone", "count": 171, "percentage": 19 }, { "name": "Customer service", "count": 157, "percentage": 18 }, { "name": "SIM lock", "count": 122, "percentage": 14 }, { "name": "English-language films", "count": 87, "percentage": 10 }
+    ]
     return Observable.create(observer => {
       observer.next(mostPopularTopicsData)
       observer.complete()
@@ -56,9 +72,9 @@ export class SampleDataService {
   }
 
   public getMostPopularFeatures(): Observable<any> {
-    let mostPopularFeatresData = [{"name":"screen","count":44,"percentage":71},
-      {"name":"SIM card","count":8,"percentage":13},{"name":"sim card","count":3,"percentage":5},
-      {"name":"button","count":2,"percentage":3},{"name":"camera","count":2,"percentage":3}]
+    let mostPopularFeatresData = [
+      { "name": "sim card", "count": 129, "percentage": 44 }, { "name": "screen", "count": 119, "percentage": 41 }, { "name": "camera", "count": 23, "percentage": 8 }, { "name": "sim cards", "count": 10, "percentage": 3 }, { "name": "sim", "count": 9, "percentage": 3 }
+    ]
     return Observable.create(observer => {
       observer.next(mostPopularFeatresData)
       observer.complete()

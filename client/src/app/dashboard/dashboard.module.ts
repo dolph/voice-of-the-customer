@@ -22,17 +22,19 @@ import { ChatsComponent } from './chats/chats.component';
 import { ForumsComponent } from './forums/forums.component';
 import { BrandPerceptionComponent } from './all/brand-perception.component';
 import { BrandSentimentComponent } from './all/brand-sentiment.component';
-import { ProductsMentionedComponent } from './all/products-mentioned.component';
-import { MostPopularComponent } from './all/most-popular.component';
+import { ProductsMentionedComponent } from './shared/products-mentioned.component';
+import { MostPopularComponent } from './shared/most-popular.component';
 
 import { DiscoveryService } from '../shared/discovery/discovery.service';
 import { SampleDataService } from '../shared/discovery/sample-data.service';
 
 import { PerceptionAnalysisComponent } from './all/perception-analysis.component';
+import { VolCallsOverTimeComponent } from './calls/vol-calls-over-time.component';
+import { LengthOfCallsComponent } from './calls/length-of-calls.component';
 
 @NgModule({
   imports:      [ CommonModule, RouterModule, DropdownModule.forRoot() ],
-  declarations: [ AllChannelsComponent, AudioCallsComponent, ChatsComponent, ForumsComponent, BrandPerceptionComponent, BrandSentimentComponent, ProductsMentionedComponent, MostPopularComponent, PerceptionAnalysisComponent ],
+  declarations: [ AllChannelsComponent, AudioCallsComponent, ChatsComponent, ForumsComponent, BrandPerceptionComponent, BrandSentimentComponent, ProductsMentionedComponent, MostPopularComponent, PerceptionAnalysisComponent, VolCallsOverTimeComponent, LengthOfCallsComponent ],
   providers: [ DiscoveryService, SampleDataService ]
 })
 

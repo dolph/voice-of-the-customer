@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-declare var c3:any
+import { DiscoveryService } from '../../shared/discovery/discovery.service';
 
 @Component({
   selector: 'app-all-channels',
@@ -13,7 +13,7 @@ export class AllChannelsComponent implements OnInit {
   private negativeMentions = {
     title: 'Products Negatively Mentioned',
     subtitle: 'Percentage of negative mentions of product overall',
-    color: '#de1f80',
+    color: '#DC267F',
     sentiment: 'negative',
     data: []
   }
@@ -21,7 +21,7 @@ export class AllChannelsComponent implements OnInit {
   private positiveMentions = {
     title: 'Products Positively Mentioned',
     subtitle: 'Percentage of positive mentions of product overall',
-    color: '#36cfbf',
+    color: '#008949',
     sentiment: 'positive',
     data: []
   }
@@ -38,15 +38,17 @@ export class AllChannelsComponent implements OnInit {
     data: []
   }
 
-  constructor() { }
+  private perceptionAnalysisOptions = {}
+
+  constructor(private discoveryService: DiscoveryService) { }
 
   private openPerceptionAnalysis(data) {
-    console.log('in triggerPerceptionAnalysis ' + data)
+    console.log('in triggerPerceptionAnalysis ' + JSON.stringify(data))
+    this.perceptionAnalysisOptions = data
     this.showPerceptionAnalysis = true
   }
 
   private closePerceptionAnalysis(data) {
-    console.log('in triggerPerceptionAnalysis ' + data)
     this.showPerceptionAnalysis = false
   }
 

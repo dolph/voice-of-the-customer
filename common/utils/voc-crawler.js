@@ -49,6 +49,7 @@ VocCrawler.prototype.init = function (_options, cb) {
     urlCacheSize: 0,
     urlCacheBytes: 0,
     bulkSaveBufferSize: 0,
+    duplicates: 0,
     errors: []
   }
   // Regex Cache
@@ -216,14 +217,54 @@ VocCrawler.prototype.processPageContentTask = function (task, cb) {
         } else {
           self.status.extracted += 1
           self.status.extractQueueSize = self.outputQueue.length()
-          if (!testMode) {
-            self.saveMetaData(metadata, false).then(() => cb(), (err) => cb(err))
+          self.checkForDuplicate(metadata).then(() => {
+            if (!testMode) {
+              self.saveMetaData(metadata, false).then(() => cb(), (err) => cb(err))
+            } else {
+              self.status.saved += 1
+              cb()
+            }
+          }, (err) => {
+            if (err) {
+              // This is a duplicate, so ignoring it.
+              cb()
+            }
+          })
+        }
+      })
+    }
+  })
+}
+
+VocCrawler.prototype.checkForDuplicate = function (metadata) {
+  var self = this
+  return new Promise(function (resolve, reject) {
+    try {
+      let selector = {
+        selector: {
+          title: metadata.title
+        },
+        fields: ['_id', 'text']
+      }
+      self.vocContentDB.find(selector, (err, success) => {
+        if (err) {
+          resolve()
+        } else {
+          if (success.docs.length === 0) {
+            resolve()
           } else {
-            self.status.saved += 1
-            cb()
+            if (success.docs[0].text === metadata.text) {
+              self.status.duplicates++
+              reject(success)
+            } else {
+              resolve()
+            }
           }
         }
       })
+    } catch (err) {
+      self.status.errors.push(new Date() + ': ' + err)
+      reject(err)
     }
   })
 }
@@ -316,12 +357,31 @@ VocCrawler.prototype.extractMetaData = function (content, linkUrl, cb) {
     tags: this.options.tags ? this.options.tags : []
   }
   for (let selector in this.options.extractTemplate) {
-    let result = $content(this.options.extractTemplate[selector]).first()
-    let text = result.text()
-    let cleaned = text.replace(/\t/g, '').replace(/\n/g, '').trim()
-    // Also remove all special chars from the text and only leave ASCII behind
-    cleaned = cleaned.replace(/[^\x00-\x7F]/g, '')
-    metadata[selector] = cleaned
+    let selected = $content(this.options.extractTemplate[selector])
+    if (selected) {
+      if (selector === 'contact_date') {
+        let dateTime = []
+        selected.each(function (i, el) {
+          if (dateTime.length > 1) {
+            return false
+          }
+          dateTime.push(Cheerio(this).text().trim())
+        })
+        let text = dateTime.join(' ')
+        let cleaned = text.replace(/\t/g, '').replace(/\n/g, '').trim()
+        // Also remove all special chars from the text and only leave ASCII behind
+        cleaned = cleaned.replace(/[^\x00-\x7F]/g, '')
+        let dt = new Date(cleaned)
+        metadata[selector] = dt
+      } else {
+        let result = $content(this.options.extractTemplate[selector]).first()
+        let text = result.text()
+        let cleaned = text.replace(/\t/g, '').replace(/\n/g, '').trim()
+        // Also remove all special chars from the text and only leave ASCII behind
+        cleaned = cleaned.replace(/[^\x00-\x7F]/g, '')
+        metadata[selector] = cleaned
+      }
+    }
   }
   cb(null, metadata)
 }

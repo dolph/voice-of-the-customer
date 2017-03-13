@@ -34,7 +34,7 @@
         "verb": "post"
       }
     },
-    "enrichContent": {
+    "preEnrichContent": {
       "returns": {
         "arg": "body",
         "type": "object",

@@ -34,6 +34,22 @@
         "verb": "post"
       }
     },
+    "getPerceptionAnalysis": {
+      "accepts": [
+        {
+          "arg": "ofDate",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    },
     "getMostPopularFeatures": {
       "accepts": [
         {

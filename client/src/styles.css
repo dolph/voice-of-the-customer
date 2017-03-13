@@ -8,7 +8,8 @@ body {
 }
 
 .dashboard-title {
-  padding-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 15px;
   overflow: hidden;
 }
 
@@ -17,12 +18,16 @@ body {
   margin-bottom: 5px
 }
 
-h1 {
+.dashboard-title h1 {
   margin-bottom: 5px;
   float: left;
+  margin-top: .3em;
+  margin-bottom: .2em;
+  font-size:36px;
+  color:#343334
 }
 
-h1 span {
+.dashboard-title h1 span {
   padding: 1px 5px 3px 5px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -37,11 +42,12 @@ h1 span {
 
 .h1-text--right {
   margin-left: 20px;
-  margin-top: 10px;
+  margin-top: 12px;
   padding: 10px 10px 10px 20px;
   border-left: 1px solid #c6c6c6;
   display:inline-block;
   float: right;
+  color: #343334;
 }
 
 .c3-line {
@@ -74,17 +80,22 @@ h1 span {
 }
 
 .arrow_box {
-    top:-10px;
-    left:50px;
-    position: relative;
-    background: #333;
-    border: 1px solid #333; /*set border colour here*/
-    width: 90%;
-    height: 250px;
-    border-radius: 3px;
-    -webkit-filter: drop-shadow(0 1px 10px rgb(216, 167, 255)); /*set shadow colour  and size here*/
-    -moz-box-shadow: 0 1px 10px rgb(216, 167, 255);
-    filter: drop-shadow(0 1px 10px rgb(216, 167, 255));
+  position: relative;
+  top:-10px;
+  left:50px;
+  color: #ffffff;
+  background: #343334;
+  border: 1px solid #343334; /*set border colour here*/
+  width: 90%;
+  height: 280px;
+  border-radius: 3px;
+  -webkit-filter: drop-shadow(0 1px 10px rgb(216, 167, 255)); /*set shadow colour  and size here*/
+  -moz-box-shadow: 0 1px 10px rgb(216, 167, 255);
+  filter: drop-shadow(0 1px 10px rgb(216, 167, 255));
+}
+
+.arrow_box h2 {
+  color: #ffffff;
 }
 
 .arrow_box_container {
@@ -93,43 +104,46 @@ h1 span {
   margin-right: 20px !important;
 }
 
-.arrow_box h2 {
-  color: white !important;
+.perception-pull-down {
+  position: relative;
+  height: 70px;
 }
 
 .perception-percentage-large {
-    font-size: 72px;
-    color: white;
-    margin-bottom: 3px;
-    line-height: 1em;
-}
-
-.perception-percentage-medium {
-    font-size: 48px;
-    color: white;
-    margin-bottom: 3px;
-    line-height: 1em;
-}
-
-.perception-text-container {
-  display: table-cell;
-  vertical-align: bottom;
-  height: 64px;
-  width: 100%;
+  font-size: 66px;
+  bottom: 0px;
 }
 
 .perception-percentage-sign {
-  color: #ffffff;
+  bottom: 0px;
   font-size: 18px;
-  height: 100%;
-  vertical-align: text-bottom;
+  left:80px;
+}
+
+.perception-percentage-medium {
+  font-size: 48px;
+  margin-bottom: 3px;
+  line-height: 1em;
+}
+
+.perception-text-container {
+  font-size: 14px;
+  bottom: 0px;
+  width: 100%;
+}
+
+.perception-statement-header {
+  border-left: 3px solid #C090ED;
+  padding-left:20px;
+  margin-top:5px;
 }
 
 .perception-statement {
-  color: #ffffff;
   font-size: 12px;
+  padding-top: 10px;
   height: 100%;
   vertical-align: text-bottom;
+  overflow: scroll;
 }
 
 .perception-down-arrow {
@@ -144,33 +158,34 @@ h1 span {
 }
 
 .close-btn {
-    position: absolute;
-    top: -10px;
-    right: 5px;
+  position: absolute;
+  top: -10px;
+  right: 5px;
 }
 
 .arrow_box:after,
 .arrow_box:before {
-    bottom: 100%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
+  bottom: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
 }
 
 .arrow_box:after {
-    border-color: rgba(255, 255, 255, 0);
-    border-bottom-color: #333;
-    border-width: 19px;
-    left: 70%;
-    margin-left: -19px;
+  border-color: rgba(255, 255, 255, 0);
+  border-bottom-color: #333;
+  border-width: 19px;
+  left: 80%;
+  margin-left: -19px;
 }
+
 .arrow_box:before {
-    border-color: rgba(113, 158, 206, 0);
-    border-bottom-color: rgb(216, 167, 255);
-    border-width: 20px;
-    left: 70%;
-    margin-left: -20px;
+  border-color: rgba(113, 158, 206, 0);
+  border-bottom-color: rgb(216, 167, 255);
+  border-width: 20px;
+  left: 80%;
+  margin-left: -20px;
 }
