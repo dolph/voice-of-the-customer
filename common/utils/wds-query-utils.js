@@ -35,7 +35,10 @@ WdsQueryUtils.prototype.getCounts = function (params) {
   return new Promise(function (resolve, reject) {
     try {
       let queryOptions = _.merge(params, defaultOptions)
-      self.query(queryOptions).then((result) => resolve(result), (err) => reject(err))
+      self.query(queryOptions).then((result) => resolve(result), (err) => {
+        console.log(err)
+        reject(err)
+      })
     } catch (err) {
       reject(err)
     }

@@ -11,6 +11,61 @@ var app = require('../../server/server')
 const BATCHSIZE = 10
 
 module.exports = function (Discovery) {
+  Discovery.getAverageLengthOfCalls = function (interval, startDt, endDt, cb) {
+    let filter = getDateFilter(startDt, endDt)
+    let aggregation = 'filter(source:call).timeslice(contact_date,' + interval + ').average(contact_duration)'
+    let params = {
+      count: 0,
+      aggregation: aggregation,
+      filter: filter
+    }
+    wdsQueryUtils.getCounts(params).then((result) => {
+      let timesliceResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'timeslice')
+      let callsByIntervals = timesliceResults.results
+      var response = [
+        ['Date'],
+        ['Count'],
+        ['Average']
+      ]
+      for (let callByInterval of callsByIntervals) {
+        let dt = new Date(callByInterval.key)
+        let count = callByInterval.matching_results
+        let avgResult = wdsQueryUtils.extractResultsForType(callByInterval.aggregations[0], 'average')
+        let avg = avgResult.value.toFixed(2)
+        response[0].push(dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate())
+        response[1].push(count)
+        response[2].push(Number(avg))
+      }
+      cb(null, response)
+    })
+  }
+
+  Discovery.getVolumeOfCallsOverTime = function (interval, startDt, endDt, cb) {
+    let filter = getDateFilter(startDt, endDt)
+    let aggregation = 'filter(source:call).timeslice(contact_date,' + interval + ')'
+    let params = {
+      count: 0,
+      aggregation: aggregation,
+      filter: filter
+    }
+    wdsQueryUtils.getCounts(params).then((result) => {
+      let timesliceResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'timeslice')
+      let callsByIntervals = timesliceResults.results
+      var response = [
+        ['Date'],
+        ['Count']
+      ]
+
+      for (let callByInterval of callsByIntervals) {
+        let dt = new Date(callByInterval.key)
+        let count = callByInterval.matching_results
+        response[0].push(dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate())
+        response[1].push(count)
+      }
+      cb(null, response)
+    }, (err) => cb(err))
+  }
+
   Discovery.getPerceptionAnalysis = function (ofDate, cb) {
     let endDt = moment(ofDate)
     let startDt = moment(endDt).subtract(1, 'months')
@@ -49,8 +104,15 @@ module.exports = function (Discovery) {
     })
   }
 
-  Discovery.getMostPopularFeatures = function (startDt, endDt, count, cb) {
+  Discovery.getMostPopularFeatures = function (startDt, endDt, source, count, cb) {
     let filter = getDateFilter(startDt, endDt)
+    if (source === 'call' || source === 'forum' || source === 'chat') {
+      if (filter) {
+        filter += ',source:' + source
+      } else {
+        filter = 'source:' + source
+      }
+    }
     let params = {
       filter: filter,
       count: 1,
@@ -78,8 +140,15 @@ module.exports = function (Discovery) {
     })
   }
 
-  Discovery.getMostPopularTopics = function (startDt, endDt, count, cb) {
+  Discovery.getMostPopularTopics = function (startDt, endDt, source, count, cb) {
     let filter = getDateFilter(startDt, endDt)
+    if (source === 'call' || source === 'forum' || source === 'chat') {
+      if (filter) {
+        filter += ',source:' + source
+      } else {
+        filter = 'source:' + source
+      }
+    }
     let params = {
       filter: filter,
       count: 1,
@@ -107,8 +176,15 @@ module.exports = function (Discovery) {
     })
   }
 
-  Discovery.getProductMentions = function (startDt, endDt, sentiment, count, cb) {
+  Discovery.getProductMentions = function (startDt, endDt, source, sentiment, count, cb) {
     let filter = getDateFilter(startDt, endDt)
+    if (source === 'call' || source === 'forum' || source === 'chat') {
+      if (filter) {
+        filter += ',source:' + source
+      } else {
+        filter = 'source:' + source
+      }
+    }
     if (!count) {
       count = 5
     }

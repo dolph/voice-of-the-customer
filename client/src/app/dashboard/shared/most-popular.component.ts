@@ -18,7 +18,7 @@ export class MostPopularComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.discoveryService.getMostPopular(this.options.type, 'last12months').subscribe((response) => {
+    this.discoveryService.getMostPopular(this.options.type, this.options.source, 'last12months').subscribe((response) => {
       // console.log(JSON.stringify(response))
       let i = 0;
       for (let x of response) {

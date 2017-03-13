@@ -48,9 +48,8 @@ export class LengthOfCallsComponent implements OnInit {
 
   private loadChart() {
     let self = this
-    this.discoveryService.getBrandPerceptionOverTime('positive', this.dateType).subscribe((response) => {
-      // console.log(JSON.stringify(response))
-      this.lengthOfCallsColumns = response
+    this.discoveryService.getAverageLengthOfCalls(this.dateType).subscribe((response) => {
+      console.log(JSON.stringify(response))
       var chart = c3.generate({
         bindto: '#length-of-calls-chart',
         legend: {
@@ -60,15 +59,21 @@ export class LengthOfCallsComponent implements OnInit {
           pattern: ['#35D6BB']
         },
         data: {
-          columns: [['Calls', 300, 350, 300, 200, 100, 400]],
-          onclick: function (d, element) {
-            d.cx = Math.round($(element).attr('cx'))
-          },
+          x: 'Date',
+          columns: response,
           type: 'bar'
         },
         bar: {
           width: {
             ratio: 0.5 // this makes bar width 50% of length between ticks
+          }
+        },
+        axis: {
+          x: {
+            type: 'timeseries',
+            tick: {
+              format: '%Y-%m-%d'
+            }
           }
         }
       });

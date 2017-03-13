@@ -11,6 +11,7 @@ export class AudioCallsComponent implements OnInit {
     subtitle: 'Percentage of negative mentions of product overall',
     color: '#DC267F',
     sentiment: 'negative',
+    source: 'call',
     data: []
   }
 
@@ -19,15 +20,17 @@ export class AudioCallsComponent implements OnInit {
     subtitle: 'Percentage of positive mentions of product overall',
     color: '#008949',
     sentiment: 'positive',
+    source: 'call',
     data: []
   }
 
   private popularTopics = {
     title: 'Most Popular Topics',
     type: 'topics',
+    source: 'call',
     data: []
   }
-  
+
   constructor() { }
 
   ngOnInit() {

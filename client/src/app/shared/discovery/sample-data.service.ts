@@ -7,6 +7,23 @@ export class SampleDataService {
 
   constructor() { }
 
+  public getAverageLengthOfCallsData() : Observable<any> {
+    let averageLengthOfCallData = [["Date","2017-2-28","2017-3-1","2017-3-2","2017-3-3","2017-3-4","2017-3-5","2017-3-6","2017-3-7","2017-3-8","2017-3-9","2017-3-10","2017-3-11"],["Count",3,39,32,18,12,22,19,30,33,24,9,9]]
+    return Observable.create(observer => {
+      observer.next(averageLengthOfCallData)
+      observer.complete()
+    });
+  }
+
+  public getVolumeOfCallsOverTimeData() : Observable<any> {
+    let volumeOfCallsOverTimeData =
+      [["Date","2016-2-29","2016-3-31","2016-4-30","2016-5-31","2016-6-30","2016-7-31","2016-8-31","2016-9-30","2016-10-31","2016-11-30","2016-12-31","2017-1-31","2017-2-28"],["Count",6,12,81,49,39,75,79,107,121,248,596,572,280]]
+      return Observable.create(observer => {
+        observer.next(volumeOfCallsOverTimeData)
+        observer.complete()
+      });
+  }
+
   public getPerceptionAnalysisData(): Observable<any> {
     let perceptionAnalysisData = {
       "changePercentage": 5,

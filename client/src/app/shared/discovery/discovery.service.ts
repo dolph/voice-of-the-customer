@@ -18,12 +18,65 @@ const DISCOVERY_URL = '/api/discovery'
 @Injectable()
 export class DiscoveryService {
 
-  private runLocal = true
+  private runLocal = false
 
   constructor(private http: Http, private authService: LoopbackLoginService, private sampleDataService: SampleDataService) { }
 
-  public getPerceptionAnalysis(date:string): Observable<any> {
-    return this.sampleDataService.getPerceptionAnalysisData()
+  public getAverageLengthOfCalls(dateType: string): Observable<any> {
+    if (!this.runLocal) {
+      let url = DISCOVERY_URL + '/getVolumeOfCallsOverTime'
+      let token = this.authService.get().token;
+      let urlWithToken = url + '?access_token=' + token;
+
+      let dateTypeParams = this.getDateTypeParams(dateType)
+      let formData: FormData = new FormData();
+      formData.append('interval', dateTypeParams.interval)
+      formData.append('startDt', dateTypeParams.startDt)
+      formData.append('endDt', dateTypeParams.endDt)
+
+      return this.http.post(urlWithToken, formData)
+         .map((res:Response) => res.json())
+         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+    } else {
+      return this.sampleDataService.getAverageLengthOfCallsData()
+    }
+  }
+
+  public getVolumeOfCallsOverTime(dateType: string): Observable<any> {
+    if (!this.runLocal) {
+      let url = DISCOVERY_URL + '/getVolumeOfCallsOverTime'
+      let token = this.authService.get().token;
+      let urlWithToken = url + '?access_token=' + token;
+
+      let dateTypeParams = this.getDateTypeParams(dateType)
+      let formData: FormData = new FormData();
+      formData.append('interval', dateTypeParams.interval)
+      formData.append('startDt', dateTypeParams.startDt)
+      formData.append('endDt', dateTypeParams.endDt)
+
+      return this.http.post(urlWithToken, formData)
+         .map((res:Response) => res.json())
+         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+    } else {
+      return this.sampleDataService.getVolumeOfCallsOverTimeData()
+    }
+  }
+
+  public getPerceptionAnalysis(ofDate:string): Observable<any> {
+    if (!this.runLocal) {
+      let url = DISCOVERY_URL + '/getPerceptionAnalysis'
+      let token = this.authService.get().token;
+      let urlWithToken = url + '?access_token=' + token;
+
+      let formData = new FormData();
+      formData.append('ofDate', ofDate)
+
+      return this.http.post(urlWithToken, formData)
+         .map((res:Response) => res.json())
+         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+    } else {
+      return this.sampleDataService.getPerceptionAnalysisData()
+    }
   }
 
   public getBrandPerceptionOverTime(sentiment:string, dateType:string): Observable<any> {
@@ -67,7 +120,7 @@ export class DiscoveryService {
     }
   }
 
-  public getProductMentions(dateType:string, sentiment:string): Observable<any> {
+  public getProductMentions(dateType:string, source:string, sentiment:string): Observable<any> {
     if (!this.runLocal) {
       let url = DISCOVERY_URL + '/getProductMentions'
       let token = this.authService.get().token;
@@ -77,6 +130,7 @@ export class DiscoveryService {
       let formData: FormData = new FormData();
       formData.append('startDt', dateTypeParams.startDt)
       formData.append('endDt', dateTypeParams.endDt)
+      formData.append('source', source)
       formData.append('sentiment', sentiment)
       formData.append('count', 5)
 
@@ -88,7 +142,7 @@ export class DiscoveryService {
     }
   }
 
-  public getMostPopular(type: string, dateType: string): Observable<any> {
+  public getMostPopular(type: string, source:string, dateType: string): Observable<any> {
     if (!this.runLocal) {
       let url = DISCOVERY_URL + '/getMostPopularTopics'
       if (type == 'features') {
@@ -101,6 +155,7 @@ export class DiscoveryService {
       let formData: FormData = new FormData();
       formData.append('startDt', dateTypeParams.startDt)
       formData.append('endDt', dateTypeParams.endDt)
+      formData.append('source', source)
       formData.append('count', 5)
 
       return this.http.post(urlWithToken, formData)

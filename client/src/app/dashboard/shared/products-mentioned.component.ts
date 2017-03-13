@@ -16,7 +16,7 @@ export class ProductsMentionedComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.discoveryService.getProductMentions('last12months', this.options.sentiment).subscribe((response) => {
+    this.discoveryService.getProductMentions('last12months', this.options.source, this.options.sentiment).subscribe((response) => {
       // console.log(JSON.stringify(response))
       this.options.data = response
     })

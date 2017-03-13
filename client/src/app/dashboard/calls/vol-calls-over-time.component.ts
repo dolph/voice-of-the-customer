@@ -48,8 +48,8 @@ export class VolCallsOverTimeComponent implements OnInit {
 
   private loadChart() {
     let self = this
-    this.discoveryService.getBrandPerceptionOverTime('positive', this.dateType).subscribe((response) => {
-      // console.log(JSON.stringify(response))
+    this.discoveryService.getVolumeOfCallsOverTime(this.dateType).subscribe((response) => {
+      //console.log(JSON.stringify(response))
       this.callVolumeOverTimeColumns = response
       var chart = c3.generate({
         bindto: '#vol-calls-over-time-chart',
@@ -57,38 +57,22 @@ export class VolCallsOverTimeComponent implements OnInit {
           show: false
         },
         color: {
-            pattern: ['#35D6BB']
+          pattern: ['#35D6BB']
         },
         data: {
-            x: 'Date',
-            columns: [
-              ['Date', "2016-04-01", "2016-05-01", "2016-06-01", "2016-07-01", "2016-08-01", "2016-09-01"],
-              ['Volume', 300, 350, 300, 200, 100, 400]],
-            onclick: function (d, element) {
-              d.cx = Math.round($(element).attr('cx'))
-            },
-            types: {
-                Date: 'area',
-                Volume: 'area-spline'
-            }
+          x: 'Date',
+          columns: response,
+          types: {
+              Date: 'area',
+              Count: 'area-spline'
+          }
         },
         axis: {
-            x: {
-                type: 'timeseries',
-                tick: {
-                  format: '%Y-%m-%d'
-                }
+          x: {
+            type: 'timeseries',
+            tick: {
+              format: '%Y-%m-%d'
             }
-        },
-        grid: {
-          y: {
-              lines: [
-                  {value: 20, text: '20', class: 'y-grid-line'},
-                  {value: 40, text: '40', class: 'y-grid-line'},
-                  {value: 60, text: '60', class: 'y-grid-line'},
-                  {value: 80, text: '80', class: 'y-grid-line'},
-                  {value: 100, text: '100', class: 'y-grid-line'}
-              ]
           }
         }
       });

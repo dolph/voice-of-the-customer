@@ -26,7 +26,7 @@ export class PerceptionAnalysisComponent implements OnInit {
   constructor(private discoveryService: DiscoveryService) { }
 
   ngOnInit() {
-    this.discoveryService.getPerceptionAnalysis(this.options.date).subscribe((analysis) => {
+    this.discoveryService.getPerceptionAnalysis(this.options.x).subscribe((analysis) => {
       this.perceptionAnalysisData.changePercentage = analysis.changePercentage
       this.perceptionAnalysisData.changeText = analysis.changeText
       this.perceptionAnalysisData.fromPercentage = analysis.fromPercentage

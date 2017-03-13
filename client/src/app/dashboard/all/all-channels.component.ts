@@ -15,6 +15,7 @@ export class AllChannelsComponent implements OnInit {
     subtitle: 'Percentage of negative mentions of product overall',
     color: '#DC267F',
     sentiment: 'negative',
+    source: 'all',
     data: []
   }
 
@@ -23,18 +24,21 @@ export class AllChannelsComponent implements OnInit {
     subtitle: 'Percentage of positive mentions of product overall',
     color: '#008949',
     sentiment: 'positive',
+    source: 'all',
     data: []
   }
 
   private popularTopics = {
     title: 'Most Popular Topics',
     type: 'topics',
+    source: 'all',
     data: []
   }
 
   private popularFeatures = {
     title: 'Most Popular Features',
     type: 'features',
+    source: 'all',
     data: []
   }
 
