@@ -17,19 +17,25 @@ import { AuthGuard } from './auth';
 import { LoopbackLoginComponent } from './auth/loopback/lb-login.component';
 
 import { HomeComponent } from './home.component'
+import { DashboardComponent } from './dashboard'
+import { ProductDetailsComponent } from './product'
 
 import { AllChannelsComponent, AudioCallsComponent, ChatsComponent, ForumsComponent } from './dashboard'
 
 const APP_ROUTES: Routes = [
   { path: 'login', component: LoopbackLoginComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
-    { path: 'all-channels', component: AllChannelsComponent },
-    { path: 'audio-calls', component: AudioCallsComponent },
-    { path: 'forums', component: ForumsComponent },
-    { path: 'chats', component: ChatsComponent },
-    { path: '', redirectTo: 'all-channels', pathMatch: 'full' },
+    { path: 'dashboard', component: DashboardComponent, children: [
+      { path: 'all-channels', component: AllChannelsComponent },
+      { path: 'audio-calls', component: AudioCallsComponent },
+      { path: 'forums', component: ForumsComponent },
+      { path: 'chats', component: ChatsComponent },
+      { path: '', redirectTo: 'all-channels', pathMatch: 'full' },
+    ] },
+    { path: 'product/:name', component: ProductDetailsComponent },
+    { path: '', redirectTo: 'dashboard/all-channels', pathMatch: 'full' },
   ] },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '', redirectTo: 'home/dashboard/all-channels', pathMatch: 'full' },
   { path: '**', component: LoopbackLoginComponent }
 ];
 

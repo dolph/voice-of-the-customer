@@ -91,9 +91,11 @@ module.exports = function (Discovery) {
       let endScore = getSentimentPercentageFromArray(wdsQueryUtils.getSentimentPercentageArray(result[1]), 'positive')
       let diff = Math.abs(endScore - startScore)
       let change = endScore <= startScore ? 'drop' : 'rise'
+      let direction = endScore <= startScore ? 'down' : 'up'
       let response = {
         changePercentage: diff,
         change: change,
+        direction: direction,
         changeText: change + ' in positive perception in 30 days',
         fromPercentage: startScore,
         from: startDt.format('MMM Do YYYY'),

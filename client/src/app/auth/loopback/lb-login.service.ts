@@ -43,14 +43,16 @@ export class LoopbackLoginService {
       let url = this.findByIdUrl + '/' + stored.id + '/accessTokens/' + stored.token + '?access_token=' + stored.token;
       return this.http.get(url)
         .map((res: Response) => {
-          return true }
-        )
+          return true
+        })
         .catch((error:any) => {
           this.destroyToken();
-          return Observable.throw(false);
+          return Observable.create(observer => {
+            observer.next(false)
+            observer.complete()
+          });
         });
     } else {
-      this.router.navigate(['login']);
       return false;
     }
   }

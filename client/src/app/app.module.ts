@@ -10,6 +10,7 @@ import { HomeComponent } from './home.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 
 import { DashboardModule, DashboardComponent } from './dashboard';
+import { ProductModule } from './product';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { DashboardModule, DashboardComponent } from './dashboard';
     BrowserModule,
     AppRoutingModule,
     AuthModule,
-    DashboardModule
+    DashboardModule,
+    ProductModule
   ],
   providers: [{provide: LocationStrategy, useClass: PathLocationStrategy}, AuthGuard],
   bootstrap: [ AppComponent ]

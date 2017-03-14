@@ -5,7 +5,7 @@
         <h2>{{perceptionAnalysisData.title}}</h2>
         <div class="row">
           <div class="col-md-12" style="line-height:1.2">
-            <i style="display:inline-block;margin-right:10px" class="fa fa-arrow-down fa-4x perception-down-arrow" aria-hidden="true"></i>
+            <i style="display:inline-block;margin-right:10px" class="fa {{arrowType}} fa-4x" aria-hidden="true" [style.color]="getDirectionColor()"></i>
             <div style="display:inline-block;font-size:84px;margin-right:10px">{{perceptionAnalysisData.changePercentage}}</div>
             <span style="display:inline-block;font-size:22px;margin-right:10px">%</span>
             <span  style="display:inline-block">{{perceptionAnalysisData.changeText}}</span>

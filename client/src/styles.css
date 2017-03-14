@@ -2,6 +2,25 @@ body {
   padding-top: 55px;
 }
 
+.verticaltext {
+    position: relative;
+    padding-left:50px;
+    margin:1em 0;
+    min-height:120px;
+}
+
+.verticaltext_content {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    left: -50px;
+    top: 140px;
+    color: #777677;
+    position: absolute;
+}
+
 .dashboard-container {
   padding-left: 30px;
   padding-right: 30px;
