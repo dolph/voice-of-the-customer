@@ -1,2 +1,5 @@
-export * from './product.module'
 export * from './product-details.component'
+export * from './concepts-mentioned.component'
+export * from './keywords-mentioned.component'
+export * from './perception-over-time.component'
+export * from './product-sentiment.component'

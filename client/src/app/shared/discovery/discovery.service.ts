@@ -18,7 +18,7 @@ const DISCOVERY_URL = '/api/discovery'
 @Injectable()
 export class DiscoveryService {
 
-  private runLocal = false
+  private runLocal = true
 
   constructor(private http: Http, private authService: LoopbackLoginService, private sampleDataService: SampleDataService) { }
 

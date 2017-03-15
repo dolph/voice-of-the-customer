@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import { Router } from '@angular/router';
+
 import { DiscoveryService } from '../../shared/discovery/discovery.service';
 
 @Component({
@@ -10,7 +12,7 @@ export class ProductsMentionedComponent implements OnInit {
 
   @Input() options:any
 
-  constructor(private discoveryService: DiscoveryService) {}
+  constructor(private router: Router, private discoveryService: DiscoveryService) {}
 
   ngOnInit() {
   }
@@ -20,5 +22,9 @@ export class ProductsMentionedComponent implements OnInit {
       // console.log(JSON.stringify(response))
       this.options.data = response
     })
+  }
+
+  routeToProductDetails(name) {
+    this.router.navigate(['/home/product/', name])
   }
 }

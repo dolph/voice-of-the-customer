@@ -1,0 +1,27 @@
+<div class="panel panel-default ibm-panel">
+  <div class="panel-heading ibm-panel__heading">
+    <div class="row">
+      <div class="col-sm-10"><h3 style="font-size:24px;color:#343334;">Concepts Mentioned</h3></div>
+      <div class="col-sm-2">
+        <div class="btn-group ibm-dropdown-group" dropdown style="margin-top:4px">
+          <button id="single-button" style="border-width: 0px 0px 1px 0px;color:#343334;" type="button" class="btn btn-default ibm-btn ibm-btn--large ibm-btn--secondary" dropdownToggle>
+            {{currentDateRange}} <span class="caret"></span>
+          </button>
+          <ul dropdownMenu role="menu" aria-labelledby="single-button">
+            <li role="menuitem"><a class="dropdown-item" (click)="setDateType('last12months')">Previous 12 Months</a></li>
+            <li role="menuitem"><a class="dropdown-item" (click)="setDateType('thisyear')">This Year</a></li>
+            <li role="menuitem"><a class="dropdown-item" (click)="setDateType('thismonth')">This Month</a></li>
+            <li role="menuitem"><a class="dropdown-item" (click)="setDateType('last4weeks')">The last 4 weeks</a></li>
+            <li role="menuitem"><a class="dropdown-item" (click)="setDateType('last14days')">The last 14 days</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-body ibm-panel__body">
+    <div class="verticaltext">
+      <div class="verticaltext_content" style="left:0px">Number of calls</div>
+      <div id="concepts-mentioned-chart"></div>
+    </div>
+  </div>
+</div>

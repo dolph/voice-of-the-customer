@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
 
+import { DropdownModule } from 'ng2-bootstrap/dropdown';
+
 import { AuthModule, AuthGuard } from './auth';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -10,7 +12,9 @@ import { HomeComponent } from './home.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 
 import { DashboardModule, DashboardComponent } from './dashboard';
-import { ProductModule } from './product';
+import { ProductModule } from './product/product.module';
+
+import { FromComponentService } from './shared/utils/from-component.service'
 
 @NgModule({
   declarations: [
@@ -24,9 +28,10 @@ import { ProductModule } from './product';
     AppRoutingModule,
     AuthModule,
     DashboardModule,
-    ProductModule
+    ProductModule,
+    DropdownModule.forRoot()
   ],
-  providers: [{provide: LocationStrategy, useClass: PathLocationStrategy}, AuthGuard],
+  providers: [{provide: LocationStrategy, useClass: PathLocationStrategy}, AuthGuard, FromComponentService],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { FromComponentService } from '../../shared/utils/from-component.service'
+
 @Component({
   selector: 'app-audio-calls',
   templateUrl: './audio-calls.component.html'
@@ -31,9 +33,10 @@ export class AudioCallsComponent implements OnInit {
     data: []
   }
 
-  constructor() { }
+  constructor(private fromComponentService: FromComponentService) { }
 
   ngOnInit() {
+    this.fromComponentService.setFrom('/home/dashboard/audio-calls')
   }
 
 }
