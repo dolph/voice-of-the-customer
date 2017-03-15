@@ -19,11 +19,16 @@ export class BrandSentimentComponent implements OnInit {
 
   ngAfterViewInit() {
     this.discoveryService.getCurrentBrandSentiment('last12months').subscribe((response) => {
+      //console.log(JSON.stringify(response))
       // Find the highest sentiment percentage
+      let colors = {
+        negative: '#dc267f', positive: '#008949', neutral: '#dddee1'}
+      let pattern = []
       let topIdx = -1
       let topScore = -1
       let i = 0
       for (let sentiment of response) {
+        pattern.push(colors[sentiment[0]])
         if (sentiment[1] > topScore) {
           topIdx = i
           topScore = sentiment[1]
@@ -53,7 +58,7 @@ export class BrandSentimentComponent implements OnInit {
           show: true
         },
         color: {
-            pattern: ['#dc267f', '#008949', '#dddee1']
+            pattern: pattern
         },
         donut: {
             title: title,

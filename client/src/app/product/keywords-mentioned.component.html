@@ -4,8 +4,8 @@
   </div>
   <div class="panel-body ibm-panel__body">
     <div class="row" *ngFor="let product of options.data" style="margin-bottom:25px">
-      <div class="col-md-4">
-        <span class="pull-right" style="font-size:18px;color:#595859">{{product.name}}</span>
+      <div class="col-md-4" style="padding-right:5px; padding-left:5px">
+        <span class="pull-right" style="font-size:16px;color:#595859;width:140px;text-overflow: ellipsis;text-align: right">{{product.name}}</span>
       </div>
       <div class="col-md-7">
         <div class="progress progress-medium">
@@ -14,7 +14,7 @@
           </div>
         </div>
         <div style="position:relative;width:100%">
-          <span class="ibm-text--small" style="position: absolute;right:0;font-size:15px;color:#595859" [style.width]="(100 - product.percentage) + '%'">{{product.count}} Mentions</span>
+          <span style="position: absolute;right:0;font-size:12px;color:#595859;" [style.width]="(100 - product.percentage) + '%'">{{product.count}} Mentions</span>
         </div>
       </div>
       <div class="col-md-1"></div>

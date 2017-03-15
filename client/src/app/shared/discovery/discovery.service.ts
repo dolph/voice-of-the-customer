@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs/Rx';
 
@@ -18,9 +19,84 @@ const DISCOVERY_URL = '/api/discovery'
 @Injectable()
 export class DiscoveryService {
 
-  private runLocal = true
+  private runLocal = false
 
-  constructor(private http: Http, private authService: LoopbackLoginService, private sampleDataService: SampleDataService) { }
+  constructor(private router: Router, private http: Http, private authService: LoopbackLoginService, private sampleDataService: SampleDataService) { }
+
+  public getProductKeywordMentions(dateType: string, product: string): Observable<any> {
+    if (!this.runLocal) {
+      let url = DISCOVERY_URL + '/getProductKeywordMentions'
+      let token = this.authService.get().token;
+      let urlWithToken = url + '?access_token=' + token;
+
+      let dateTypeParams = this.getDateTypeParams(dateType)
+      let formData: FormData = new FormData();
+      formData.append('startDt', dateTypeParams.startDt)
+      formData.append('endDt', dateTypeParams.endDt)
+      formData.append('product', product)
+
+      return this.genericHttpPost(urlWithToken, formData)
+    } else {
+      return this.sampleDataService.getAverageLengthOfCallsData()
+    }
+  }
+
+  public getProductPerceptionOverTime(dateType: string, product: string, sentiment: string): Observable<any> {
+    if (!this.runLocal) {
+      let url = DISCOVERY_URL + '/getProductPerceptionOverTime'
+      let token = this.authService.get().token;
+      let urlWithToken = url + '?access_token=' + token;
+
+      let dateTypeParams = this.getDateTypeParams(dateType)
+      let formData: FormData = new FormData();
+      formData.append('startDt', dateTypeParams.startDt)
+      formData.append('endDt', dateTypeParams.endDt)
+      formData.append('interval', dateTypeParams.interval)
+      formData.append('product', product)
+      formData.append('sentiment', sentiment)
+
+      return this.genericHttpPost(urlWithToken, formData)
+    } else {
+      return this.sampleDataService.getAverageLengthOfCallsData()
+    }
+  }
+
+  public getProductConceptsMentioned(dateType: string, product: string): Observable<any> {
+    if (!this.runLocal) {
+      let url = DISCOVERY_URL + '/getProductConceptsMentioned'
+      let token = this.authService.get().token;
+      let urlWithToken = url + '?access_token=' + token;
+
+      let dateTypeParams = this.getDateTypeParams(dateType)
+      let formData: FormData = new FormData();
+      formData.append('startDt', dateTypeParams.startDt)
+      formData.append('endDt', dateTypeParams.endDt)
+      formData.append('product', product)
+
+      return this.genericHttpPost(urlWithToken, formData)
+    } else {
+      return this.sampleDataService.getAverageLengthOfCallsData()
+    }
+  }
+
+  public getProductSentiment(dateType: string, product: string): Observable<any> {
+    if (!this.runLocal) {
+      let url = DISCOVERY_URL + '/getProductSentiment'
+      let token = this.authService.get().token;
+      let urlWithToken = url + '?access_token=' + token;
+
+      let dateTypeParams = this.getDateTypeParams(dateType)
+      let formData: FormData = new FormData();
+      formData.append('interval', dateTypeParams.interval)
+      formData.append('startDt', dateTypeParams.startDt)
+      formData.append('endDt', dateTypeParams.endDt)
+      formData.append('product', product)
+
+      return this.genericHttpPost(urlWithToken, formData)
+    } else {
+      return this.sampleDataService.getAverageLengthOfCallsData()
+    }
+  }
 
   public getAverageLengthOfCalls(dateType: string): Observable<any> {
     if (!this.runLocal) {
@@ -34,9 +110,7 @@ export class DiscoveryService {
       formData.append('startDt', dateTypeParams.startDt)
       formData.append('endDt', dateTypeParams.endDt)
 
-      return this.http.post(urlWithToken, formData)
-         .map((res:Response) => res.json())
-         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+      return this.genericHttpPost(urlWithToken, formData)
     } else {
       return this.sampleDataService.getAverageLengthOfCallsData()
     }
@@ -54,9 +128,7 @@ export class DiscoveryService {
       formData.append('startDt', dateTypeParams.startDt)
       formData.append('endDt', dateTypeParams.endDt)
 
-      return this.http.post(urlWithToken, formData)
-         .map((res:Response) => res.json())
-         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+      return this.genericHttpPost(urlWithToken, formData)
     } else {
       return this.sampleDataService.getVolumeOfCallsOverTimeData()
     }
@@ -71,9 +143,7 @@ export class DiscoveryService {
       let formData = new FormData();
       formData.append('ofDate', ofDate)
 
-      return this.http.post(urlWithToken, formData)
-         .map((res:Response) => res.json())
-         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+      return this.genericHttpPost(urlWithToken, formData)
     } else {
       return this.sampleDataService.getPerceptionAnalysisData()
     }
@@ -93,9 +163,7 @@ export class DiscoveryService {
       formData.append('startDt', dateTypeParams.startDt)
       formData.append('endDt', dateTypeParams.endDt)
 
-      return this.http.post(urlWithToken, formData)
-         .map((res:Response) => res.json())
-         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+      return this.genericHttpPost(urlWithToken, formData)
     } else {
       return this.sampleDataService.getPerceptionOverTimeData()
     }
@@ -112,9 +180,7 @@ export class DiscoveryService {
       formData.append('startDt', dateTypeParams.startDt)
       formData.append('endDt', dateTypeParams.endDt)
 
-      return this.http.post(urlWithToken, formData)
-         .map((res:Response) => res.json())
-         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+      return this.genericHttpPost(urlWithToken, formData)
     } else {
       return this.sampleDataService.getCurrentBrandSentiment()
     }
@@ -134,9 +200,7 @@ export class DiscoveryService {
       formData.append('sentiment', sentiment)
       formData.append('count', 5)
 
-      return this.http.post(urlWithToken, formData)
-         .map((res:Response) => res.json())
-         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+      return this.genericHttpPost(urlWithToken, formData)
     } else {
       return this.sampleDataService.getNegativeProductMentions()
     }
@@ -148,6 +212,9 @@ export class DiscoveryService {
       if (type == 'features') {
         url = DISCOVERY_URL + '/getMostPopularFeatures'
       }
+      if (!source) {
+        source = 'all'
+      }
       let token = this.authService.get().token;
       let urlWithToken = url + '?access_token=' + token;
 
@@ -158,9 +225,7 @@ export class DiscoveryService {
       formData.append('source', source)
       formData.append('count', 5)
 
-      return this.http.post(urlWithToken, formData)
-         .map((res:Response) => res.json())
-         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+      return this.genericHttpPost(urlWithToken, formData)
     } else {
       if (type === 'topics') {
         return this.sampleDataService.getMostPopularTopics()
@@ -168,6 +233,17 @@ export class DiscoveryService {
         return this.sampleDataService.getMostPopularFeatures()
       }
     }
+  }
+
+  private genericHttpPost(url, formData): Observable<any> {
+    return this.http.post(url, formData)
+       .map((res:Response) => res.json())
+       .catch((error:any) => {
+         if (error.status === 401) {
+           this.router.navigate(['login'])
+         }
+         return Observable.throw(error.json().error || 'Server error')
+       });
   }
 
   private getDateTypeParams(dateType:string) {

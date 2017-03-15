@@ -35,7 +35,7 @@ export class HomeComponent {
     this.sub = this.activatedRoute.queryParams.subscribe((params: Params) => {
       let originalUrl = params['originalUrl'];
       if (originalUrl) {
-        console.log('Redirecting to : ' + originalUrl)
+        // console.log('Redirecting to : ' + originalUrl)
         this.router.navigateByUrl(originalUrl);
       }
     });

@@ -49,7 +49,7 @@ export class LengthOfCallsComponent implements OnInit {
   private loadChart() {
     let self = this
     this.discoveryService.getAverageLengthOfCalls(this.dateType).subscribe((response) => {
-      console.log(JSON.stringify(response))
+      // console.log(JSON.stringify(response))
       var chart = c3.generate({
         bindto: '#length-of-calls-chart',
         legend: {

@@ -17,13 +17,13 @@ export class ProductDetailsComponent implements OnInit {
 
   private lastUpdated = ''
   private sub: any;
-  private productName;
+  private product: string;
 
   constructor(private route: ActivatedRoute, private router: Router, private fromComponentService: FromComponentService) { }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-       this.productName = params['name'];
+       this.product = params['name'];
     });
   }
 
@@ -32,7 +32,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   returnToCaller() {
-    console.log(this.fromComponentService.getFrom())
+    // console.log(this.fromComponentService.getFrom())
     this.router.navigate([this.fromComponentService.getFrom()]);
   }
 

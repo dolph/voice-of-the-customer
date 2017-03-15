@@ -34,6 +34,117 @@
         "verb": "post"
       }
     },
+    "getProductKeywordMentions": {
+      "accepts": [
+        {
+          "arg": "startDt",
+          "type": "Date"
+        },
+        {
+          "arg": "endDt",
+          "type": "Date"
+        },
+        {
+          "arg": "product",
+          "type": "string"
+        },
+        {
+          "arg": "count",
+          "type": "number"
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    },
+    "getProductPerceptionOverTime": {
+      "accepts": [
+        {
+          "arg": "interval",
+          "type": "string",
+          "required": true
+        },
+        {
+          "arg": "sentiment",
+          "type": "string",
+          "required": true
+        },
+        {
+          "arg": "product",
+          "type": "string",
+          "required": true
+        },
+        {
+          "arg": "startDt",
+          "type": "Date"
+        },
+        {
+          "arg": "endDt",
+          "type": "Date"
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    },
+    "getProductConceptsMentioned": {
+      "accepts": [
+        {
+          "arg": "startDt",
+          "type": "Date"
+        },
+        {
+          "arg": "endDt",
+          "type": "Date"
+        },
+        {
+          "arg": "product",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    },
+    "getProductSentiment": {
+      "accepts": [
+        {
+          "arg": "startDt",
+          "type": "Date"
+        },
+        {
+          "arg": "endDt",
+          "type": "Date"
+        },
+        {
+          "arg": "product",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    },
     "getAverageLengthOfCalls": {
       "accepts": [
         {

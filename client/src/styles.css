@@ -4,7 +4,7 @@ body {
 
 .verticaltext {
     position: relative;
-    padding-left:50px;
+    padding-left:25px;
     margin:1em 0;
     min-height:120px;
 }
@@ -15,7 +15,7 @@ body {
     -ms-transform: rotate(-90deg);
     -o-transform: rotate(-90deg);
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-    left: -50px;
+    left: -85px;
     top: 140px;
     color: #777677;
     position: absolute;

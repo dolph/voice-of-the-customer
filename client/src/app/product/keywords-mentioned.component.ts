@@ -8,6 +8,7 @@ import { DiscoveryService } from '../shared/discovery/discovery.service';
 })
 export class KeywordsMentionedComponent implements OnInit {
 
+  @Input() product: string
   @Input() options: any = {
     type: '',
     source: ''
@@ -21,7 +22,7 @@ export class KeywordsMentionedComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.discoveryService.getMostPopular(this.options.type, this.options.source, 'last12months').subscribe((response) => {
+    this.discoveryService.getProductKeywordMentions('last12months', this.product).subscribe((response) => {
       // console.log(JSON.stringify(response))
       let i = 0;
       for (let x of response) {

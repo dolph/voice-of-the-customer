@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { DiscoveryService } from '../shared/discovery/discovery.service';
 
@@ -11,9 +11,10 @@ declare var $:any
 })
 export class PerceptionOverTimeComponent implements OnInit {
 
+  @Input() product: string
   private dateType: string = 'last12months'
   private currentDateRange: string = 'Last 12 Months'
-  private callVolumeOverTimeColumns = []
+  private productPerceptionOverTimeColumns = []
 
   constructor(private discoveryService: DiscoveryService) { }
 
@@ -48,11 +49,11 @@ export class PerceptionOverTimeComponent implements OnInit {
 
   private loadChart() {
     let self = this
-    this.discoveryService.getVolumeOfCallsOverTime(this.dateType).subscribe((response) => {
-      //console.log(JSON.stringify(response))
-      this.callVolumeOverTimeColumns = response
+    this.discoveryService.getProductPerceptionOverTime(this.dateType, this.product, 'negative').subscribe((response) => {
+      // console.log(JSON.stringify(response))
+      this.productPerceptionOverTimeColumns = response
       var chart = c3.generate({
-        bindto: '#vol-calls-over-time-chart',
+        bindto: '#perception-over-time-chart',
         legend: {
           show: false
         },

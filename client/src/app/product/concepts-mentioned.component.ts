@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { DiscoveryService } from '../shared/discovery/discovery.service';
 
@@ -11,6 +11,7 @@ declare var $:any
 })
 export class ConceptsMentionedComponent implements OnInit {
 
+  @Input() product: string
   private dateType: string = 'last12months'
   private currentDateRange: string = 'Last 12 Months'
   private lengthOfCallsColumns = []
@@ -48,10 +49,10 @@ export class ConceptsMentionedComponent implements OnInit {
 
   private loadChart() {
     let self = this
-    this.discoveryService.getAverageLengthOfCalls(this.dateType).subscribe((response) => {
-      console.log(JSON.stringify(response))
+    this.discoveryService.getProductConceptsMentioned(this.dateType, this.product).subscribe((response) => {
+      // console.log(JSON.stringify(response))
       var chart = c3.generate({
-        bindto: '#length-of-calls-chart',
+        bindto: '#concepts-mentioned-chart',
         legend: {
           show: false
         },
@@ -59,7 +60,7 @@ export class ConceptsMentionedComponent implements OnInit {
           pattern: ['#35D6BB']
         },
         data: {
-          x: 'Date',
+          x: 'Concept',
           columns: response,
           type: 'bar'
         },
@@ -68,16 +69,14 @@ export class ConceptsMentionedComponent implements OnInit {
             ratio: 0.5 // this makes bar width 50% of length between ticks
           }
         },
-        axis: {
-          x: {
-            type: 'timeseries',
-            tick: {
-              format: '%Y-%m-%d'
-            }
-          }
-        },
         size: {
           height: 278
+        },
+        axis: {
+            x: {
+                type: 'category',
+                categories: response[0]
+            }
         }
       });
     })

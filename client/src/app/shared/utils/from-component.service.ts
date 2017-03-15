@@ -9,7 +9,7 @@ export class FromComponentService {
   constructor() { }
 
   public setFrom(value: string) {
-    console.log('Setting from Component to ' + value)
+    //console.log('Setting from Component to ' + value)
     this.from = value
   }
 
