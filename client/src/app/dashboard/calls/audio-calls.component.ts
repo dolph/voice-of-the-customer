@@ -11,23 +11,23 @@ import { DashboardCtxService } from '../shared/dashboard-ctx.service'
 
 export class AudioCallsComponent implements OnInit {
 
-  private negativeMentions = {
-    title: 'Products Negatively Mentioned',
-    subtitle: 'Percentage of negative mentions of product overall',
+  private productMentions = {
+    title: 'Products Mentioned',
+    subtitle: 'Percentage mentions of products overall',
+    color: '#008949',
+    source: 'call',
+    data: []
+  }
+
+  private sentimentMentions = {
+    title: 'Percentage Negative Mentions',
+    subtitle: 'Percentage the product was negatively mentioned',
     color: '#DC267F',
     sentiment: 'negative',
     source: 'call',
     data: []
   }
 
-  private positiveMentions = {
-    title: 'Products Positively Mentioned',
-    subtitle: 'Percentage of positive mentions of product overall',
-    color: '#008949',
-    sentiment: 'positive',
-    source: 'call',
-    data: []
-  }
 
   private popularTopics = {
     title: 'Most Popular Topics',

@@ -15,20 +15,19 @@ export class ChatsComponent implements OnInit {
     source: 'chat'
   }
 
-  private negativeMentions = {
-    title: 'Products Negatively Mentioned',
-    subtitle: 'Percentage of negative mentions of product overall',
-    color: '#DC267F',
-    sentiment: 'negative',
+  private productMentions = {
+    title: 'Products Mentioned',
+    subtitle: 'Percentage mentions of products overall',
+    color: '#008949',
     source: 'chat',
     data: []
   }
 
-  private positiveMentions = {
-    title: 'Products Positively Mentioned',
-    subtitle: 'Percentage of positive mentions of product overall',
-    color: '#008949',
-    sentiment: 'positive',
+  private sentimentMentions = {
+    title: 'Percentage Negative Mentions',
+    subtitle: 'Percentage the product was negatively mentioned',
+    color: '#DC267F',
+    sentiment: 'negative',
     source: 'chat',
     data: []
   }

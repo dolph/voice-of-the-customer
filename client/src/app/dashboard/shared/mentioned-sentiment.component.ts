@@ -5,10 +5,10 @@ import { Router } from '@angular/router';
 import { DiscoveryService } from '../../shared/discovery/discovery.service';
 
 @Component({
-  selector: 'app-products-mentioned',
-  templateUrl: './products-mentioned.component.html'
+  selector: 'app-mentioned-sentiment',
+  templateUrl: './mentioned-sentiment.component.html'
 })
-export class ProductsMentionedComponent implements OnInit {
+export class MentionedSentimentComponent implements OnInit {
 
   @Input() options:any
 
@@ -18,8 +18,8 @@ export class ProductsMentionedComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.discoveryService.getProductMentions('last12months', this.options.source).subscribe((response) => {
-      // console.log(JSON.stringify(response))
+    this.discoveryService.getProductMentionsSentiment('last12months', this.options.source, 'negative').subscribe((response) => {
+      console.log(JSON.stringify(response))
       this.options.data = response
     })
   }

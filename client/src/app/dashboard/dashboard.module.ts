@@ -34,7 +34,8 @@ import { LengthOfCallsComponent } from './calls/length-of-calls.component';
 import { ChannelVolOvertimeComponent } from './shared/channel-vol-overtime.component';
 
 import { DashboardCtxService } from './shared/dashboard-ctx.service';
-import { MostPopularSmallComponent } from './shared/most-popular-small.component'
+import { MostPopularSmallComponent } from './shared/most-popular-small.component';
+import { MentionedSentimentComponent } from './shared/mentioned-sentiment.component'
 
 @NgModule({
   imports:      [ CommonModule,
@@ -52,7 +53,8 @@ import { MostPopularSmallComponent } from './shared/most-popular-small.component
     VolCallsOverTimeComponent,
     LengthOfCallsComponent,
     ChannelVolOvertimeComponent,
-    MostPopularSmallComponent ],
+    MostPopularSmallComponent,
+    MentionedSentimentComponent ],
   providers: [ DiscoveryService,
     SampleDataService,
     DashboardCtxService ]

@@ -275,7 +275,7 @@
         "verb": "post"
       }
     },
-    "getProductMentions": {
+    "getProductMentionsSentiment": {
       "accepts": [
         {
           "arg": "startDt",
@@ -292,6 +292,36 @@
         },
         {
           "arg": "sentiment",
+          "type": "string",
+          "required": true
+        },
+        {
+          "arg": "count",
+          "type": "number",
+          "default": 5
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "post"
+      }
+    },
+    "getProductMentions": {
+      "accepts": [
+        {
+          "arg": "startDt",
+          "type": "Date"
+        },
+        {
+          "arg": "endDt",
+          "type": "Date"
+        },
+        {
+          "arg": "source",
           "type": "string",
           "required": true
         },

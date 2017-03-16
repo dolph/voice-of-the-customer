@@ -187,7 +187,27 @@ export class DiscoveryService {
     }
   }
 
-  public getProductMentions(dateType:string, source:string, sentiment:string): Observable<any> {
+  public getProductMentionsSentiment(dateType:string, source:string, sentiment:string): Observable<any> {
+    if (!this.runLocal) {
+      let url = DISCOVERY_URL + '/getProductMentionsSentiment'
+      let token = this.authService.get().token;
+      let urlWithToken = url + '?access_token=' + token;
+
+      let dateTypeParams = this.getDateTypeParams(dateType)
+      let formData: FormData = new FormData();
+      formData.append('startDt', dateTypeParams.startDt)
+      formData.append('endDt', dateTypeParams.endDt)
+      formData.append('source', source)
+      formData.append('sentiment', sentiment)
+      formData.append('count', 5)
+
+      return this.genericHttpPost(urlWithToken, formData)
+    } else {
+      return this.sampleDataService.getNegativeProductMentions()
+    }
+  }
+
+  public getProductMentions(dateType:string, source:string): Observable<any> {
     if (!this.runLocal) {
       let url = DISCOVERY_URL + '/getProductMentions'
       let token = this.authService.get().token;
@@ -198,7 +218,6 @@ export class DiscoveryService {
       formData.append('startDt', dateTypeParams.startDt)
       formData.append('endDt', dateTypeParams.endDt)
       formData.append('source', source)
-      formData.append('sentiment', sentiment)
       formData.append('count', 5)
 
       return this.genericHttpPost(urlWithToken, formData)

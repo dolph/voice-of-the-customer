@@ -87,8 +87,11 @@ module.exports = function (Discovery) {
   }
 
   Discovery.getProductConceptsMentioned = function (startDt, endDt, product, cb) {
+    // 'filter(enriched_text.entities.text:' + product + ').term(enriched_text.concepts.text,count:5)'
+    // nested(enriched_text.entities).filter(enriched_text.entities.type:Physical_Feature).term(enriched_text.entities.text).term(enriched_text.entities.sentiment.type)
     let filter = getFilter(startDt, endDt, 0.4)
-    let aggregation = 'filter(enriched_text.entities.text:' + product + ').term(enriched_text.concepts.text,count:5)'
+    filter += ',enriched_text.entities.text:' + product + ''
+    let aggregation = 'nested(enriched_text.entities).filter(enriched_text.entities.type:Physical_Feature).term(enriched_text.entities.text)'
     let params = {
       count: 0,
       aggregation: aggregation,
@@ -153,9 +156,9 @@ module.exports = function (Discovery) {
       ]
       for (let callByInterval of callsByIntervals) {
         let dt = new Date(callByInterval.key)
-        let count = callByInterval.matching_results
+        let avg = Math.round(callByInterval.aggregations[0].value)
         response[0].push(dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate())
-        response[1].push(count)
+        response[1].push(avg)
       }
       cb(null, response)
     })
@@ -299,8 +302,8 @@ module.exports = function (Discovery) {
     })
   }
 
-  Discovery.getProductMentions = function (startDt, endDt, source, sentiment, count, cb) {
-    let filter = getFilter(startDt, endDt, 0.4)
+  Discovery.getProductMentionsSentiment = function (startDt, endDt, source, sentiment, count, cb) {
+    let filter = getFilter(startDt, endDt)
     if (source === 'call' || source === 'forum' || source === 'chat') {
       if (filter) {
         filter += ',source:' + source
@@ -315,8 +318,46 @@ module.exports = function (Discovery) {
       filter: filter,
       count: 1,
       aggregation: 'nested(enriched_text.entities)' +
-        '.filter(enriched_text.entities.type:"Product"' +
-        ',enriched_text.entities.sentiment.type:"' + sentiment + '")' +
+        '.filter(enriched_text.entities.type:Product)' +
+        '.term(enriched_text.entities.text,count:' + count + ')' +
+        '.filter(enriched_text.entities.sentiment.type:' + sentiment + ')' +
+        '.term(enriched_text.entities.sentiment.type)'
+    }
+    wdsQueryUtils.getCounts(params).then((result) => {
+      let productResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
+      let products = productResults.results
+      var response = [
+      ]
+      for (let product of products) {
+        let sentimentResults = wdsQueryUtils.extractResultsForType(product.aggregations[0], 'term')
+        let p = {
+          name: product.key,
+          count: sentimentResults.matching_results,
+          percentage: Math.round(((sentimentResults.matching_results / product.matching_results) * 100).toFixed(2))
+        }
+        response.push(p)
+      }
+      cb(null, response)
+    })
+  }
+
+  Discovery.getProductMentions = function (startDt, endDt, source, count, cb) {
+    let filter = getFilter(startDt, endDt)
+    if (source === 'call' || source === 'forum' || source === 'chat') {
+      if (filter) {
+        filter += ',source:' + source
+      } else {
+        filter = 'source:' + source
+      }
+    }
+    if (!count) {
+      count = 5
+    }
+    let params = {
+      filter: filter,
+      count: 1,
+      aggregation: 'nested(enriched_text.entities)' +
+        '.filter(enriched_text.entities.type:Product)' +
         '.term(enriched_text.entities.text,count:' + count + ')'
     }
     wdsQueryUtils.getCounts(params).then((result) => {
@@ -454,9 +495,9 @@ module.exports = function (Discovery) {
     }
     if (sentimentThreshold) {
       if (filter) {
-        filter += ',enriched_text.entities.sentiment.score>.4'
+        filter += ',enriched_text.entities.sentiment.score>' + sentimentThreshold
       } else {
-        filter = 'enriched_text.entities.sentiment.score>.4'
+        filter = 'enriched_text.entities.sentiment.score>' + sentimentThreshold
       }
     }
     return filter
