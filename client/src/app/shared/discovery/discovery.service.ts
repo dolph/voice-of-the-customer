@@ -100,7 +100,7 @@ export class DiscoveryService {
 
   public getAverageLengthOfCalls(dateType: string): Observable<any> {
     if (!this.runLocal) {
-      let url = DISCOVERY_URL + '/getVolumeOfCallsOverTime'
+      let url = DISCOVERY_URL + '/getAverageLengthOfCalls'
       let token = this.authService.get().token;
       let urlWithToken = url + '?access_token=' + token;
 
@@ -116,9 +116,9 @@ export class DiscoveryService {
     }
   }
 
-  public getVolumeOfCallsOverTime(dateType: string): Observable<any> {
+  public getVolumeOfOverTime(dateType: string, source: String): Observable<any> {
     if (!this.runLocal) {
-      let url = DISCOVERY_URL + '/getVolumeOfCallsOverTime'
+      let url = DISCOVERY_URL + '/getVolumeOfOverTime'
       let token = this.authService.get().token;
       let urlWithToken = url + '?access_token=' + token;
 
@@ -127,6 +127,7 @@ export class DiscoveryService {
       formData.append('interval', dateTypeParams.interval)
       formData.append('startDt', dateTypeParams.startDt)
       formData.append('endDt', dateTypeParams.endDt)
+      formData.append('source', source)
 
       return this.genericHttpPost(urlWithToken, formData)
     } else {

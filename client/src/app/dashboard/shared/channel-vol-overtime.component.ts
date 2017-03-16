@@ -1,20 +1,19 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { DiscoveryService } from '../shared/discovery/discovery.service';
+import { DiscoveryService } from '../../shared/discovery/discovery.service';
 
 declare var c3:any
-declare var $:any
 
 @Component({
-  selector: 'app-concepts-mentioned',
-  templateUrl: './concepts-mentioned.component.html'
+  selector: 'app-channel-vol-overtime',
+  templateUrl: './channel-vol-overtime.component.html'
 })
-export class ConceptsMentionedComponent implements OnInit {
+export class ChannelVolOvertimeComponent implements OnInit {
 
-  @Input() product: string
+  @Input() options: any
   private dateType: string = 'last12months'
   private currentDateRange: string = 'Last 12 Months'
-  private starterData = [["Concept","Loading..."],["Count",0]]
+  private starterData = [["Date","2017-2-29"],["Count",10]]
 
   constructor(private discoveryService: DiscoveryService) { }
 
@@ -49,7 +48,7 @@ export class ConceptsMentionedComponent implements OnInit {
   }
 
   private retrieveData() {
-    this.discoveryService.getProductConceptsMentioned(this.dateType, this.product).subscribe((response) => {
+    this.discoveryService.getVolumeOfOverTime(this.dateType, this.options.source).subscribe((response) => {
       this.renderChart(response)
     })
   }
@@ -57,7 +56,7 @@ export class ConceptsMentionedComponent implements OnInit {
   private renderChart(data) {
     console.log(JSON.stringify(data))
     var chart = c3.generate({
-      bindto: '#concepts-mentioned-chart',
+      bindto: '#channel-vol-over-time-chart',
       legend: {
         show: false
       },
@@ -65,22 +64,18 @@ export class ConceptsMentionedComponent implements OnInit {
         pattern: ['#35D6BB']
       },
       data: {
-        x: 'Concept',
+        x: 'Date',
         columns: data,
-        type: 'bar'
-      },
-      bar: {
-        width: {
-          ratio: 0.5 // this makes bar width 50% of length between ticks
+        types: {
+          Date: 'line'
         }
-      },
-      size: {
-        height: 278
       },
       axis: {
         x: {
-          type: 'category',
-          categories: data[0]
+          type: 'timeseries',
+          tick: {
+            format: '%Y-%m-%d'
+          }
         }
       }
     });

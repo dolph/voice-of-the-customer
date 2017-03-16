@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 import { FromComponentService } from '../../shared/utils/from-component.service'
+
+import { DashboardCtxService } from '../shared/dashboard-ctx.service'
 
 @Component({
   selector: 'app-audio-calls',
   templateUrl: './audio-calls.component.html'
 })
+
 export class AudioCallsComponent implements OnInit {
 
   private negativeMentions = {
@@ -33,10 +36,10 @@ export class AudioCallsComponent implements OnInit {
     data: []
   }
 
-  constructor(private fromComponentService: FromComponentService) { }
+  constructor(private fromComponentService: FromComponentService, private dashboardCtxService: DashboardCtxService) { }
 
   ngOnInit() {
     this.fromComponentService.setFrom('/home/dashboard/audio-calls')
+    this.dashboardCtxService.setTitle('Audio Call Highlights')
   }
-
 }

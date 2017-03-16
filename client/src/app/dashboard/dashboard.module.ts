@@ -31,11 +31,31 @@ import { SampleDataService } from '../shared/discovery/sample-data.service';
 import { PerceptionAnalysisComponent } from './all/perception-analysis.component';
 import { VolCallsOverTimeComponent } from './calls/vol-calls-over-time.component';
 import { LengthOfCallsComponent } from './calls/length-of-calls.component';
+import { ChannelVolOvertimeComponent } from './shared/channel-vol-overtime.component';
+
+import { DashboardCtxService } from './shared/dashboard-ctx.service';
+import { MostPopularSmallComponent } from './shared/most-popular-small.component'
 
 @NgModule({
-  imports:      [ CommonModule, RouterModule, DropdownModule.forRoot() ],
-  declarations: [ AllChannelsComponent, AudioCallsComponent, ChatsComponent, ForumsComponent, BrandPerceptionComponent, BrandSentimentComponent, ProductsMentionedComponent, MostPopularComponent, PerceptionAnalysisComponent, VolCallsOverTimeComponent, LengthOfCallsComponent ],
-  providers: [ DiscoveryService, SampleDataService ]
+  imports:      [ CommonModule,
+    RouterModule,
+    DropdownModule.forRoot() ],
+  declarations: [ AllChannelsComponent,
+    AudioCallsComponent,
+    ChatsComponent,
+    ForumsComponent,
+    BrandPerceptionComponent,
+    BrandSentimentComponent,
+    ProductsMentionedComponent,
+    MostPopularComponent,
+    PerceptionAnalysisComponent,
+    VolCallsOverTimeComponent,
+    LengthOfCallsComponent,
+    ChannelVolOvertimeComponent,
+    MostPopularSmallComponent ],
+  providers: [ DiscoveryService,
+    SampleDataService,
+    DashboardCtxService ]
 })
 
 export class DashboardModule {

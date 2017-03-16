@@ -13,15 +13,16 @@ export class VolCallsOverTimeComponent implements OnInit {
 
   private dateType: string = 'last12months'
   private currentDateRange: string = 'Last 12 Months'
-  private callVolumeOverTimeColumns = []
+  private starterData = [["Date","2017-2-29"],["Count",10]]
 
   constructor(private discoveryService: DiscoveryService) { }
 
   ngOnInit() {
+    this.renderChart(this.starterData)
   }
 
   ngAfterViewInit() {
-    this.loadChart()
+    this.retrieveData()
   }
 
   private setDateType(value) {
@@ -43,39 +44,41 @@ export class VolCallsOverTimeComponent implements OnInit {
         this.currentDateRange = 'Last 14 Days'
         break
     }
-    this.loadChart()
+    this.retrieveData()
   }
 
-  private loadChart() {
-    let self = this
-    this.discoveryService.getVolumeOfCallsOverTime(this.dateType).subscribe((response) => {
-      //console.log(JSON.stringify(response))
-      this.callVolumeOverTimeColumns = response
-      var chart = c3.generate({
-        bindto: '#vol-calls-over-time-chart',
-        legend: {
-          show: false
-        },
-        color: {
-          pattern: ['#35D6BB']
-        },
-        data: {
-          x: 'Date',
-          columns: response,
-          types: {
-              Date: 'area',
-              Count: 'area-spline'
-          }
-        },
-        axis: {
-          x: {
-            type: 'timeseries',
-            tick: {
-              format: '%Y-%m-%d'
-            }
+  private retrieveData() {
+    this.discoveryService.getVolumeOfOverTime(this.dateType, 'call').subscribe((response) => {
+      this.renderChart(response)
+    })
+  }
+
+  private renderChart(data) {
+    //console.log(JSON.stringify(response))
+    var chart = c3.generate({
+      bindto: '#vol-calls-over-time-chart',
+      legend: {
+        show: false
+      },
+      color: {
+        pattern: ['#35D6BB']
+      },
+      data: {
+        x: 'Date',
+        columns: data,
+        types: {
+            Date: 'area',
+            Count: 'area-spline'
+        }
+      },
+      axis: {
+        x: {
+          type: 'timeseries',
+          tick: {
+            format: '%Y-%m-%d'
           }
         }
-      });
-    })
+      }
+    });
   }
 }

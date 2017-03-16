@@ -14,15 +14,16 @@ export class PerceptionOverTimeComponent implements OnInit {
   @Input() product: string
   private dateType: string = 'last12months'
   private currentDateRange: string = 'Last 12 Months'
-  private productPerceptionOverTimeColumns = []
+  private starterData = [["Date","2017-2-29"],["Count",10]]
 
   constructor(private discoveryService: DiscoveryService) { }
 
   ngOnInit() {
+    this.renderChart(this.starterData)
   }
 
   ngAfterViewInit() {
-    this.loadChart()
+    this.retrieveData()
   }
 
   private setDateType(value) {
@@ -44,42 +45,44 @@ export class PerceptionOverTimeComponent implements OnInit {
         this.currentDateRange = 'Last 14 Days'
         break
     }
-    this.loadChart()
+    this.retrieveData()
   }
 
-  private loadChart() {
-    let self = this
+  private retrieveData() {
     this.discoveryService.getProductPerceptionOverTime(this.dateType, this.product, 'negative').subscribe((response) => {
-      // console.log(JSON.stringify(response))
-      this.productPerceptionOverTimeColumns = response
-      var chart = c3.generate({
-        bindto: '#perception-over-time-chart',
-        legend: {
-          show: false
-        },
-        color: {
-          pattern: ['#35D6BB']
-        },
-        data: {
-          x: 'Date',
-          columns: response,
-          types: {
-              Date: 'line'
-          }
-        },
-        axis: {
-          x: {
-            type: 'timeseries',
-            tick: {
-              format: '%Y-%m-%d'
-            }
-          }
-        },
-        size: {
-          height: 240
-        }
-      });
+      this.renderChart(response)
     })
+  }
+
+  private renderChart(data) {
+    console.log(JSON.stringify(data))
+    var chart = c3.generate({
+      bindto: '#perception-over-time-chart',
+      legend: {
+        show: false
+      },
+      color: {
+        pattern: ['#35D6BB']
+      },
+      data: {
+        x: 'Date',
+        columns: data,
+        types: {
+            Date: 'line'
+        }
+      },
+      axis: {
+        x: {
+          type: 'timeseries',
+          tick: {
+            format: '%Y-%m-%d'
+          }
+        }
+      },
+      size: {
+        height: 240
+      }
+    });
   }
 
 }

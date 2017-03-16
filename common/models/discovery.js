@@ -149,25 +149,21 @@ module.exports = function (Discovery) {
       let callsByIntervals = timesliceResults.results
       var response = [
         ['Date'],
-        ['Count'],
-        ['Average']
+        ['Count']
       ]
       for (let callByInterval of callsByIntervals) {
         let dt = new Date(callByInterval.key)
         let count = callByInterval.matching_results
-        let avgResult = wdsQueryUtils.extractResultsForType(callByInterval.aggregations[0], 'average')
-        let avg = avgResult.value.toFixed(2)
         response[0].push(dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate())
         response[1].push(count)
-        response[2].push(Number(avg))
       }
       cb(null, response)
     })
   }
 
-  Discovery.getVolumeOfCallsOverTime = function (interval, startDt, endDt, cb) {
+  Discovery.getVolumeOfOverTime = function (interval, startDt, endDt, source, cb) {
     let filter = getFilter(startDt, endDt)
-    let aggregation = 'filter(source:call).timeslice(contact_date,' + interval + ')'
+    let aggregation = 'filter(source:' + source + ').timeslice(contact_date,' + interval + ')'
     let params = {
       count: 0,
       aggregation: aggregation,

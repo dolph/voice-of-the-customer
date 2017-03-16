@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { DiscoveryService } from '../../shared/discovery/discovery.service';
 import { FromComponentService } from '../../shared/utils/from-component.service'
+import { DashboardCtxService } from '../shared/dashboard-ctx.service'
 
 @Component({
   selector: 'app-all-channels',
@@ -45,10 +46,9 @@ export class AllChannelsComponent implements OnInit {
 
   private perceptionAnalysisOptions = {}
 
-  constructor(private discoveryService: DiscoveryService, private fromComponentService: FromComponentService) { }
+  constructor(private discoveryService: DiscoveryService, private fromComponentService: FromComponentService, private dashboardCtxService: DashboardCtxService) { }
 
   private openPerceptionAnalysis(data) {
-    console.log('in triggerPerceptionAnalysis ' + JSON.stringify(data))
     this.perceptionAnalysisOptions = data
     this.showPerceptionAnalysis = true
   }
@@ -59,6 +59,7 @@ export class AllChannelsComponent implements OnInit {
 
   ngOnInit() {
     this.fromComponentService.setFrom('/home/dashboard/all-channels')
+    this.dashboardCtxService.setTitle('Today\'s Highlights')
   }
 
   ngAfterViewInit() {

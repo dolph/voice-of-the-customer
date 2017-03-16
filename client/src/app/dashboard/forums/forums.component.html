@@ -1,3 +1,18 @@
-<p>
-  forums works!
-</p>
+<div role="tabpanel" class="tab-pane active ibm-tabs__content-panel ibm-tabs__content-panel--active" id="forum-channels">
+  <div class="row">
+    <div class="col-md-12">
+      <app-channel-vol-overtime [options]="forumVolOverTime"></app-channel-vol-overtime>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <app-products-mentioned [options]="negativeMentions"></app-products-mentioned>
+    </div>
+    <div class="col-md-4">
+      <app-products-mentioned [options]="positiveMentions"></app-products-mentioned>
+    </div>
+    <div class="col-md-4">
+      <app-most-popular-small [options]="popularTopics"></app-most-popular-small>
+    </div>
+  </div>
+</div>

@@ -13,17 +13,19 @@ export class BrandPerceptionComponent implements OnInit {
 
   @Output() perceptionAnalysisOpen = new EventEmitter<any>();
 
+  private chartAvailable = false
   private dateType: string = 'last12months'
   private currentDateRange: string = 'Last 12 Months'
-  private brandPerceptionOverTimeColumns = []
+  private starterData = [["Date","2017-2-29"],["Percentage",10]]
 
   constructor(private discoveryService: DiscoveryService) { }
 
   ngOnInit() {
+    this.renderChart(this.starterData)
   }
 
   ngAfterViewInit() {
-    this.loadChart()
+    this.retrieveData()
   }
 
   private setDateType(value) {
@@ -45,50 +47,53 @@ export class BrandPerceptionComponent implements OnInit {
         this.currentDateRange = 'Last 14 Days'
         break
     }
-    this.loadChart()
+    this.retrieveData()
   }
 
-  private loadChart() {
-    let self = this
+  private retrieveData() {
     this.discoveryService.getBrandPerceptionOverTime('positive', this.dateType).subscribe((response) => {
-      // console.log(JSON.stringify(response))
-      this.brandPerceptionOverTimeColumns = response
-      var chart = c3.generate({
-        bindto: '#brand-perception-chart',
-        legend: {
-          show: false
-        },
-        color: {
-            pattern: ['#35D6BB']
-        },
-        data: {
-            x: 'Date',
-            columns: this.brandPerceptionOverTimeColumns,
-            onclick: function (d, element) {
-              d.cx = Math.round($(element).attr('cx'))
-              self.perceptionAnalysisOpen.emit(d);
-            }
-        },
-        axis: {
-            x: {
-                type: 'timeseries',
-                tick: {
-                  format: '%Y-%m-%d'
-                }
-            }
-        },
-        grid: {
-          y: {
-              lines: [
-                  {value: 20, text: '20', class: 'y-grid-line'},
-                  {value: 40, text: '40', class: 'y-grid-line'},
-                  {value: 60, text: '60', class: 'y-grid-line'},
-                  {value: 80, text: '80', class: 'y-grid-line'},
-                  {value: 100, text: '100', class: 'y-grid-line'}
-              ]
-          }
-        }
-      });
+      this.renderChart(response)
     })
+  }
+
+  private renderChart(data) {
+    let self = this
+    this.chartAvailable = true
+    var chart = c3.generate({
+      bindto: '#brand-perception-chart',
+      legend: {
+        show: false
+      },
+      color: {
+          pattern: ['#35D6BB']
+      },
+      data: {
+          x: 'Date',
+          columns: data,
+          onclick: function (d, element) {
+            d.cx = Math.round($(element).attr('cx'))
+            self.perceptionAnalysisOpen.emit(d);
+          }
+      },
+      axis: {
+          x: {
+              type: 'timeseries',
+              tick: {
+                format: '%Y-%m-%d'
+              }
+          }
+      },
+      grid: {
+        y: {
+            lines: [
+                {value: 20, text: '20', class: 'y-grid-line'},
+                {value: 40, text: '40', class: 'y-grid-line'},
+                {value: 60, text: '60', class: 'y-grid-line'},
+                {value: 80, text: '80', class: 'y-grid-line'},
+                {value: 100, text: '100', class: 'y-grid-line'}
+            ]
+        }
+      }
+    });
   }
 }

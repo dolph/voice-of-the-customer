@@ -170,7 +170,7 @@
         "verb": "post"
       }
     },
-    "getVolumeOfCallsOverTime": {
+    "getVolumeOfOverTime": {
       "accepts": [
         {
           "arg": "interval",
@@ -184,6 +184,10 @@
         {
           "arg": "endDt",
           "type": "Date"
+        },
+        {
+          "arg": "source",
+          "type": "string"
         }
       ],
       "returns": {

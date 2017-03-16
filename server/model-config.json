@@ -36,6 +36,7 @@
       "remoting": {
         "sharedMethods": {
           "*": false,
+          "isInRole": true,
           "login": true,
           "logout": true
         }

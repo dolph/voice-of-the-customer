@@ -14,7 +14,7 @@ module.exports = function (app, done) {
   ]
 
   var seedRoles = [
-    {name: 'admin'}
+    { name: 'admin' }
   ]
 
   // Controller...
@@ -57,6 +57,7 @@ module.exports = function (app, done) {
             }, (err) => reject(err))
           } else {
             clearAccessTokens(result).then((result) => {
+              console.log('returned from clear tokens')
               resolve(result)
             }, (err) => reject(err))
           }
@@ -95,7 +96,7 @@ module.exports = function (app, done) {
                 let alive = (now - created) / 1000
                 if (alive > 3600) {
                   console.log('*** Removing expired token for user ' + user.username)
-                  AccessToken.destroyAll({ id: data.id }, function (err, data) {
+                  AccessToken.destroyAll({ id: token.id }, function (err, data) {
                     if (err) {
                       reject(err)
                     } else {
