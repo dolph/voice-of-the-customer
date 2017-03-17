@@ -139,26 +139,26 @@ module.exports = function (Discovery) {
     }, (err) => cb(err))
   }
 
-  Discovery.getAverageLengthOfCalls = function (interval, startDt, endDt, cb) {
+  Discovery.getCallsByDuration = function (startDt, endDt, cb) {
     let filter = getFilter(startDt, endDt)
-    let aggregation = 'filter(source:call).timeslice(contact_date,' + interval + ').average(contact_duration)'
+    let aggregation = 'filter(source:call).histogram(contact_duration,interval:10)'
     let params = {
       count: 0,
       aggregation: aggregation,
       filter: filter
     }
     wdsQueryUtils.getCounts(params).then((result) => {
-      let timesliceResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'timeslice')
-      let callsByIntervals = timesliceResults.results
+      let histogramResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'histogram')
+      let callsForDuration = histogramResults.results
       var response = [
-        ['Date'],
-        ['Count']
+        ['Count'],
+        []
       ]
-      for (let callByInterval of callsByIntervals) {
-        let dt = new Date(callByInterval.key)
-        let avg = Math.round(callByInterval.aggregations[0].value)
-        response[0].push(dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate())
-        response[1].push(avg)
+      for (let duration of callsForDuration) {
+        let category = duration.key
+        let count = duration.matching_results
+        response[0].push(count)
+        response[1].push(category)
       }
       cb(null, response)
     })

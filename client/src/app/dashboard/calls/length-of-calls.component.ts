@@ -13,7 +13,6 @@ export class LengthOfCallsComponent implements OnInit {
 
   private dateType: string = 'last12months'
   private currentDateRange: string = 'Last 12 Months'
-  private lengthOfCallsColumns = []
 
   constructor(private discoveryService: DiscoveryService) { }
 
@@ -48,8 +47,8 @@ export class LengthOfCallsComponent implements OnInit {
 
   private loadChart() {
     let self = this
-    this.discoveryService.getAverageLengthOfCalls(this.dateType).subscribe((response) => {
-      // console.log(JSON.stringify(response))
+    this.discoveryService.getCallsByDuration(this.dateType).subscribe((response) => {
+      console.log(JSON.stringify(response))
       var chart = c3.generate({
         bindto: '#length-of-calls-chart',
         legend: {
@@ -59,8 +58,7 @@ export class LengthOfCallsComponent implements OnInit {
           pattern: ['#35D6BB']
         },
         data: {
-          x: 'Date',
-          columns: response,
+          columns: [response[0]],
           type: 'bar'
         },
         bar: {
@@ -70,10 +68,8 @@ export class LengthOfCallsComponent implements OnInit {
         },
         axis: {
           x: {
-            type: 'timeseries',
-            tick: {
-              format: '%Y-%m-%d'
-            }
+            type: 'category',
+            categories: response[1]
           }
         }
       });

@@ -37,7 +37,7 @@ export class DiscoveryService {
 
       return this.genericHttpPost(urlWithToken, formData)
     } else {
-      return this.sampleDataService.getAverageLengthOfCallsData()
+      return this.sampleDataService.getProductKeywordMentionsData()
     }
   }
 
@@ -57,7 +57,7 @@ export class DiscoveryService {
 
       return this.genericHttpPost(urlWithToken, formData)
     } else {
-      return this.sampleDataService.getAverageLengthOfCallsData()
+      return this.sampleDataService.getProductPerceptionOverTimeData()
     }
   }
 
@@ -75,7 +75,7 @@ export class DiscoveryService {
 
       return this.genericHttpPost(urlWithToken, formData)
     } else {
-      return this.sampleDataService.getAverageLengthOfCallsData()
+      return this.sampleDataService.getProductConceptsMentionedData()
     }
   }
 
@@ -94,25 +94,24 @@ export class DiscoveryService {
 
       return this.genericHttpPost(urlWithToken, formData)
     } else {
-      return this.sampleDataService.getAverageLengthOfCallsData()
+      return this.sampleDataService.getProductSentimentData()
     }
   }
 
-  public getAverageLengthOfCalls(dateType: string): Observable<any> {
+  public getCallsByDuration(dateType: string): Observable<any> {
     if (!this.runLocal) {
-      let url = DISCOVERY_URL + '/getAverageLengthOfCalls'
+      let url = DISCOVERY_URL + '/getCallsByDuration'
       let token = this.authService.get().token;
       let urlWithToken = url + '?access_token=' + token;
 
       let dateTypeParams = this.getDateTypeParams(dateType)
       let formData: FormData = new FormData();
-      formData.append('interval', dateTypeParams.interval)
       formData.append('startDt', dateTypeParams.startDt)
       formData.append('endDt', dateTypeParams.endDt)
 
       return this.genericHttpPost(urlWithToken, formData)
     } else {
-      return this.sampleDataService.getAverageLengthOfCallsData()
+      return this.sampleDataService.getCallsByDurationData()
     }
   }
 

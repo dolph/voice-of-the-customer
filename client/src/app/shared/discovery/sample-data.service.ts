@@ -7,7 +7,39 @@ export class SampleDataService {
 
   constructor() { }
 
-  public getAverageLengthOfCallsData() : Observable<any> {
+  public getProductKeywordMentionsData(): Observable<any> {
+    let averageLengthOfCallData = [["Date","2017-2-28","2017-3-1","2017-3-2","2017-3-3","2017-3-4","2017-3-5","2017-3-6","2017-3-7","2017-3-8","2017-3-9","2017-3-10","2017-3-11"],["Count",3,39,32,18,12,22,19,30,33,24,9,9]]
+    return Observable.create(observer => {
+      observer.next(averageLengthOfCallData)
+      observer.complete()
+    });
+  }
+
+  public getProductPerceptionOverTimeData(): Observable<any> {
+    let averageLengthOfCallData = [["Date","2017-2-28","2017-3-1","2017-3-2","2017-3-3","2017-3-4","2017-3-5","2017-3-6","2017-3-7","2017-3-8","2017-3-9","2017-3-10","2017-3-11"],["Count",3,39,32,18,12,22,19,30,33,24,9,9]]
+    return Observable.create(observer => {
+      observer.next(averageLengthOfCallData)
+      observer.complete()
+    });
+  }
+
+  public getProductConceptsMentionedData(): Observable<any> {
+    let averageLengthOfCallData = [["Date","2017-2-28","2017-3-1","2017-3-2","2017-3-3","2017-3-4","2017-3-5","2017-3-6","2017-3-7","2017-3-8","2017-3-9","2017-3-10","2017-3-11"],["Count",3,39,32,18,12,22,19,30,33,24,9,9]]
+    return Observable.create(observer => {
+      observer.next(averageLengthOfCallData)
+      observer.complete()
+    });
+  }
+
+  public getProductSentimentData(): Observable<any> {
+    let averageLengthOfCallData = [["Date","2017-2-28","2017-3-1","2017-3-2","2017-3-3","2017-3-4","2017-3-5","2017-3-6","2017-3-7","2017-3-8","2017-3-9","2017-3-10","2017-3-11"],["Count",3,39,32,18,12,22,19,30,33,24,9,9]]
+    return Observable.create(observer => {
+      observer.next(averageLengthOfCallData)
+      observer.complete()
+    });
+  }
+
+  public getCallsByDurationData() : Observable<any> {
     let averageLengthOfCallData = [["Date","2017-2-28","2017-3-1","2017-3-2","2017-3-3","2017-3-4","2017-3-5","2017-3-6","2017-3-7","2017-3-8","2017-3-9","2017-3-10","2017-3-11"],["Count",3,39,32,18,12,22,19,30,33,24,9,9]]
     return Observable.create(observer => {
       observer.next(averageLengthOfCallData)

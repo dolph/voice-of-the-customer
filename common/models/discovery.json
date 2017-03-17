@@ -145,13 +145,8 @@
         "verb": "post"
       }
     },
-    "getAverageLengthOfCalls": {
+    "getCallsByDuration": {
       "accepts": [
-        {
-          "arg": "interval",
-          "type": "string",
-          "required": true
-        },
         {
           "arg": "startDt",
           "type": "Date"

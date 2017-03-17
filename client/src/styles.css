@@ -21,6 +21,11 @@ body {
     position: absolute;
 }
 
+.chart_x_label {
+  color: #777677;
+  text-align: center;
+}
+
 .dashboard-container {
   padding-left: 30px;
   padding-right: 30px;
