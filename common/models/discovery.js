@@ -278,7 +278,7 @@ module.exports = function (Discovery) {
     let params = {
       filter: filter,
       count: 1,
-      aggregation: 'nested(enriched_text.concepts).term(enriched_text.concepts.text,count:' + count + ')'
+      aggregation: 'nested(enriched_text.concepts).filter(enriched_text.concepts.text:!"English-language films").term(enriched_text.concepts.text,count:' + count + ')'
     }
     wdsQueryUtils.getCounts(params).then((result) => {
       let termResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
@@ -409,6 +409,7 @@ module.exports = function (Discovery) {
       filter: filter
     }
     wdsQueryUtils.getCounts(params).then((result) => {
+      console.log(JSON.stringify(result))
       let timesliceResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'timeslice')
       let sentimentByIntervals = timesliceResults.results
       var response = [
@@ -436,7 +437,10 @@ module.exports = function (Discovery) {
         response[1].push(percentage)
       }
       cb(null, response)
-    }, (err) => cb(err))
+    }, (err) => {
+      console.log(err)
+      cb(err)
+    })
   }
 
   Discovery.addContent = function (cb) {

@@ -20,7 +20,7 @@ import { DashboardComponent } from './dashboard'
 
 @Component({
   selector: 'app-home',
-  templateUrl: `
+  template: `
     <app-navbar></app-navbar>
     <router-outlet></router-outlet>
   `,

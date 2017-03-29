@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  templateUrl: `
+  template: `
     <router-outlet></router-outlet>
   `
 })

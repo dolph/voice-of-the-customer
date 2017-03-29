@@ -14,7 +14,7 @@ export class AudioCallsComponent implements OnInit {
   private productMentions = {
     title: 'Products Mentioned',
     subtitle: 'Percentage mentions of products overall',
-    color: '#008949',
+    color: '#35D6BB',
     source: 'call',
     data: []
   }

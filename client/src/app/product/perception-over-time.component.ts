@@ -62,7 +62,7 @@ export class PerceptionOverTimeComponent implements OnInit {
         show: false
       },
       color: {
-        pattern: ['#35D6BB']
+        pattern: ['#DC267F']
       },
       data: {
         x: 'Date',
