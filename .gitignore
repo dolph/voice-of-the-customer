@@ -21,4 +21,5 @@ npm-debug.log
 *.env
 dist
 mem_db.json
-crawl
+vcap-local.json
+env-vars.json
