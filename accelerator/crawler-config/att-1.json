@@ -1,0 +1,30 @@
+{
+  "title": "Wireless > Phones & Devices > Apple",
+  "testMode": true,
+  "max": 2000,
+  "tags": [
+    "Wireless",
+    "Phones & Devices",
+    "Apple"
+  ],
+  "seed": "https://forums.att.com/t5/Apple/bd-p/apple",
+  "acceptExpr": [
+    "^http.*/t5/Apple/bd-p/apple/.*",
+    "^http.*/t5/Apple/.*/td-p/[0-9]+"
+  ],
+  "rejectExpr": [
+    "^http.*/m-p/[0-9]+/.*",
+    "^http.*/m-p/[0-9]+\\?.*",
+    "^http.*/m-p/[0-9]+#.*",
+    "^http.*\\?.*"
+  ],
+  "extractExpr": [
+    "^http.*/td-p/.*[0-9][^/.]"
+  ],
+  "extractTemplate": {
+    "title": ".lia-message-subject > h5",
+    "contact_date": ".lia-message-posted-on > span",
+    "contact_id": ".lia-user-name-link > span",
+    "text": ".lia-message-body-content"
+  }
+}

@@ -11,8 +11,8 @@ declare var c3:any
 export class ChannelVolOvertimeComponent implements OnInit {
 
   @Input() options: any
-  private dateType: string = 'last12months'
-  private currentDateRange: string = 'Last 12 Months'
+  private dateType: string = 'last14days'
+  private currentDateRange: string = 'Last 14 Days'
   private starterData = [["Date","2017-2-29"],["Count",10]]
 
   constructor(private discoveryService: DiscoveryService) { }

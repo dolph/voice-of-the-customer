@@ -14,8 +14,8 @@ export class BrandPerceptionComponent implements OnInit {
   @Output() perceptionAnalysisOpen = new EventEmitter<any>();
 
   private chartAvailable = false
-  private dateType: string = 'last12months'
-  private currentDateRange: string = 'Last 12 Months'
+  private dateType: string = 'last14days'
+  private currentDateRange: string = 'Last 14 Days'
   private starterData = [["Date","2017-2-29"],["Percentage",10]]
 
   constructor(private discoveryService: DiscoveryService) { }

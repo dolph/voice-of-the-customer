@@ -11,8 +11,8 @@ declare var $:any
 })
 export class LengthOfCallsComponent implements OnInit {
 
-  private dateType: string = 'last12months'
-  private currentDateRange: string = 'Last 12 Months'
+  private dateType: string = 'last14days'
+  private currentDateRange: string = 'Last 14 Days'
 
   constructor(private discoveryService: DiscoveryService) { }
 

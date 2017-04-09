@@ -43,10 +43,6 @@
       }
     }
   },
-  "conversation": {
-    "dataSource": null,
-    "public": true
-  },
   "crawl": {
     "dataSource": null,
     "public": true

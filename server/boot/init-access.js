@@ -32,6 +32,34 @@ module.exports = function (app, done) {
     done()
   })
 
+  Auth.beforeRemote('login', function (ctx, modelInstance, next) {
+    try {
+      AccessToken.find({ where: { userId: modelInstance.id } }, function (err, data) {
+        if (!err) {
+          if (data.length > 0) {
+            for (let token of data) {
+              let now = new Date()
+              let created = new Date(token.created)
+              let alive = (now - created) / 1000
+              if (alive > 3600) {
+                AccessToken.destroyById(token.id, function (err, data) {
+                  if (err) {
+                    console.log(err)
+                  } else {
+                    console.log('*** Removing expired token for user.')
+                  }
+                })
+              }
+            }
+          }
+        }
+      })
+    } catch (err) {
+      console.log(err)
+    }
+    next()
+  })
+
   // Implementation functions...
   function checkUsers () {
     return new Promise(function (resolve, reject) {
@@ -56,10 +84,7 @@ module.exports = function (app, done) {
               resolve(result)
             }, (err) => reject(err))
           } else {
-            clearAccessTokens(result).then((result) => {
-              console.log('returned from clear tokens')
-              resolve(result)
-            }, (err) => reject(err))
+            resolve(result)
           }
         })
       } catch (err) {
@@ -76,40 +101,6 @@ module.exports = function (app, done) {
             reject(err)
           } else {
             resolve(result)
-          }
-        })
-      } catch (err) {
-        reject(err)
-      }
-    })
-  }
-
-  function clearAccessTokens (user) {
-    return new Promise(function (resolve, reject) {
-      try {
-        AccessToken.find({ where: { userId: user.id } }, function (err, data) {
-          if (!err) {
-            if (data.length > 0) {
-              for (let token of data) {
-                let now = new Date()
-                let created = new Date(token.created)
-                let alive = (now - created) / 1000
-                if (alive > 3600) {
-                  console.log('*** Removing expired token for user ' + user.username)
-                  AccessToken.destroyAll({ id: token.id }, function (err, data) {
-                    if (err) {
-                      reject(err)
-                    } else {
-                      resolve(data)
-                    }
-                  })
-                }
-              }
-            } else {
-              resolve(data)
-            }
-          } else {
-            reject(err)
           }
         })
       } catch (err) {

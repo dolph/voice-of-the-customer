@@ -1,8 +1,28 @@
 {
   "db-definitions": {
-    "crawl-config": {
-    },
-    "voc-content-v1": {
+    "voc-content": {
+      "design": [{
+        "name": "voc-content",
+        "views": {
+          "all-docs-view": {
+            "map": "function (doc) {\n  emit(doc._id, 1);\n}",
+            "reduce": "_count"
+          },
+          "contact-date-view": {
+            "reduce": "_count",
+            "map": "function (doc) {\n  var dt = new Date(doc.contact_date);\n  emit([dt.getFullYear(), dt.getMonth(), dt.getDate()], 1);\n}"
+          },
+          "wds-id-view": {
+            "reduce": "_count",
+            "map": "function (doc) {\n  if (doc.wds_id) {\n    emit(doc.wds_id, 1);\n  }\n}"
+          },
+          "no-wds-id-view": {
+            "reduce": "_count",
+            "map": "function (doc) {\n  if (!doc.wds_id) {\n    var dt = new Date(doc.contact_date)\n    emit([dt.getFullYear(), dt.getMonth(), dt.getDate()], 1);\n  }\n}"
+          }
+        },
+        "language": "javascript"
+      }]
     }
   }
 }

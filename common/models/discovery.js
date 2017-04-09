@@ -409,7 +409,7 @@ module.exports = function (Discovery) {
       filter: filter
     }
     wdsQueryUtils.getCounts(params).then((result) => {
-      console.log(JSON.stringify(result))
+      // console.log(JSON.stringify(result))
       let timesliceResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'timeslice')
       let sentimentByIntervals = timesliceResults.results
       var response = [
@@ -440,6 +440,12 @@ module.exports = function (Discovery) {
     }, (err) => {
       console.log(err)
       cb(err)
+    })
+  }
+
+  Discovery.getCollectionInfo = function (cb) {
+    wdsQueryUtils.getCollectionInfo(function (err, result) {
+      cb(err, result)
     })
   }
 

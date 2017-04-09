@@ -3,70 +3,11 @@
 var fs = require('fs')
 var Cloudant = require('cloudant')
 var app = require('../../server/server')
-var watson = require('watson-developer-cloud')
-
-var conversation = watson.conversation({
-  username: process.env.CONVERSATION_API_USER,
-  password: process.env.CONVERSATION_API_PASSWORD,
-  version: 'v1',
-  version_date: '2017-02-03'
-})
 
 var VocContentUtils = function () { }
 
 VocContentUtils.prototype.getVocContentDBConnection = function (url) {
   return _getVocContentDBConnection(url)
-}
-
-VocContentUtils.prototype.preEnrichContentTask = function (task, done) {
-  // Initialize all the required variables
-  var vocContent = app.models.vocContent
-  var vocContentDB = _getVocContentDBConnection(vocContent.getDataSource().settings.url)
-  var start = new Date()
-  var updates = 0
-  var errors = 0
-  var bulkRequest = {
-    docs: []
-  }
-  var options = {
-    'limit': task.limit,
-    'skip': task.skip,
-    'include_docs': true,
-    'reduce': false
-  }
-  vocContentDB.view('voc-content', 'all-docs-view', options, (err, success) => {
-    if (err) {
-      done(err)
-    } else {
-      var cnt = success.rows.length
-      for (let row of success.rows) {
-        updateWithIntentsAndEntities(row.doc).then((success) => {
-          updateSource(success, task.source).then((success) => {
-            bulkRequest.docs.push(success)
-            updates++
-            if ((updates + errors) >= cnt) {
-              if (errors === 0) {
-                bulkUpdate(bulkRequest).then((success) => {
-                  console.log('Retrieving and Update of ' + cnt + ' docs took ' + (new Date() - start) + ' milliseconds.')
-                  done()
-                }, (err) => {
-                  done(err)
-                })
-              } else {
-                done('Error occured.')
-              }
-            }
-          }, (err) => {
-            console.log(err)
-            errors++
-          })
-        }, (err) => {
-          console.log(err)
-          errors++
-        })
-      }
-    }
-  })
 }
 
 function updateSource (doc, source) {

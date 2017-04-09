@@ -275,27 +275,27 @@ export class DiscoveryService {
       case 'last12months':
         params.interval = '1month'
         params.endDt = new Date()
-        params.startDt = moment().subtract(1, 'year')
+        params.startDt = moment('03-12-2017').subtract(1, 'year')
         break
       case 'thisyear':
         params.interval = '1week'
         params.endDt = new Date()
-        params.startDt = moment().dayOfYear(1);
+        params.startDt = moment('03-12-2017').dayOfYear(1);
         break
       case 'thismonth':
         params.interval = '1day'
         params.endDt = new Date()
-        params.startDt = moment().date(1)
+        params.startDt = moment('03-01-2017')
         break
       case 'last4weeks':
         params.interval = '1day'
         params.endDt = new Date()
-        params.startDt = moment().week(moment().week() - 4)
+        params.startDt = moment('03-12-2017').week(moment().week() - 4)
         break
       case 'last14days':
         params.interval = '1day'
         params.endDt = new Date()
-        params.startDt = moment().subtract(14, 'days')
+        params.startDt = moment('03-12-2017').subtract(14, 'days')
         break
     }
     return params

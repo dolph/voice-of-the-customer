@@ -4,38 +4,86 @@ var Async = require('async')
 
 var vocContentUtils = require('../utils/voc-content-utils')
 
-const BATCHSIZE = 25
-const SOURCES = ['forum', 'call', 'chat']
-
 module.exports = function (Voccontent) {
-  Voccontent.preEnrichContent = function (cb) {
+  Voccontent.getContentInfo = function (cb) {
     var vocContentDB = vocContentUtils.getVocContentDBConnection(Voccontent.getDataSource().settings.url)
-    var preEnrichmentQueue = Async.queue(vocContentUtils.preEnrichContentTask, 1)
-    preEnrichmentQueue.drain(() => {
-      console.log('Pre-Enrichment Completed.')
-    })
-    vocContentDB.view('voc-content', 'all-docs-view', { reduce: true }, (err, success) => {
+    let options = {
+      reduce: true
+    }
+    // Get a count of the docs that haven't been loaded into Discovery
+    let response = {
+      inDiscover: 0,
+      notInDisovery: 0
+    }
+    vocContentDB.view('voc-content', 'no-wds-id-view', options, (err, result) => {
       if (err) {
         cb(err)
       } else {
-        var count = success.rows[0].value
-        var skip = 0
-        var tasks = 0
-        var sourceIdx = 0
-        while (skip < count) {
-          preEnrichmentQueue.push({ limit: BATCHSIZE, skip: skip, source: SOURCES[sourceIdx] }, (err) => {
-            if (err) {
-              console.log('Error in task. ' + err)
-            }
-          })
-          sourceIdx++
-          if (sourceIdx > 2) {
-            sourceIdx = 0
-          }
-          tasks++
-          skip += BATCHSIZE
+        if (result.rows[0]) {
+          response.notInDisovery = result.rows[0].value
         }
-        cb(null, tasks)
+        vocContentDB.view('voc-content', 'wds-id-view', options, (err, result) => {
+          if (err) {
+            cb(err)
+          } else {
+            if (result.rows[0]) {
+              response.inDiscovery = result.rows[0].value
+              cb(null, response)
+            } else {
+              cb(null, response)
+            }
+          }
+        })
+      }
+    })
+  }
+
+  Voccontent.bulkUpload = function (bulkRequest, cb) {
+    var vocContentDB = vocContentUtils.getVocContentDBConnection(Voccontent.getDataSource().settings.url)
+    vocContentDB.bulk(bulkRequest, function (err, result) {
+      cb(err, result)
+    })
+  }
+
+  Voccontent.bulkDownload = function (limit, skip, cb) {
+    var vocContentDB = vocContentUtils.getVocContentDBConnection(Voccontent.getDataSource().settings.url)
+    let options = {
+      limit: limit,
+      skip: skip,
+      reduce: false,
+      descending: true,
+      include_docs: true
+    }
+    vocContentDB.view('voc-content', 'contact-date-view', options, (err, result) => {
+      if (err) {
+        cb(err)
+      }
+      var bulkResponse = {
+        docs: []
+      }
+      for (let row of result.rows) {
+        let doc = row.doc
+        delete doc._id
+        delete doc._rev
+        delete doc.loopback__model__name
+        delete doc.wds_id
+        delete doc.intents
+        delete doc.entities
+
+        // Make the text lower case
+        doc.text = doc.text.toLowerCase()
+        // Redact ATT in the content.
+        doc.text = doc.text.replace(/att/ig, 'wwireless')
+        doc.text = doc.text.replace(/at&t/ig, 'wwireless')
+        doc.text = doc.text.replace(/directv/, 'wsatellite')
+        doc.text = doc.text.replace(/direct tv/, 'wsatellite')
+        doc.text = doc.text.replace(/[edited for privacy.]/, '')
+
+        bulkResponse.docs.push(doc)
+        console.log(bulkResponse.docs.length + ' === ' + result.rows.length)
+        if (bulkResponse.docs.length === result.rows.length) {
+          cb(null, bulkResponse)
+        }
       }
     })
   }

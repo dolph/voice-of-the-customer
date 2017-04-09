@@ -11,7 +11,7 @@ This Accelerator requires Watson Discovery Service, Cloudant and Watson Knowledg
 
 The Accelerator provides you with the ability to load your own content into WDS.
 
-This Accelerator does not limit you in how to obtain the content, but it does require it to be JSON and some specific fields to exist in the content when it is loaded into WDS.  Please keep in mind that the WKS model which is part of this Accelerator is trained on telco products and will annotate as such.  If you want to train your own WKS model, it is required that a product entity type is annotated.
+This Accelerator does not limit you in how to obtain the content, but it does require it to be JSON and some specific fields to exist in the content when it is loaded into WDS.  Please keep in mind that the WKS model which is part of this Accelerator is trained on telco products and will annotate as such.  If you want to train your own WKS model, it is required that a `product` entity type is annotated.
 
 The high-level steps to get this application running is as follows;
 
@@ -23,13 +23,15 @@ You can also use the Crawler that comes with Discovery to load the content into 
 
 # Required Services
 
-This Accelerator requires 2 services to be created.  You can reuse services by binding existing services to this application.
+This Accelerator requires 2 services to be created as well as WKS 2.0 for training your model.  You can reuse services by binding existing services to this application.
 
 - IBM Cloudant noSql Database
 - Watson Discovery Service
-- WKS + NLU
+- WKS
 
 # Content Preparation
+
+This Accelerator comes with some sample data.  If you would like to use your own data keep reading.
 
 As with all Cognitive solutions, the preparation of the content for Watson is the most important part of the development process.
 
@@ -58,7 +60,8 @@ The application requires the following software to be installed locally.
 
 ![](./images/wsl_steps_basic.png)
 
-The setup is done in 3 primary steps.  You will download the code, configure the code and then deploy the code to Bluemix.  
+The setup is done in 4 primary steps.  You will download the code, configure the code and then deploy the code to Bluemix.  Once you have deployed the code to Bluemix, you would load the data into Cloudant and then trigger a task to load the content from Cloudant into Discovery.
+
 If you would like to run the code locally, there will be one more step to configure the credentials locally.
 
 > Think of a name for your application.  The name must be unique within Bluemix, otherwise it won't deploy.  This name will be used in a number of steps to get the application up and running.
@@ -120,7 +123,17 @@ The `vcap-local-example.json` file should be copied to `vcap-local.json` before 
 
 ### Update the Discovery information
 
-It is required to update the `env-vars.json` file with the newly created collection information.  On the Collection Dashboard, copy and paste the Collection Id, Config Id and Environment Id into the `env-vars.json` file.
+It is required to update the `env-vars.json` file with the newly created collection information.  On the Collection Dashboard, copy and paste the Collection Id, Config Id and Environment Id into the `env-vars.json` file in the variables shown below.
+
+```
+"DISCOVERY_ENV_ID": "",
+"DISCOVERY_COLLECTION_ID": "",
+"DISCOVERY_CONFIG_ID": ""
+```
+
+### Setup and train WKS
+
+
 
 ## Installing the dependencies
 
@@ -151,7 +164,9 @@ npm install
 
 ## Building the application
 
-For the application to run on Bluemix or locally, it needs to be build first.  To do that, the Prerequisites needs to be met and install must have been executed successfully.
+>For the application to run on Bluemix or locally, it needs to be build first.  
+
+To do that, the Prerequisites needs to be met and install must have been executed successfully.
 
 From the App folder, run the command `gulp build`.
 
@@ -159,9 +174,7 @@ This will build the code into a folder called dist that will contain 3 sub-folde
 
 ## Running the app on Bluemix
 
-1. Open the `manifest.yml` file and change the `name` and `host` values to your application name.
-
-  The host you choose will determinate the subdomain of your application's URL:  `<host>.mybluemix.net`
+1. Open the `manifest.yml` file and change the `name` and `host` values to your application name.  The host you choose will determinate the subdomain of your application's URL:  `<host>.mybluemix.net`
 
 2. Connect to Bluemix in the command line tool and follow the prompts to log in
 
@@ -176,15 +189,46 @@ This will build the code into a folder called dist that will contain 3 sub-folde
 
 4. The application should now be running on Bluemix.  You can access the application URL using the application name you defined in the manifest.yml file with a '.mybluemix.net' appended to it.
 
-7. The application is secured with a username and password.
+5. The application is secured with a username and password.  By default the credentials are username = watson and password = p@ssw0rd.
 
-8. Continue to the next step to do some additional configuration within the application.
+6. Continue to the next step to do some additional configuration within the application.
+
+## Loading the data
+
+This Accelerator comes with some sample data that can be loaded into Discovery.  You have 2 choices, you can either use the utilities that are part of this Accelerator to load the data, or you can use the [data crawler](https://www.ibm.com/watson/developercloud/doc/discovery/data-crawler.html).  
+>Note: There would be some additional steps to split the data up before you crawl it with the data crawler.
+
+### Loading the data into Cloudant
+
+Loading the data into Cloudant will provide you with the ability to re-start loading content into Discovery.
+
+The utility to load the data into Cloudant runs on your local machine, sends the data to the application, running on Bluemix, and loads the data into Cloudant.  This means that the application must be deployed to Bluemix before you can attempt this step.
+
+From the application folder.  Enter the following command to enter the Utility CLI.
+
+`node cli/voc-utilities-cli.js`
+
+1. Enter the Bluemix url for your application.
+2. Enter the username (watson) and password (p@ssw0rd).
+3. Select the option to load the data into Cloudant.
+4. Enter the folder `./accelerator/data`.
+5. Data will be sent, in bulk, to the application and load it into Cloudant.
+6. When done, the menu will be displayed again.  Continue on to the next step.
+
+### Trigger the Task to load the content into Discovery
+
+You can view the number of documents in Cloudant, broken down in those that are loaded into Discovery and those that are not.  When you run the Discovery load task, only the documents not yet loaded will be loaded into Discovery.
+
+1. From the CLI menu select the option to Trigger the task to load the content into Discovery.
+2. One the task is triggered, you can view the status by selecting the Collection Info option from the menu.  Here you will see the number of documents loaded (and those that failed) in your Discovery Collection.
+3. Once all 1000 sample documents are loaded, the application is ready for use.  Enter the Bluemix url in your Browser to log into the application.
 
 ## Running the app locally
 
 To run the application locally (your own computer), you have to install additional Node.js modules and configure the application with some credentials that is provisioned on Bluemix.
 
 ### Starting the application
+
 There are a few quick steps required to stand up the application. In general, the required tasks are.
 
 1. Install the server and client dependencies

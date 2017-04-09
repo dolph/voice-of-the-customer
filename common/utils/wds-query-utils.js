@@ -81,4 +81,14 @@ WdsQueryUtils.prototype.extractResultsFromAggregation = function (aggregation) {
   return response
 }
 
+WdsQueryUtils.prototype.getCollectionInfo = function (cb) {
+  let params = {
+    environment_id: process.env.DISCOVERY_ENV_ID,
+    collection_id: process.env.DISCOVERY_COLLECTION_ID
+  }
+  discovery.getCollection(params, function (err, data) {
+    cb(err, data)
+  })
+}
+
 module.exports = new WdsQueryUtils()

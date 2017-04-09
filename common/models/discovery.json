@@ -34,6 +34,16 @@
         "verb": "post"
       }
     },
+    "getCollectionInfo": {
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "get"
+      }
+    },
     "getProductKeywordMentions": {
       "accepts": [
         {

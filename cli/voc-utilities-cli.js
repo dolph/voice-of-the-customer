@@ -27,6 +27,16 @@ function actionsController (appUrl, token, done) {
           })
         })
         break
+      case 'content-info':
+        viewContentInfo(appUrl, token, () => {
+          actionsController(appUrl, token, done)
+        })
+        break
+      case 'collection-info':
+        viewCollectionInfo(appUrl, token, () => {
+          actionsController(appUrl, token, done)
+        })
+        break
       case 'load-discovery':
         loadDiscovery(appUrl, token, () => {
           actionsController(appUrl, token, done)
@@ -86,11 +96,19 @@ function getActionQuestions () {
       type: 'list',
       choices: [
         {
-          name: 'Load content in local folder into Cloudant',
+          name: 'Upload content from this computer into Cloudant',
           value: 'load-cloudant'
         },
         {
-          name: 'Load content in Cloudant into Discovery',
+          name: 'View your content in Cloudant information',
+          value: 'content-info'
+        },
+        {
+          name: 'View your collection information',
+          value: 'collection-info'
+        },
+        {
+          name: 'Load content from Cloudant into Discovery',
           value: 'load-discovery'
         },
         {
@@ -135,6 +153,52 @@ function loadCloudant (inputFolder, appUrl, token, cb) {
   })
 }
 
+function viewContentInfo (appUrl, token, done) {
+  let url = URL.resolve(appUrl, 'api/voc-content/getContentInfo?access_token=' + token)
+  let options = {
+    method: 'get',
+    url: url
+  }
+  request(options, (err, res, body) => {
+    if (err) {
+      console.log(err)
+    } else {
+      if (res.statusCode === 200) {
+        console.log(JSON.stringify(JSON.parse(body), null, 4))
+      } else {
+        console.log('********************************************************************************')
+        console.log('Error occurred getting the Collection info (' + res.statusCode + ')')
+        console.log('Check the server log file for detailed information on the error.')
+        console.log('********************************************************************************')
+      }
+    }
+    done()
+  })
+}
+
+function viewCollectionInfo (appUrl, token, done) {
+  let url = URL.resolve(appUrl, 'api/discovery/getCollectionInfo?access_token=' + token)
+  let options = {
+    method: 'get',
+    url: url
+  }
+  request(options, (err, res, body) => {
+    if (err) {
+      console.log(err)
+    } else {
+      if (res.statusCode === 200) {
+        console.log(JSON.stringify(JSON.parse(body), null, 4))
+      } else {
+        console.log('********************************************************************************')
+        console.log('Error occurred getting the Collection info (' + res.statusCode + ')')
+        console.log('Check the server log file for detailed information on the error.')
+        console.log('********************************************************************************')
+      }
+    }
+    done()
+  })
+}
+
 function loadDiscovery (appUrl, token, done) {
   let url = URL.resolve(appUrl, 'api/discovery/addContent?access_token=' + token)
   let options = {
@@ -171,10 +235,13 @@ function uploadFile (files, inputFolder, appUrl, token, idx, done) {
           done()
         })
       } else {
-        let url = URL.resolve(appUrl, 'api/voc-content?access_token=' + token)
+        let url = URL.resolve(appUrl, 'api/voc-content/bulkUpload?access_token=' + token)
+        let data = {
+          bulkRequest: json
+        }
         let options = {
           method: 'post',
-          body: json,
+          body: data,
           json: true,
           url: url
         }

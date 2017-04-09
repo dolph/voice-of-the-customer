@@ -24,7 +24,46 @@
     }
   ],
   "methods": {
-    "exportAsHtml": {
+    "getContentInfo": {
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "get"
+      }
+    },
+    "bulkDownload": {
+      "accepts": [
+        {
+          "arg": "limit",
+          "type": "number",
+          "required": true
+        },
+        {
+          "arg": "skip",
+          "type": "number",
+          "required": true
+        }
+      ],
+      "returns": {
+        "arg": "body",
+        "type": "object",
+        "root": true
+      },
+      "http": {
+        "verb": "get"
+      }
+    },
+    "bulkUpload": {
+      "accepts": [
+        {
+          "arg": "bulkRequest",
+          "type": "object",
+          "required": true
+        }
+      ],
       "returns": {
         "arg": "body",
         "type": "object",
@@ -34,7 +73,7 @@
         "verb": "post"
       }
     },
-    "preEnrichContent": {
+    "exportAsHtml": {
       "returns": {
         "arg": "body",
         "type": "object",
