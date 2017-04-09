@@ -5,6 +5,10 @@
 This Watson Accelerator demonstrates how communication with customers can be analyzed by Watson to provide a high level view of the sentiment towards products, services and brand.  This information can be used for
 proactive responses to customer demands and issue resolution, training of staff or allocation.
 
+![](./accelerator/images/Voice_of_the_Customer.png)
+
+![](./accelerator/images/Voice_of_the_Customer_2.png)
+
 # Description
 
 This Accelerator requires Watson Discovery Service, Cloudant and Watson Knowledge Studio to do your own annotations on the content.  These annotations would then become the entity extraction values in the enrichment.
@@ -207,6 +211,8 @@ The utility to load the data into Cloudant runs on your local machine, sends the
 From the application folder.  Enter the following command to enter the Utility CLI.
 
 `node cli/voc-utilities-cli.js`
+
+![](./accelerator/images/Voice_of_the_Customer_CLI.png)
 
 1. Enter the Bluemix url for your application.
 2. Enter the username (watson) and password (p@ssw0rd).
