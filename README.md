@@ -303,10 +303,6 @@ This file must be updated with your service credentials before the application c
 
 ## Accessing the Application
 
-There are 3 specific users required for this application.
-
-1. The Field Technician is the persona that will log in, few the orders, search for solutions and work on order.  This persona will use the credentials `watson\p@ssw0rd` to log in.
-2. The second persona is the Device that will send events via IoT to the application.  With this credentials, you will have access to the IoT Sender feature to initiate the devices sending events to the platform.  This persona will use the credentials `iot-device\d3v1ce` to log in.
-3. The third persona is the administrator and is only to load and setup the data required to customize the application for your own needs.  You can log in with this persona using credentials `admin\@dm1n`.
+There is only 1 user required for this application.  This user is `watson` with a password of `p@ssw0rd`
 
 The user names and passwords can be modified in the /server/boot/init-access.js file.
