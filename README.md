@@ -25,6 +25,8 @@ The high-level steps to get this application running is as follows;
 
 You can also use the Crawler that comes with Discovery to load the content into WDS.
 
+![](./accelerator/images/Voc-Architecture.png)
+
 # Required Services
 
 This Accelerator requires 2 services to be created as well as WKS 2.0 for training your model.  You can reuse services by binding existing services to this application.
@@ -62,7 +64,7 @@ The application requires the following software to be installed locally.
 
 # Setup Instructions
 
-![](./images/wsl_steps_basic.png)
+![](./accelerator/images/Voc-Setup-Flow.png)
 
 The setup is done in 4 primary steps.  You will download the code, configure the code and then deploy the code to Bluemix.  Once you have deployed the code to Bluemix, you would load the data into Cloudant and then trigger a task to load the content from Cloudant into Discovery.
 
@@ -137,6 +139,20 @@ It is required to update the `env-vars.json` file with the newly created collect
 
 ### Setup and train WKS
 
+You can get access to a free trial version of WKS [here](https://www.ibm.com/us-en/marketplace/supervised-machine-learning).
+
+To upload your model, follow these steps:
+
+1. Create a new workspace in Watson Knowledge Studio.
+2. Upload the type system, dictionaries, and documents in that order.  File can be found in the accelerator/wks folder.
+3. Go to your annotator components and click Create a Machine Learning  Annotator.
+4. Click “All” under document sets and click “Next.”
+5. Map dictionaries to the appropriate entities.
+6. Now click “Train and Evaluate” the annotator. This should take ~15 minutes and when it is done you can deploy to WDS.
+7. The instructions for deploying from WKS are here: https://www.ibm.com/watson/developercloud/doc/wks/wks_mapublish.shtml#wks_madiscovery
+8. The instructions for using the deployed model are here: https://www.ibm.com/watson/developercloud/doc/discovery/integrate-wks.html
+9. IMPORTANT: for step 6 use the following curl command instead of the one in the documentation
+curl -X PUT -u "{username}":"{password}" -H "Content-Type: application/json" -d@my_config.json "https://gateway.watsonplatform.net/discovery/api/v1/environments/{environment_id}/configurations/{configuration_id}?version=2016-12-01"
 
 
 ## Installing the dependencies
