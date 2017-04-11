@@ -27,25 +27,9 @@ import { DashboardComponent } from './dashboard'
 })
 export class HomeComponent {
 
-  private sub: any;
-  constructor(private authService: LoopbackLoginService, private router: Router, private activatedRoute: ActivatedRoute) { }
-
-  ngOnInit() {
-    // subscribe to router event
-    this.sub = this.activatedRoute.queryParams.subscribe((params: Params) => {
-      let originalUrl = params['originalUrl'];
-      if (originalUrl) {
-        // console.log('Redirecting to : ' + originalUrl)
-        this.router.navigateByUrl(originalUrl);
-      }
-    });
-  }
+  constructor(private authService: LoopbackLoginService) { }
 
   submitLogout() {
     this.authService.logout().subscribe();
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 }
