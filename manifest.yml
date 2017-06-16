@@ -3,6 +3,6 @@ applications:
   memory: 4096M
   instances: 1
   domain: mybluemix.net
-  name: voice-of-the-customer-app
-  host: voice-of-the-customer-app
+  name: vocal-customers
+  host: vocal-customers
   disk_quota: 1024M
