@@ -3,6 +3,6 @@ applications:
   memory: 4096M
   instances: 1
   domain: mybluemix.net
-  name: vocal-customers
-  host: vocal-customers
+  name: mood-ring
+  host: mood-ring
   disk_quota: 1024M

@@ -1,5 +1,5 @@
 {
-  "name": "vocal-customers",
+  "name": "mood-ring",
   "version": "1.0.0",
   "main": "server/server.js",
   "scripts": {
