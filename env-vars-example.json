@@ -1,6 +1,6 @@
 {
   "CLOUDANT_CONNECTION_URL": {"expr": "Cloudant.*", "field": "credentials.url"},
-  "CLOUDANT_VOC_CONTENT_DB_NAME": "voc-content-v1",
+  "CLOUDANT_VOC_CONTENT_DB_NAME": "voc-content",
   "CLOUDANT_CRAWL_CONFIG_DB_NAME": "crawl-config",
   "CLOUDANT_USERNAME": {"expr": "Cloudant.*", "field": "credentials.username"},
   "CLOUDANT_PASSWORD": {"expr": "Cloudant.*", "field": "credentials.password"},
