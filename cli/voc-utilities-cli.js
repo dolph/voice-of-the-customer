@@ -167,7 +167,7 @@ function viewContentInfo (appUrl, token, done) {
         console.log(JSON.stringify(JSON.parse(body), null, 4))
       } else {
         console.log('********************************************************************************')
-        console.log('Error occurred getting the Collection info (' + res.statusCode + ')')
+        console.log('Error occurred getting the Content info (' + res.statusCode + ')')
         console.log('Check the server log file for detailed information on the error.')
         console.log('********************************************************************************')
       }
