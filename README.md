@@ -25,7 +25,7 @@ The high-level steps to get this application running is as follows;
 
 You can also use the Crawler that comes with Discovery to load the content into WDS.
 
-![](./accelerator/images/Voc-Architecture.png)
+![](./accelerator/images/VoC-Architecture.png)
 
 # Required Services
 
@@ -35,61 +35,15 @@ This Accelerator requires 2 services to be created as well as WKS 2.0 for traini
 - Watson Discovery Service
 - WKS
 
-# Content Preparation
-
-This Accelerator comes with some sample data.  If you would like to use your own data keep reading.
-
-As with all Cognitive solutions, the preparation of the content for Watson is the most important part of the development process.
-
-This Accelerator required that the content is prepared in a certain format before it is loaded into WDS.  This
-Accelerator accepts JSON that is on your local file system.
-
-The content needs to be within the customer communication domain.  Examples of this would be forums where customers post questions or complaints, product reviews or call center interactions.
-
-There are 2 fields required in the content to make this application function.
-
-1. text - The content of the customer statement.  This should be something where the customer states the problem or review the product.
-2. contact_date - The date when the customer made the statement.  Should be in ISO format YYYY-MM-DDTHH:MM:SSZ.
-
-## Prerequisites
-
-The application requires the following software to be installed locally.
-
-1. Node (6.9+) Application runtime environment
-2. NPM (3.10+) Server side dependency management
-3. Gulp (3.9+) `npm install -g gulp`
-4. Angular CLI (1.0.0) `npm install -g @angular/cli`
-
-> If you have Angular CLI already installed.  Please read the upgrade instructions for Angular CLI when you upgrade the software.
-
 # Setup Instructions
 
-![](./accelerator/images/Voc-Setup-Flow.png)
+![](./accelerator/images/VoC-Setup-flow.png)
 
 The setup is done in 4 primary steps.  You will download the code, configure the code and then deploy the code to Bluemix.  Once you have deployed the code to Bluemix, you would load the data into Cloudant and then trigger a task to load the content from Cloudant into Discovery.
 
 If you would like to run the code locally, there will be one more step to configure the credentials locally.
 
 > Think of a name for your application.  The name must be unique within Bluemix, otherwise it won't deploy.  This name will be used in a number of steps to get the application up and running.
-
-## Downloading the code
-
-1. Clone the app to your local environment from your terminal using the following command:
-  `
-  git clone https://github.ibm.com/Watson-Solutions-Lab/voice-of-the-customer-app.git
-  `
-2. `cd` into this newly created directory
-3. Edit the manifest.yml file and replace the name and host values ```voice-of-the-customer-app``` with our own unique name you came up with.
-4. Save the manifest.yml file.
-5. Edit the package.json file and modify the application name as well.
-
-### Configuration files
-
-There are 2 sample configuration files that are required by the application.
-
-The `env-vars-example.json` file should be copied to `env-vars.json` before the application is executed locally or on Bluemix.
-
-The `vcap-local-example.json` file should be copied to `vcap-local.json` before the application is executed locally.  This file contains your service credentials required to run the application locally.  If the app is run on Bluemix, the app will use the VCAP service information on Bluemix.  The sample file is a skeleton of what is required, but, you have to fill in the details.
 
 ## Setting up Bluemix
 
@@ -127,16 +81,6 @@ The `vcap-local-example.json` file should be copied to `vcap-local.json` before 
 9. If asked, setup the storage.
 10. Create a new Collection.  You can name it anything you want as the app reference it with the id.  Use the Default Configuration.
 
-### Update the Discovery information
-
-It is required to update the `env-vars.json` file with the newly created collection information.  On the Collection Dashboard, copy and paste the Collection Id, Config Id and Environment Id into the `env-vars.json` file in the variables shown below.
-
-```
-"DISCOVERY_ENV_ID": "",
-"DISCOVERY_COLLECTION_ID": "",
-"DISCOVERY_CONFIG_ID": ""
-```
-
 ### Setup and train WKS
 
 You can get access to a free trial version of WKS [here](https://www.ibm.com/us-en/marketplace/supervised-machine-learning).
@@ -154,8 +98,47 @@ To upload your model, follow these steps:
 9. IMPORTANT: for step 8 use the following curl command instead of the one in the documentation
 curl -X PUT -u "{username}":"{password}" -H "Content-Type: application/json" -d@my_config.json "https://gateway.watsonplatform.net/discovery/api/v1/environments/{environment_id}/configurations/{configuration_id}?version=2016-12-01"
 
+## Configure the code
 
-## Installing the dependencies
+1. Clone the app to your local environment from your terminal using the following command:
+  `
+  git clone https://github.ibm.com/Watson-Solutions-Lab/voice-of-the-customer-app.git
+  `
+2. `cd` into this newly created directory
+3. Edit the manifest.yml file and replace the name and host values ```voice-of-the-customer-app``` with our own unique name you came up with.
+4. Save the manifest.yml file.
+5. Edit the package.json file and modify the application name as well.
+
+### Configuration files
+
+There are 2 sample configuration files that are required by the application.
+
+The `env-vars-example.json` file should be copied to `env-vars.json` before the application is executed locally or on Bluemix.
+
+The `vcap-local-example.json` file should be copied to `vcap-local.json` before the application is executed locally.  This file contains your service credentials required to run the application locally.  If the app is run on Bluemix, the app will use the VCAP service information on Bluemix.  The sample file is a skeleton of what is required, but, you have to fill in the details.
+
+### Update the Discovery information
+
+It is required to update the `env-vars.json` file with the newly created collection information.  On the Collection Dashboard, copy and paste the Collection Id, Config Id and Environment Id into the `env-vars.json` file in the variables shown below.
+
+```
+"DISCOVERY_ENV_ID": "",
+"DISCOVERY_COLLECTION_ID": "",
+"DISCOVERY_CONFIG_ID": ""
+```
+
+### Build Prerequisites
+
+The application requires the following software to be installed locally.
+
+1. Node (6.9+) Application runtime environment
+2. NPM (3.10+) Server side dependency management
+3. Gulp (3.9+) `npm install -g gulp`
+4. Angular CLI (1.0.0) `npm install -g @angular/cli`
+
+> If you have Angular CLI already installed.  Please read the upgrade instructions for Angular CLI when you upgrade the software.
+
+### Installing the dependencies
 
 The server dependencies are controlled and defined in [the main package.json](./package.json).
 
@@ -178,11 +161,10 @@ Alternatively, the dependencies can be installed manually with the following com
 
 ```
 npm install
+(cd client/ && npm install)
 ```
 
-(cd client/ && npm install)
-
-## Building the application
+### Building the application
 
 >For the application to run on Bluemix or locally, it needs to be build first.  
 
@@ -217,6 +199,22 @@ This will build the code into a folder called dist that will contain 3 sub-folde
 
 This Accelerator comes with some sample data that can be loaded into Discovery.  You have 2 choices, you can either use the utilities that are part of this Accelerator to load the data, or you can use the [data crawler](https://www.ibm.com/watson/developercloud/doc/discovery/data-crawler.html).  
 >Note: There would be some additional steps to split the data up before you crawl it with the data crawler.
+
+### Content Preparation
+
+This Accelerator comes with some sample data.  If you would like to use your own data keep reading.
+
+As with all Cognitive solutions, the preparation of the content for Watson is the most important part of the development process.
+
+This Accelerator required that the content is prepared in a certain format before it is loaded into WDS.  This
+Accelerator accepts JSON that is on your local file system.
+
+The content needs to be within the customer communication domain.  Examples of this would be forums where customers post questions or complaints, product reviews or call center interactions.
+
+There are 2 fields required in the content to make this application function.
+
+1. text - The content of the customer statement.  This should be something where the customer states the problem or review the product.
+2. contact_date - The date when the customer made the statement.  Should be in ISO format YYYY-MM-DDTHH:MM:SSZ.
 
 ### Loading the data into Cloudant
 
