@@ -1,5 +1,5 @@
 {
-  "name": "mood-ring",
+  "name": "voice-of-the-customer",
   "version": "1.0.0",
   "main": "server/server.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "async": "^2.1.5",
     "babel-polyfill": "^6.20.0",
     "body-parser": "^1.15.2",
+    "cf-deployment-tracker-client": "*",
     "cfenv": "^1.0.3",
     "cheerio": "^0.22.0",
     "cloudant": "^1.7.1",

@@ -3,7 +3,7 @@
 ## Overview
 
 This Watson Accelerator demonstrates how communication with customers can be analyzed by Watson to provide a high level view of the sentiment towards products, services and brand.  This information can be used for
-proactive responses to customer demands and issue resolution, training of staff or allocation.
+proactive responses to customer demands, issue resolution, and training and allocation of staff.
 
 ![](./accelerator/images/Voice_of_the_Customer.png)
 
@@ -11,7 +11,7 @@ proactive responses to customer demands and issue resolution, training of staff 
 
 # Description
 
-This Accelerator requires Watson Discovery Service, Cloudant and Watson Knowledge Studio to do your own annotations on the content.  These annotations would then become the entity extraction values in the enrichment.
+This Accelerator requires Watson Discovery Service (WDS), Cloudant NoSQL DB and Watson Knowledge Studio (WKS) to do your own annotations on the content.  These annotations would then become the entity extraction values in the enrichment.
 
 The Accelerator provides you with the ability to load your own content into WDS.
 
@@ -31,21 +31,23 @@ You can also use the Crawler that comes with Discovery to load the content into 
 
 This Accelerator requires 2 services to be created as well as WKS 2.0 for training your model.  You can reuse services by binding existing services to this application.
 
-- IBM Cloudant noSql Database
-- Watson Discovery Service
-- WKS
+- IBM Cloudant NoSql Database
+- Watson Discovery Service (WDS)
+- Watson Knowledge Studio (WKS)
 
 # Setup Instructions
 
 ![](./accelerator/images/VoC-Setup-flow.png)
 
-The setup is done in 4 primary steps.  You will download the code, configure the code and then deploy the code to Bluemix.  Once you have deployed the code to Bluemix, you would load the data into Cloudant and then trigger a task to load the content from Cloudant into Discovery.
+The setup is done in 4 primary steps.  You will download the code, configure the code and then deploy the code to Bluemix.  Once you have deployed the code to Bluemix, you will load the data into Cloudant and then trigger a task to load the content from Cloudant into Discovery.
 
 If you would like to run the code locally, there will be one more step to configure the credentials locally.
 
 > Think of a name for your application.  The name must be unique within Bluemix, otherwise it won't deploy.  This name will be used in a number of steps to get the application up and running.
 
 ## Setting up Bluemix
+
+[![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://github.com/IBM/voice-of-the-customer)
 
 1. If you do not already have a Bluemix account, [sign up here](https://console.ng.bluemix.net/registration).
 2. Log into Bluemix with your own credentials.
@@ -88,8 +90,8 @@ You can get access to a free trial version of WKS [here](https://www.ibm.com/us-
 To upload your model, follow these steps:
 
 1. Create a new project in Watson Knowledge Studio.
-2. Upload the type system, dictionaries, and documents in that order.  File can be found in the accelerator/wks folder.
-3. Go to your annotator components and click Create a Machine Learning  Annotator.
+2. Upload the type system, dictionaries, and documents in that order.  Files can be found in the accelerator/wks folder.
+3. Go to your annotator components and click Create a Machine Learning Annotator.
 4. Click “All” under document sets and click “Next.”
 5. Map dictionaries to the appropriate entities.
 6. Now click “Train and Evaluate” the annotator. This should take ~15 minutes and when it is done you can deploy to WDS.
@@ -304,3 +306,25 @@ This file must be updated with your service credentials before the application c
 There is only 1 user required for this application.  This user is `watson` with a password of `p@ssw0rd`
 
 The user names and passwords can be modified in the /server/boot/init-access.js file.
+
+# Privacy Notice
+
+The following information is sent to a [Deployment Tracker](https://github.com/IBM-Bluemix/cf-deployment-tracker-service) service on each deployment:
+
+* Node.js package version
+* Node.js repository URL
+* Application Name (`application_name`)
+* Application GUID (`application_id`)
+* Application instance index number (`instance_index`)
+* Space ID (`space_id`)
+* Application Version (`application_version`)
+* Application URIs (`application_uris`)
+* Labels of bound services
+* Number of instances for each bound service and associated plan information
+
+This data is collected from the `package.json` file in the sample application and the `VCAP_APPLICATION` and `VCAP_SERVICES` environment variables in IBM Bluemix and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Bluemix to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
+
+## Disabling Deployment Tracking
+
+To disable tracking, simply remove ``require("cf-deployment-tracker-client").track();`` from the ``server.js`` file in the server directory.
+

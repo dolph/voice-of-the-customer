@@ -1,8 +1,16 @@
+declared-services:
+  voc-discovery:
+    label: discovery
+    plan: lite
+  voc-cloudantNoSQLDB:
+    label: cloudantNoSQLDB
+    plan: Lite
 applications:
 - path: .
-  memory: 1024M
+  memory: 256M
   instances: 1
-  domain: mybluemix.net
-  name: mood-ring
-  host: mood-ring
-  disk_quota: 1024M
+  name: voice-of-the-customer
+  disk_quota: 256M
+  services:
+  - voc-discovery
+  - voc-cloudantNoSQLDB
