@@ -168,7 +168,7 @@ npm install
 
 ### Building the application
 
->For the application to run on Bluemix or locally, it needs to be build first.  
+>For the application to run on Bluemix or locally, it needs to be built first.  
 
 To do that, the Prerequisites needs to be met and install must have been executed successfully.
 
