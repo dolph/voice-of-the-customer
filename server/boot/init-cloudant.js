@@ -17,7 +17,7 @@ module.exports = function (app, cb) {
   console.log('*** Checking Cloudant')
   let start = new Date()
   // Get the credentials from the VCAP file sitting in the environment
-  var re = new RegExp('Cloudant.*')
+  var re = new RegExp('.*[Cc]loudant.*')
   var cloudantCredentials = wslEnv.getAppEnv().getService(re)['credentials']
 
   // Initialize Cloudant with my account.

@@ -1,12 +1,12 @@
 {
-  "CLOUDANT_CONNECTION_URL": {"expr": "Cloudant.*", "field": "credentials.url"},
+  "CLOUDANT_CONNECTION_URL": {"expr": ".*[Cc]loudant.*", "field": "credentials.url"},
   "CLOUDANT_VOC_CONTENT_DB_NAME": "voc-content",
   "CLOUDANT_CRAWL_CONFIG_DB_NAME": "crawl-config",
-  "CLOUDANT_USERNAME": {"expr": "Cloudant.*", "field": "credentials.username"},
-  "CLOUDANT_PASSWORD": {"expr": "Cloudant.*", "field": "credentials.password"},
-  "DISCOVERY_URL": {"expr": "Discovery.*", "field": "credentials.url"},
-  "DISCOVERY_USERNAME": {"expr": "Discovery.*", "field": "credentials.username"},
-  "DISCOVERY_PASSWORD": {"expr": "Discovery.*", "field": "credentials.password"},
+  "CLOUDANT_USERNAME": {"expr": ".*[Cc]loudant.*", "field": "credentials.username"},
+  "CLOUDANT_PASSWORD": {"expr": ".*[Cc]loudant.*", "field": "credentials.password"},
+  "DISCOVERY_URL": {"expr": ".*[Dd]iscovery.*", "field": "credentials.url"},
+  "DISCOVERY_USERNAME": {"expr": ".*[Dd]iscovery.*", "field": "credentials.username"},
+  "DISCOVERY_PASSWORD": {"expr": ".*[Dd]iscovery.*", "field": "credentials.password"},
   "DISCOVERY_ENV_ID": "",
   "DISCOVERY_COLLECTION_ID": "",
   "DISCOVERY_CONFIG_ID": ""
