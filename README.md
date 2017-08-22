@@ -232,7 +232,7 @@ From the application folder.  Enter the following command to enter the Utility C
 
 1. Enter the Bluemix url for your application.
 2. Enter the username (watson) and password (p@ssw0rd).
-3. Select the option to load the data into Cloudant.
+3. Select the option to `Upload content from this computer into Cloudant`.
 4. Enter the folder `./accelerator/data`.
 5. Data will be sent, in bulk, to the application and load it into Cloudant.
 6. When done, the menu will be displayed again.  Continue on to the next step.
@@ -241,8 +241,8 @@ From the application folder.  Enter the following command to enter the Utility C
 
 You can view the number of documents in Cloudant, broken down in those that are loaded into Discovery and those that are not.  When you run the Discovery load task, only the documents not yet loaded will be loaded into Discovery.
 
-1. From the CLI menu select the option to Trigger the task to load the content into Discovery.
-2. One the task is triggered, you can view the status by selecting the Collection Info option from the menu.  Here you will see the number of documents loaded (and those that failed) in your Discovery Collection.
+1. From the CLI menu select the option to Trigger the task to `Load content from Cloudant into Discovery`.
+2. Once the task is triggered, you can view the status by selecting the Collection Info option from the menu.  Here you will see the number of documents loaded (and those that failed) in your Discovery Collection.
 3. Once all 1000 sample documents are loaded, the application is ready for use.  Enter the Bluemix url in your Browser to log into the application.
 
 ## Running the app locally
