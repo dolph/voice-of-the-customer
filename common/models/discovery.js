@@ -12,16 +12,16 @@ const BATCHSIZE = 10
 
 module.exports = function (Discovery) {
   Discovery.getProductKeywordMentions = function (startDt, endDt, product, count, cb) {
-    let filter = getFilter(startDt, endDt, 0.4)
+    let filter = getFilter(startDt, endDt)
     if (!count) {
       count = 5
     }
     let params = {
       filter: filter,
       count: 1,
-      aggregation:
-        'filter(enriched_text.entities.text:' + product + ')' +
-        '.nested(enriched_text.keywords)' +
+      aggregation: 'nested(enriched_text)' +
+        '.filter(enriched_text.entities.type::Product)' +
+        '.filter(enriched_text.entities.text::' + product + ')' +
         '.term(enriched_text.keywords.text,count:' + count + ')'
     }
     wdsQueryUtils.getCounts(params).then((result) => {
@@ -47,39 +47,49 @@ module.exports = function (Discovery) {
 
   Discovery.getProductPerceptionOverTime = function (interval, sentiment, product, startDt, endDt, cb) {
     let filter = getFilter(startDt, endDt)
+
+    var sentimentFilter
+    if (sentiment === 'negative') {
+      sentimentFilter = '.filter(enriched_text.entities.sentiment.score<-0.65)'
+    } else if (sentiment === 'positive') {
+      sentimentFilter = '.filter(enriched_text.entities.sentiment.score>0.3)'
+    } else {  // neutral
+      sentimentFilter = '.filter(enriched_text.entities.sentiment.score>=-0.65,enriched_text.entities.sentiment.score<=0.3)'
+    }
+
     let aggregation = 'timeslice(contact_date,' + interval + ')' +
       '.nested(enriched_text.entities)' +
-      '.filter(enriched_text.entities.text:' + product + ')' +
-      '.term(enriched_text.entities.sentiment.type)'
+      '.filter(enriched_text.entities.type::' + 'Product' + ')' +
+      '.filter(enriched_text.entities.text::' + product + ')' +
+      sentimentFilter
+
     let params = {
       aggregation: aggregation,
       filter: filter
     }
     wdsQueryUtils.getCounts(params).then((result) => {
-      let timesliceResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'timeslice')
-      let sentimentByIntervals = timesliceResults.results
       var response = [
         ['Date'],
         ['Percentage']
       ]
 
-      for (let sentimentByInterval of sentimentByIntervals) {
-        let total = sentimentByInterval.matching_results
-        let dt = new Date(sentimentByInterval.key)
-        let count = 0
-        let sentimentResults = wdsQueryUtils.extractResultsForType(sentimentByInterval.aggregations[0], 'term')
-        for (let sentiments of sentimentResults.results) {
-          if (sentiments.key === sentiment) {
-            count = sentiments.matching_results
-            break
-          }
-        }
-        response[0].push(dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate())
-        let percentage = Math.round(((count / total) * 100).toFixed(2))
+      let aggs = result.aggregations[0]
+      for (let agg in aggs.results) {
+        let timeAgg = aggs.results[agg]
+        let dt = new Date(timeAgg.key)
+        let entityAgg = timeAgg.aggregations[0]
+        let productTypeAgg = entityAgg.aggregations[0]
+        let productAgg = productTypeAgg['aggregations'][0]
+        let sentimentAgg = productAgg['aggregations'][0]
+        let sentimentCount = sentimentAgg['matching_results']
+        let productCount = productAgg['matching_results']
+
+        let percentage = Math.round(((sentimentCount / productCount) * 100).toFixed(2))
         if (!percentage) {
-          // console.log('count = ' + count + ' total = ' + total)
           percentage = 0
         }
+
+        response[0].push(dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate())
         response[1].push(percentage)
       }
       cb(null, response)
@@ -87,11 +97,9 @@ module.exports = function (Discovery) {
   }
 
   Discovery.getProductConceptsMentioned = function (startDt, endDt, product, cb) {
-    // 'filter(enriched_text.entities.text:' + product + ').term(enriched_text.concepts.text,count:5)'
-    // nested(enriched_text.entities).filter(enriched_text.entities.type:Physical_Feature).term(enriched_text.entities.text).term(enriched_text.entities.sentiment.type)
-    let filter = getFilter(startDt, endDt, 0.4)
-    filter += ',enriched_text.entities.text:' + product + ''
-    let aggregation = 'nested(enriched_text.entities).filter(enriched_text.entities.type:Physical_Feature).term(enriched_text.entities.text)'
+    let filter = getFilter(startDt, endDt)
+    filter += ',enriched_text.entities.text::' + product
+    let aggregation = 'nested(enriched_text.entities).filter(enriched_text.entities.type::Physical_Feature).term(enriched_text.entities.text)'
     let params = {
       count: 0,
       aggregation: aggregation,
@@ -117,26 +125,10 @@ module.exports = function (Discovery) {
     let filter = getFilter(startDt, endDt)
     let params = {
       filter: filter,
-      aggregation: 'filter(enriched_text.entities.text:' + product + ').term(enriched_text.entities.sentiment.type)',
-      count: 1
+      count: 9999,
+      aggregation: 'filter(enriched_text.entities.type::Product).filter(enriched_text.entities.text::' + product + ')'
     }
-    wdsQueryUtils.getCounts(params).then((result) => {
-      // console.log(JSON.stringify(result))
-      let termResults = wdsQueryUtils.extractResultsForType(result, 'term')
-      let sentiments = termResults.results
-      let total = 0
-      for (let sentiment of sentiments) {
-        total += sentiment.matching_results
-      }
-      var response = [
-      ]
-      for (let sentiment of sentiments) {
-        let rounded = (sentiment.matching_results / total).toFixed(2)
-        let percentage = Math.round(rounded * 100)
-        response.push([sentiment.key, percentage])
-      }
-      cb(null, response)
-    }, (err) => cb(err))
+    wdsQueryUtils.getCounts(params).then((result) => wdsQueryUtils.getSentimentScores(result, "Product", product, cb), (err) => cb(err))
   }
 
   Discovery.getCallsByDuration = function (startDt, endDt, cb) {
@@ -199,7 +191,7 @@ module.exports = function (Discovery) {
     let startParams = {
       filter: startFilter,
       count: 0,
-      aggregation: 'nested(enriched_text.docSentiment).term(enriched_text.docSentiment.type)'
+      aggregation: 'nested(enriched_text.sentiment).term(enriched_text.sentiment.document.label)'
     }
     promises.push(wdsQueryUtils.getCounts(startParams))
     // Build the end date Query
@@ -207,7 +199,7 @@ module.exports = function (Discovery) {
     let endParams = {
       filter: endFilter,
       count: 0,
-      aggregation: 'nested(enriched_text.docSentiment).term(enriched_text.docSentiment.type)'
+      aggregation: 'nested(enriched_text.sentiment).term(enriched_text.sentiment.document.label)'
     }
     promises.push(wdsQueryUtils.getCounts(endParams))
     Promise.all(promises).then((result) => {
@@ -231,7 +223,7 @@ module.exports = function (Discovery) {
   }
 
   Discovery.getMostPopularFeatures = function (startDt, endDt, source, count, cb) {
-    let filter = getFilter(startDt, endDt, 0.4)
+    let filter = getFilter(startDt, endDt, 0.3)
     if (source === 'call' || source === 'forum' || source === 'chat') {
       if (filter) {
         filter += ',source:' + source
@@ -242,7 +234,7 @@ module.exports = function (Discovery) {
     let params = {
       filter: filter,
       count: 1,
-      aggregation: 'nested(enriched_text.entities).filter(enriched_text.entities.type:"Physical_Feature").term(enriched_text.entities.text,count:' + count + ')'
+      aggregation: 'nested(enriched_text.entities).filter(enriched_text.entities.type::Physical_Feature).term(enriched_text.entities.text,count:' + count + ')'
     }
     wdsQueryUtils.getCounts(params).then((result) => {
       let termResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
@@ -303,6 +295,16 @@ module.exports = function (Discovery) {
   }
 
   Discovery.getProductMentionsSentiment = function (startDt, endDt, source, sentiment, count, cb) {
+
+    var sentimentFilter
+    if (sentiment === 'negative') {
+      sentimentFilter = '.filter(enriched_text.entities.sentiment.score<-0.65)'
+    } else if (sentiment === 'positive') {
+      sentimentFilter = '.filter(enriched_text.entities.sentiment.score>0.3)'
+    } else {  // neutral
+      sentimentFilter = '.filter(enriched_text.entities.sentiment.score>=-0.65,enriched_text.entities.sentiment.score<=0.3)'
+    }
+
     let filter = getFilter(startDt, endDt)
     if (source === 'call' || source === 'forum' || source === 'chat') {
       if (filter) {
@@ -320,8 +322,8 @@ module.exports = function (Discovery) {
       aggregation: 'nested(enriched_text.entities)' +
         '.filter(enriched_text.entities.type:Product)' +
         '.term(enriched_text.entities.text,count:' + count + ')' +
-        '.filter(enriched_text.entities.sentiment.type:' + sentiment + ')' +
-        '.term(enriched_text.entities.sentiment.type)'
+        sentimentFilter +
+        '.term(enriched_text.entities.sentiment.score)'
     }
     wdsQueryUtils.getCounts(params).then((result) => {
       let productResults = wdsQueryUtils.extractResultsForType(result.aggregations[0], 'term')
@@ -382,7 +384,7 @@ module.exports = function (Discovery) {
     let filter = getFilter(startDt, endDt)
     let params = {
       filter: filter,
-      aggregation: 'term(enriched_text.docSentiment.type)',
+      aggregation: 'term(enriched_text.sentiment.document.label)',
       count: 1
     }
     wdsQueryUtils.getCounts(params).then((result) => {
@@ -403,7 +405,7 @@ module.exports = function (Discovery) {
 
   Discovery.getBrandPerceptionOverTime = function (interval, sentiment, startDt, endDt, cb) {
     let filter = getFilter(startDt, endDt)
-    let aggregation = 'timeslice(contact_date,' + interval + ').nested(enriched_text.docSentiment).term(enriched_text.docSentiment.type)'
+    let aggregation = 'timeslice(contact_date,' + interval + ').nested(enriched_text.sentiment).term(enriched_text.sentiment.document.label)'
     let params = {
       aggregation: aggregation,
       filter: filter
