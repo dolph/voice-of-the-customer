@@ -33,7 +33,7 @@ DiscoveryUtils.prototype.addDocumentsTask = function (task, done) {
       var promiseArray = []
       // Add a promise to the array
       for (let row of success.rows) {
-        promiseArray.push(addVocConent(row.doc))
+        promiseArray.push(addVocContent(row.doc))
       }
       // Add the document to Discovery
       console.log('Adding documents to WDS...')
@@ -131,7 +131,7 @@ function checkDocumentStatus (documentId, cb) {
 }
 
 // Add the content to the Discovery Service
-function addVocConent (doc, done) {
+function addVocContent (doc, done) {
   return new Promise(function (resolve, reject) {
     // Make a copy of the doc that will be returned
     var copy = JSON.parse(JSON.stringify(doc))
