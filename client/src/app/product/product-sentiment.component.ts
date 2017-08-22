@@ -37,8 +37,8 @@ export class ProductSentimentComponent implements OnInit {
         i++
       }
       let sentiments = {
-        'negative': 'negativaly',
-        'positive': 'positivaly',
+        'negative': 'negatively',
+        'positive': 'positively',
         'neutral': 'neutrally'
       }
       this.sentimentDescription = topScore + '% of customers are speaking ' + sentiments[response[topIdx][0]] + ' of ' + this.product
