@@ -4,8 +4,11 @@ var gulp = require('gulp')
 var babel = require('gulp-babel')
 var clean = require('gulp-clean')
 var shell = require('gulp-shell')
+var install = require('gulp-install')
 var spawn = require('child_process').spawn
 var node
+
+gulp.src(["./package.json"]).pipe(install());
 
 var config = {
   devBaseUrl: 'http://localhost',
