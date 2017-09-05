@@ -7,7 +7,7 @@
           <button id="single-button" style="border-width: 0px 0px 1px 0px;color:#343334;" type="button" class="btn btn-default ibm-btn ibm-btn--large ibm-btn--secondary" dropdownToggle>
             {{currentDateRange}} <span class="caret"></span>
           </button>
-          <ul dropdownMenu role="menu" aria-labelledby="single-button">
+          <ul *dropdownMenu role="menu" aria-labelledby="single-button">
             <li role="menuitem"><a class="dropdown-item" (click)="setDateType('last12months')">Previous 12 Months</a></li>
             <li role="menuitem"><a class="dropdown-item" (click)="setDateType('thisyear')">This Year</a></li>
             <li role="menuitem"><a class="dropdown-item" (click)="setDateType('thismonth')">This Month</a></li>

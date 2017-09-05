@@ -115,7 +115,7 @@ export class DiscoveryService {
     }
   }
 
-  public getVolumeOfOverTime(dateType: string, source: String): Observable<any> {
+  public getVolumeOfOverTime(dateType: string, source: string): Observable<any> {
     if (!this.runLocal) {
       let url = DISCOVERY_URL + '/getVolumeOfOverTime'
       let token = this.authService.get().token;
@@ -198,7 +198,7 @@ export class DiscoveryService {
       formData.append('endDt', dateTypeParams.endDt)
       formData.append('source', source)
       formData.append('sentiment', sentiment)
-      formData.append('count', 5)
+      formData.append('count', '5')
 
       return this.genericHttpPost(urlWithToken, formData)
     } else {
@@ -217,7 +217,7 @@ export class DiscoveryService {
       formData.append('startDt', dateTypeParams.startDt)
       formData.append('endDt', dateTypeParams.endDt)
       formData.append('source', source)
-      formData.append('count', 5)
+      formData.append('count', '5')
 
       return this.genericHttpPost(urlWithToken, formData)
     } else {
@@ -242,7 +242,7 @@ export class DiscoveryService {
       formData.append('startDt', dateTypeParams.startDt)
       formData.append('endDt', dateTypeParams.endDt)
       formData.append('source', source)
-      formData.append('count', 5)
+      formData.append('count', '5')
 
       return this.genericHttpPost(urlWithToken, formData)
     } else {

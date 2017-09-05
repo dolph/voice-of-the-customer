@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
 
-import { DropdownModule } from 'ng2-bootstrap/dropdown';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { AuthModule, AuthGuard } from './auth';
 import { AppRoutingModule } from './app-routing.module';
@@ -29,7 +29,7 @@ import { FromComponentService } from './shared/utils/from-component.service'
     AuthModule,
     DashboardModule,
     ProductModule,
-    DropdownModule.forRoot()
+    BsDropdownModule.forRoot()
   ],
   providers: [{provide: LocationStrategy, useClass: PathLocationStrategy}, AuthGuard, FromComponentService],
   bootstrap: [ AppComponent ]

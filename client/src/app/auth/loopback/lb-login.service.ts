@@ -1,18 +1,6 @@
-/*
-# Copyright 2016 IBM Corp. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");  you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and
-# limitations under the License.
-*/
 import { Injectable } from '@angular/core';
 
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Http, Response, Headers, RequestOptions, URLSearchParams, ResponseContentType } from '@angular/http';
 import { Router } from '@angular/router';
 
 import {Observable} from 'rxjs/Rx';
@@ -28,6 +16,7 @@ export class LoopbackLoginService {
   private loginUrl = '/api/auth/login';
   private logoutUrl = '/api/auth/logout';
   private findByIdUrl = '/api/auth';
+  private isInRoleUrl = '/api/auth/isInRole'
   // key used for saving the token in session storage
   private TOKEN_KEY = 'wsl-api-token';
   private USER_ID_KEY = 'wsl-userid';
@@ -43,17 +32,22 @@ export class LoopbackLoginService {
       let url = this.findByIdUrl + '/' + stored.id + '/accessTokens/' + stored.token + '?access_token=' + stored.token;
       return this.http.get(url)
         .map((res: Response) => {
-          return true
+          return Observable.create(true)
         })
         .catch((error:any) => {
           this.destroyToken();
           return Observable.create(observer => {
+            this.router.navigate(['/login'])
             observer.next(false)
             observer.complete()
           });
         });
     } else {
-      return false;
+      return Observable.create(observer => {
+        this.router.navigate(['/login'])
+        observer.next(false)
+        observer.complete()
+      });
     }
   }
 
@@ -66,7 +60,7 @@ export class LoopbackLoginService {
     return this.http.post(this.loginUrl, credentials, options) // ...using post request
        .map((res:Response) => {
          this.save(res.json());
-         this.router.navigate(['home']);
+         this.router.navigate(['/']);
          return res.json();
        })
        .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
@@ -74,7 +68,6 @@ export class LoopbackLoginService {
 
   // Returns an Observable that will make the logout request to the server with the token in session storage
   public logout() : Observable<string> {
-    console.log('In Auth Service Logout Function');
     let stored = this.get();
     if (stored && stored.token) {
       let url = this.logoutUrl + '?access_token=' + stored.token;
@@ -85,8 +78,25 @@ export class LoopbackLoginService {
           this.router.navigate(['login']);
           return true;
         })
-        .catch((err: Response | any) => Observable.throw('Error Loggin Out: ' + err));
+        .catch((err: Response | any) => Observable.throw('Logout Error: ' + err));
     }
+  }
+
+  public isInRole(role): Observable<any> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('access_token', this.get().token);
+    params.set('role', role);
+    let requestOptions = new RequestOptions({
+      search: params
+    });
+    return this.http.get(this.isInRoleUrl, requestOptions)
+       .map((res:Response) => res.json().isInRole)
+       .catch((error:any) => {
+         if (error.status === 401) {
+           this.router.navigate(['login'])
+         }
+         return Observable.throw(error.json().error || 'Server error')
+       });
   }
 
   // Remove the token from session storage.
@@ -98,6 +108,129 @@ export class LoopbackLoginService {
       return true;
     }
     return false;
+  }
+
+  public makeAuthenticatedHttpGetBlob(url, queryParams?) : Observable<any> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('access_token', this.get().token);
+    if (queryParams && queryParams.length > 0) {
+      for (let qp of queryParams) {
+        params.set(qp.name, qp.value.toString())
+      }
+    }
+    let requestOptions = new RequestOptions({
+      responseType: ResponseContentType.Blob,
+      search: params
+    });
+    return this.http.get(url, requestOptions)
+      .map(response => response.blob())
+       .catch((error:any) => {
+         if (error.status === 401) {
+           this.router.navigate(['login'])
+         }
+         return Observable.throw(error.json().error || 'Server error')
+       });
+  }
+
+  // Function that will make an authenticated GET request to the server.  If an Unauthenicated is returned by
+  // the server, then it will route to the login page.
+  // You need a URL and an array of objects that contains a name and value for example [ { name: 'id', value: 1 }]
+  public makeAuthenticatedHttpGet(url, queryParams?) : Observable<any> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('access_token', this.get().token);
+    if (queryParams && queryParams.length > 0) {
+      for (let qp of queryParams) {
+        params.set(qp.name, qp.value.toString())
+      }
+    }
+    let requestOptions = new RequestOptions({
+      search: params
+    });
+    return this.http.get(url, requestOptions)
+       .map((res:Response) => res.json())
+       .catch((error:any) => {
+         if (error.status === 401) {
+           this.router.navigate(['login'])
+         }
+         return Observable.throw(error.json().error || 'Server error')
+       });
+  }
+
+  // Function that will make an authenticated POST request to the server.  If an Unauthenicated is returned by
+  // the server, then it will route to the login page.
+  // You need a URL and an array of objects that contains a name and value for example [ { name: 'id', value: 1 }]
+  public makeAuthenticatedHttpPost(url, formData) : Observable<any> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('access_token', this.get().token);
+    let requestOptions = new RequestOptions();
+    requestOptions.search = params;
+    return this.http.post(url, formData, requestOptions)
+       .map((res:Response) => res.json())
+       .catch((error:any) => {
+         if (error.status === 401) {
+           this.router.navigate(['login'])
+         }
+         return Observable.throw(error.json().error || 'Server error')
+       });
+  }
+
+  public makeAuthenticatedHttpJsonPost(url, data) : Observable<any> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('access_token', this.get().token);
+    let headers = new Headers({'Content-Type':'application/json'});
+    let requestOptions = new RequestOptions({
+      headers: headers,
+      search: params,
+      body: JSON.stringify(data)
+    });
+    return this.http.post(url, {}, requestOptions)
+       .map((res:Response) => res.json())
+       .catch((error:any) => {
+         if (error.status === 401) {
+           this.router.navigate(['login'])
+         }
+         return Observable.throw(error.json().error || 'Server error')
+       });
+  }
+
+  public makeAuthenticatedHttpJsonPut(url, data) : Observable<any> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('access_token', this.get().token);
+    let headers = new Headers({'Content-Type':'application/json'});
+    let requestOptions = new RequestOptions({
+      headers: headers,
+      search: params,
+      body: JSON.stringify(data)
+    });
+    return this.http.put(url, {}, requestOptions)
+       .map((res:Response) => res.json())
+       .catch((error:any) => {
+         if (error.status === 401) {
+           this.router.navigate(['login'])
+         }
+         return Observable.throw(error.json().error || 'Server error')
+       });
+  }
+
+  public makeAuthenticatedHttpDelete(url, queryParams?) : Observable<any> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('access_token', this.get().token);
+    if (queryParams && queryParams.length > 0) {
+      for (let qp of queryParams) {
+        params.set(qp.name, qp.value.toString())
+      }
+    }
+    let requestOptions = new RequestOptions({
+      search: params
+    });
+    return this.http.delete(url, requestOptions)
+       .map((res:Response) => res.json())
+       .catch((error:any) => {
+         if (error.status === 401) {
+           this.router.navigate(['login'])
+         }
+         return Observable.throw(error.json().error || 'Server error')
+       });
   }
 
   // Retrieve the api token from the session storage and null if not found

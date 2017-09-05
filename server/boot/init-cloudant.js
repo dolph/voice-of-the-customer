@@ -6,7 +6,6 @@
 */
 'use strict'
 
-var Cloudant = require('cloudant')
 var wslEnv = require('../utils/wsl-env')
 var CloudantInitializer = require('../utils/cloudant-initializer')
 var cloudantConfig = require('../config/cloudant-config.json')
@@ -14,32 +13,29 @@ var cloudantConfig = require('../config/cloudant-config.json')
 var debug = require('debug')('loopback:init-cloudant')
 
 module.exports = function (app, cb) {
-  console.log('*** Checking Cloudant')
-  let start = new Date()
+  debug('Initializing Cloudant')
+  // Instanciate the Cloudant Initializer
   // Get the credentials from the VCAP file sitting in the environment
   var re = new RegExp('.*[Cc]loudant.*')
   var cloudantCredentials = wslEnv.getAppEnv().getService(re)['credentials']
 
-  // Initialize Cloudant with my account.
-  var cloudant = Cloudant({account: cloudantCredentials.username, password: cloudantCredentials.password})
-  // Instanciate the Cloudant Initializer
-  var cloudantInitializer = new CloudantInitializer(cloudant, cloudantConfig)
+  var cloudantInitializer = new CloudantInitializer(cloudantCredentials.username, cloudantCredentials.password, cloudantConfig)
 
   cloudantInitializer.checkCloudant().then(function (checkResult) {
     var needSync = cloudantInitializer.needSync(checkResult)
     if (needSync) {
       cloudantInitializer.syncCloudantConfig(checkResult).then(function (createResult) {
         debug(createResult)
-        console.log('*** It took ' + ((new Date() - start) / 1000) + ' seconds to check Cloudant...')
-        console.log('*** Synchronization completed. ***')
-        console.log('*** Application should be terminated.  This is required for the indexes to be created the next time the app starts up ***')
+        cb()
+      }).catch((err) => {
+        console.log(err)
         cb()
       })
     } else {
-      console.log('*** It took ' + ((new Date() - start) / 1000) + ' seconds to check Cloudant...')
       cb()
     }
   }, function (err) {
     console.log(err)
+    cb()
   })
 }

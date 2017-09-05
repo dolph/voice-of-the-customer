@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { DropdownModule } from 'ng2-bootstrap/dropdown';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { AppRoutingModule } from '../app-routing.module';
 
@@ -22,7 +22,7 @@ import { ProductSentimentComponent } from './product-sentiment.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    DropdownModule.forRoot()
+    BsDropdownModule.forRoot()
   ],
 })
 export class ProductModule { }

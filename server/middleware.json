@@ -1,7 +1,7 @@
 {
   "initial:before": {
     "loopback#favicon": {
-      "params": "dist/server/watson.ico"
+      "params": "server/watson.ico"
     }
   },
   "initial": {
