@@ -1,6 +1,4 @@
 /client
-/common
-/server
 /node_modules
 *.example
 mem_db.json

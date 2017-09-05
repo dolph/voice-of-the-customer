@@ -3,10 +3,10 @@
 var Request = require('Request')
 var Async = require('Async')
 
-let env = '900af393-bd98-4405-ba0f-de6b770e3f83'
-let col = '6c4de040-7993-4097-ad3a-8ded985be4e1'
-let user = 'a5caa97e-8990-4019-9fa9-4fae8a23a3cc'
-let password = 'GICi3mthsKtY'
+let env = ''
+let col = ''
+let user = ''
+let password = ''
 
 controlFlow()
 

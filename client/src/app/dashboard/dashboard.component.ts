@@ -14,7 +14,7 @@ export class DashboardComponent implements OnInit {
 
   private titleSubject
   private title
-  private lastUpdated = ''
+  private lastUpdated = moment().format('MMMM Do, YYYY')
 
   constructor(private router: Router, private dashboardCtxService: DashboardCtxService) { }
 

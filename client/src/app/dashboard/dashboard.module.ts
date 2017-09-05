@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 
-import { DropdownModule } from 'ng2-bootstrap/dropdown';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { AllChannelsComponent } from './all/all-channels.component';
 import { AudioCallsComponent } from './calls/audio-calls.component';
@@ -40,7 +40,7 @@ import { MentionedSentimentComponent } from './shared/mentioned-sentiment.compon
 @NgModule({
   imports:      [ CommonModule,
     RouterModule,
-    DropdownModule.forRoot() ],
+    BsDropdownModule.forRoot() ],
   declarations: [ AllChannelsComponent,
     AudioCallsComponent,
     ChatsComponent,

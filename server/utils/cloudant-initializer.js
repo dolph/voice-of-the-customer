@@ -1,110 +1,39 @@
-/*
-# Copyright 2016 IBM Corp. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License")  you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and
-# limitations under the License.
-*/
+'use strict'
 
-/*
-* This utility can be used to initialize, check and load a cloudant database for you.  It should be called from the boot scripts in loopback.
-* Below is the implementation example in a boot script that will use this utility.
-// A list of cloudant BULK request json files
-var dataToLoad = {
-  dbName: bulkData
-}
-// Get the credentials from the VCAP file sitting in the environment
-var re = new RegExp('Cloudant.*')
-var cloudantCredentials = wslEnv.getAppEnv().getService(re)['credentials']
+var Cloudant = require('cloudant')
+/**
+ * This utility can be used to initialize, check and load a cloudant database for you.
+ * It should be called from the boot scripts in loopback.
+ */
+var debug = require('debug')('app:init-cloudant')
 
-// Initialize Cloudant with my account.
-var cloudant = Cloudant({account: cloudantCredentials.username, password: cloudantCredentials.password})
-// Instanciate the Cloudant Initializer
-var cloudantInitializer = new CloudantInitializer(cloudant, cloudantConfig)
-
-cloudantInitializer.checkCloudant().then(function (checkResult) {
-  var needSync = cloudantInitializer.needSync(checkResult)
-  if (needSync) {
-    cloudantInitializer.syncCloudantConfig(checkResult).then(function (createResult) {
-      debug(createResult)
-      console.log('*** Synchronization completed. ***')
-      console.log('*** Application will be terminated.  Next time it starts up, all the data will be loaded. ***')
-      process.exit()
-    })
-  } else {
-    dataInitialization(checkResult, function (err) {
-      if (err) {
-        console.log(err)
-        cb(err)
-      } else {
-        cb()
-      }
-    })
-  }
-}, function (err) {
-  console.log(err)
-})
-
-function dataInitialization (checkResult, cb) {
-  console.log('*** In Data Initialization ***')
-  var dataCollection = {}
-  var dataCollectionCnt = 0
-  for (let db of checkResult) {
-    if (db.rows <= 1) {
-      console.log('*** Data Will be loaded into DB ' + db.dbName)
-      var data = dataToLoad[db.dbName]
-      if (data) {
-        dataCollection[db.dbName] = data
-        dataCollectionCnt++
-      }
-    }
-  }
-  if (dataCollectionCnt > 0) {
-    cloudantInitializer.syncData(dataCollection).then(function (dataLoadResult) {
-      console.log('*** Data Load completed. ***')
-      cb()
-    }, function (err) {
-      console.log(err)
-      cb()
-    })
-  } else {
-    console.log('*** Data Load Not Required. ***')
-    cb()
-  }
-}
-*/
-var Promise = require('promise')
-
-var debug = require('debug')('loopback:init-cloudant')
-
-var CloudantInitializer = function (_connection, _config) {
-  this.connection = _connection
+/** Create an instance of the Cloudant Initializer.
+ */
+var CloudantInitializer = function (_username, _password, _config) {
+  // Initialize Cloudant with my account.
+  this.connection = Cloudant({ account: _username, password: _password })
   this.config = _config
 }
 
+/** Check Cloudant against the cloudant-config.json file.
+ */
 CloudantInitializer.prototype.checkCloudant = function () {
-  var self = this
   var dbDefinitions = this.config['db-definitions']
 
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     try {
       debug('Checking cloudant...')
       var dbCheckPromises = []
       for (var dbName in dbDefinitions) {
         var dbConfig = dbDefinitions[dbName]
-        dbCheckPromises.push(checkDatabase(self.connection, dbName, dbConfig))
+        dbCheckPromises.push(checkDatabase(this.connection, dbName, dbConfig))
       }
       debug('Number of databases in configuration that will be checked : ' + dbCheckPromises.length)
 
       Promise.all(dbCheckPromises).then(function (dbResult) {
         debug('Done checking cloudant...')
         resolve(dbResult)
-      }, function (err) {
+      }).catch((err) => {
         debug('Error checking cloudant : ' + err)
         reject(err)
       })
@@ -115,10 +44,11 @@ CloudantInitializer.prototype.checkCloudant = function () {
   })
 }
 
-// Utility function to tell you whether you need to sync the db config
+/** Utility function to tell you whether you need to sync the db config
+ */
 CloudantInitializer.prototype.needSync = function (checkResult) {
   try {
-    console.log('*** Checking if cloudant sync is required. ***')
+    debug('*** Checking if cloudant sync is required. ***')
     var needSync = false
     for (var i = 0; i < checkResult.length; i++) {
       if (!checkResult[i].exist) {
@@ -133,7 +63,7 @@ CloudantInitializer.prototype.needSync = function (checkResult) {
         }
       }
     }
-    console.log('*** Cloudant sync is' + (needSync ? ' required ' : ' not required. ***'))
+    debug('*** Cloudant sync is' + (needSync ? ' required ' : ' not required. ***'))
     return needSync
   } catch (err) {
     debug('Error checking if cloudant sync is required : ' + err)
@@ -141,23 +71,25 @@ CloudantInitializer.prototype.needSync = function (checkResult) {
   }
 }
 
-// Sync the cloudant instance with the configuration
+/** Sync the cloudant instance with the configuration in the cloudant-config.json file.
+ */
 CloudantInitializer.prototype.syncCloudantConfig = function (checkResult) {
-  var self = this
   var dbDefinitions = this.config['db-definitions']
 
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     try {
       debug('Syncing cloudant configuration...')
       var createHash = getCreateManifest(checkResult)
       var dbCreatePromises = []
       for (var dbName in dbDefinitions) {
         var dbConfig = dbDefinitions[dbName]
-        dbCreatePromises.push(createCloudantDB(self.connection, dbName, dbConfig, createHash))
+        dbCreatePromises.push(createCloudantDB(this.connection, dbName, dbConfig, createHash))
       }
       Promise.all(dbCreatePromises).then(function (dbResult) {
         debug('Done syncing cloudant configuration')
         resolve(dbResult)
+      }).catch((err) => {
+        reject(err)
       })
     } catch (err) {
       debug('Error syncing cloudant configuration : ' + err)
@@ -166,18 +98,21 @@ CloudantInitializer.prototype.syncCloudantConfig = function (checkResult) {
   })
 }
 
+/** Loads data into the Cloudant Database
+ */
 CloudantInitializer.prototype.syncData = function (dataCollection) {
-  var self = this
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     try {
       var dataLoadPromises = []
       for (var dbName in dataCollection) {
         debug('Data will be loaded into ' + dbName)
-        dataLoadPromises.push(loadData(self.connection, dbName, dataCollection[dbName]))
+        dataLoadPromises.push(loadData(this.connection, dbName, dataCollection[dbName]))
       }
       Promise.all(dataLoadPromises).then(function (loadDataResult) {
         debug('Done syncing cloudant data')
         resolve(loadDataResult)
+      }).catch((err) => {
+        reject(err)
       })
     } catch (err) {
       debug('Error syncing cloudant data : ' + err)
@@ -186,13 +121,18 @@ CloudantInitializer.prototype.syncData = function (dataCollection) {
   })
 }
 
-// Print the results of the check out
+/** Print the results of the check out
+ */
 CloudantInitializer.prototype.printCheckResults = function (checkResult) {
   try {
     for (var i = 0; i < checkResult.length; i++) {
       debug('Database ' + checkResult[i].dbName + (checkResult[i].exist ? ' exist' : ' does not exist'))
       for (var j = 0; j < checkResult[i].design.length; j++) {
-        debug(checkResult[i].design[j].type + ' ' + checkResult[i].design[j].name + (checkResult[i].design[j].exist ? ' exist' : ' does not exist'))
+        if (checkResult[i].design[j].type === 'index') {
+          debug('> Index ' + checkResult[i].design[j].name + (checkResult[i].design[j].exist ? ' exist' : ' does not exist'))
+        } else {
+          debug('> Design ' + checkResult[i].design[j].name + (checkResult[i].design[j].exist ? ' exist' : ' does not exist'))
+        }
       }
     }
   } catch (err) {
@@ -224,6 +164,7 @@ var checkDatabase = function (connection, dbName, dbConfig) {
       connection.db.get(dbName, function (err, body) {
         var designs
         if (err) {
+          // No database exist
           var result = {
             'dbName': dbName,
             'exist': false,
@@ -238,8 +179,7 @@ var checkDatabase = function (connection, dbName, dbConfig) {
           }
           var indexes = dbConfig.index ? dbConfig.index : []
           for (let index of indexes) {
-            var indexName = index.name
-            result.design.push({ 'type': 'index', 'name': indexName, 'exist': false })
+            result.design.push({ 'type': 'index', 'name': index.name, 'exist': false })
           }
           resolve(result)
         } else {
@@ -251,10 +191,8 @@ var checkDatabase = function (connection, dbName, dbConfig) {
           }
           indexes = dbConfig.index ? dbConfig.index : []
           for (let index of indexes) {
-            indexName = index.name
-            designCheckPromises.push(checkIndex(connection, dbName, indexName))
+            designCheckPromises.push(checkIndex(connection, dbName, index.name))
           }
-
           Promise.all(designCheckPromises).then(function (designResult) {
             var db = connection.db.use(dbName)
             var options = {
@@ -312,6 +250,7 @@ var checkIndex = function (connection, dbName, indexName) {
           var found = false
           for (var i = 0; i < indexes.length; i++) {
             if (indexes[i].name === indexName) {
+              debug('Index ' + indexName + ' already exist.')
               found = true
               break
             }
@@ -372,8 +311,7 @@ var buildDesignCreatePromiseArray = function (connection, dbName, dbConfig, crea
   var designCreatePromises = []
   for (let design of designs) {
     var designName = design.name
-    var views = design.views
-    designCreatePromises.push(createCloudantDesign(connection, dbName, designName, views, createHash))
+    designCreatePromises.push(createCloudantDesign(connection, dbName, designName, design, createHash))
   }
   var indexes = dbConfig.index ? dbConfig.index : []
   for (let index of indexes) {
@@ -408,14 +346,14 @@ var createCloudantIndex = function (connection, dbName, indexName, indexDef, cre
   })
 }
 
-var createCloudantDesign = function (connection, dbName, designName, views, createHash) {
+var createCloudantDesign = function (connection, dbName, designName, design, createHash) {
   return new Promise(function (resolve, reject) {
     try {
       debug('Creating cloudant design document ' + designName + ' in database ' + dbName)
       var createDesign = createHash.design[dbName + '-' + designName + '-design']
       if (createDesign) {
         var db = connection.db.use(dbName)
-        db.insert({ 'views': views }, '_design/' + designName, function (err, body) {
+        db.insert(design, '_design/' + designName, function (err, body) {
           if (!err) {
             resolve({ 'type': 'design', 'name': designName, 'exist': true })
           } else {
