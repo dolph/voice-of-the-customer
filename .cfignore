@@ -1,4 +1,4 @@
-/client
-/node_modules
+node_modules/
+client/node_modules/
 *.example
 mem_db.json

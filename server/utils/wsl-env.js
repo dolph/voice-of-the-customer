@@ -164,7 +164,7 @@ module.exports = (function () {
           services: appEnv.services,
           isLocal: appEnv.isLocal,
           name: appEnv.name,
-          port: appEnv.port,
+          port: process.env.PORT || appEnv.port,
           bind: appEnv.bind,
           urls: appEnv.urls,
           url: appEnv.url,
