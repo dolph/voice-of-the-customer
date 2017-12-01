@@ -168,7 +168,7 @@ npm install
 
 ### Building the application
 
->For the application to run on Bluemix or locally, it needs to be built first.  
+>For the application to run on Bluemix or locally, it needs to be built first.
 
 To do that, the Prerequisites needs to be met and install must have been executed successfully.
 
@@ -199,7 +199,7 @@ This will build the code into a folder called dist that will contain 3 sub-folde
 
 ## Loading the data
 
-This Accelerator comes with some sample data that can be loaded into Discovery.  You have 2 choices, you can either use the utilities that are part of this Accelerator to load the data, or you can use the [data crawler](https://www.ibm.com/watson/developercloud/doc/discovery/data-crawler.html).  
+This Accelerator comes with some sample data that can be loaded into Discovery.  You have 2 choices, you can either use the utilities that are part of this Accelerator to load the data, or you can use the [data crawler](https://www.ibm.com/watson/developercloud/doc/discovery/data-crawler.html).
 >Note: There would be some additional steps to split the data up before you crawl it with the data crawler.
 
 ### Content Preparation
