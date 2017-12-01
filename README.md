@@ -39,24 +39,24 @@ This Accelerator requires 2 services to be created as well as WKS 2.0 for traini
 
 ![](./accelerator/images/VoC-Setup-flow.png)
 
-The setup is done in 4 primary steps.  You will download the code, configure the code and then deploy the code to Bluemix.  Once you have deployed the code to Bluemix, you will load the data into Cloudant and then trigger a task to load the content from Cloudant into Discovery.
+The setup is done in 4 primary steps.  You will download the code, configure the code and then deploy the code to IBM Cloud.  Once you have deployed the code to Bluemix, you will load the data into Cloudant and then trigger a task to load the content from Cloudant into Discovery.
 
 If you would like to run the code locally, there will be one more step to configure the credentials locally.
 
-> Think of a name for your application.  The name must be unique within Bluemix, otherwise it won't deploy.  This name will be used in a number of steps to get the application up and running.
+> Think of a name for your application.  The name must be unique within IBM Cloud, otherwise it won't deploy.  This name will be used in a number of steps to get the application up and running.
 
-## Setting up Bluemix
+## Setting up IBM Cloud
 
-[![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://github.com/IBM/voice-of-the-customer)
+[![Deploy to IBM Cloud](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://github.com/IBM/voice-of-the-customer)
 
-1. If you do not already have a Bluemix account, [sign up here](https://console.ng.bluemix.net/registration).
-2. Log into Bluemix with your own credentials.
-3. Create a new application by clicking on the Create App button on the Bluemix Dashboard.
+1. If you do not already have a IBM Cloud account, [sign up here](https://console.ng.bluemix.net/registration).
+2. Log into IBM Cloud with your own credentials.
+3. Create a new application by clicking on the Create App button on the IBM Cloud Dashboard.
 4. On the left navigation, select Cloud Foundry Apps.
 5. Click on the SDK for Node.js option on the right.
 6. Enter your unique application name you though of before and click the Create button.
 7. Wait until the application is started and available.
-8. From the Bluemix Dashboard, select the newly created application.
+8. From the IBM Cloud Dashboard, select the newly created application.
 9. Select Connections on the left.
 
 ### Create the following services using the procedure below
@@ -115,9 +115,9 @@ curl -X PUT -u "{username}":"{password}" -H "Content-Type: application/json" -d@
 
 There are 2 sample configuration files that are required by the application.
 
-The `env-vars-example.json` file should be copied to `env-vars.json` before the application is executed locally or on Bluemix.
+The `env-vars-example.json` file should be copied to `env-vars.json` before the application is executed locally or on IBM Cloud.
 
-The `vcap-local-example.json` file should be copied to `vcap-local.json` before the application is executed locally.  This file contains your service credentials required to run the application locally.  If the app is run on Bluemix, the app will use the VCAP service information on Bluemix.  The sample file is a skeleton of what is required, but, you have to fill in the details.
+The `vcap-local-example.json` file should be copied to `vcap-local.json` before the application is executed locally.  This file contains your service credentials required to run the application locally.  If the app is run on IBM Cloud, the app will use the VCAP service information on Bluemix.  The sample file is a skeleton of what is required, but, you have to fill in the details.
 
 ### Update the Discovery information
 
@@ -168,7 +168,7 @@ npm install
 
 ### Building the application
 
->For the application to run on Bluemix or locally, it needs to be built first.
+>For the application to run on IBM Cloud or locally, it needs to be built first.
 
 To do that, the Prerequisites needs to be met and install must have been executed successfully.
 
@@ -176,22 +176,22 @@ From the App folder, run the command `gulp build`.
 
 This will build the code into a folder called dist that will contain 3 sub-folders.  If any error occurred, then the build wasn't successful and is probably a dependency issue or install that wasn't ran or successful.
 
-## Running the app on Bluemix
+## Running the app on IBM Cloud
 
 1. Open the `manifest.yml` file and change the `name` and `host` values to your application name.  The host you choose will determinate the subdomain of your application's URL:  `<host>.mybluemix.net`
 
-2. Connect to Bluemix in the command line tool and follow the prompts to log in
+2. Connect to IBM Cloud in the command line tool and follow the prompts to log in
 
   ```
   $ cf login -a https://api.ng.bluemix.net
   ```
-3. Push the app to Bluemix, but don't start it yet.  We would need to bind the services to the new application before starting it up.
+3. Push the app to IBM Cloud, but don't start it yet.  We would need to bind the services to the new application before starting it up.
 
   ```
   $ cf push
   ```
 
-4. The application should now be running on Bluemix.  You can access the application URL using the application name you defined in the manifest.yml file with a '.mybluemix.net' appended to it.
+4. The application should now be running on IBM Cloud.  You can access the application URL using the application name you defined in the manifest.yml file with a '.mybluemix.net' appended to it.
 
 5. The application is secured with a username and password.  By default the credentials are username = watson and password = p@ssw0rd.
 
@@ -222,7 +222,7 @@ There are 2 fields required in the content to make this application function.
 
 Loading the data into Cloudant will provide you with the ability to re-start loading content into Discovery.
 
-The utility to load the data into Cloudant runs on your local machine, sends the data to the application, running on Bluemix, and loads the data into Cloudant.  This means that the application must be deployed to Bluemix before you can attempt this step.
+The utility to load the data into Cloudant runs on your local machine, sends the data to the application, running on IBM Cloud, and loads the data into Cloudant.  This means that the application must be deployed to Bluemix before you can attempt this step.
 
 From the application folder.  Enter the following command to enter the Utility CLI.
 
@@ -230,7 +230,7 @@ From the application folder.  Enter the following command to enter the Utility C
 
 ![](./accelerator/images/Voice_of_the_Customer_CLI.png)
 
-1. Enter the Bluemix url for your application.
+1. Enter the IBM Cloud url for your application.
 2. Enter the username (watson) and password (p@ssw0rd).
 3. Select the option to `Upload content from this computer into Cloudant`.
 4. Enter the folder `./accelerator/data`.
@@ -243,11 +243,11 @@ You can view the number of documents in Cloudant, broken down in those that are 
 
 1. From the CLI menu select the option to Trigger the task to `Load content from Cloudant into Discovery`.
 2. Once the task is triggered, you can view the status by selecting the Collection Info option from the menu.  Here you will see the number of documents loaded (and those that failed) in your Discovery Collection.
-3. Once all 1000 sample documents are loaded, the application is ready for use.  Enter the Bluemix url in your Browser to log into the application.
+3. Once all 1000 sample documents are loaded, the application is ready for use.  Enter the IBM Cloud url in your Browser to log into the application.
 
 ## Running the app locally
 
-To run the application locally (your own computer), you have to install additional Node.js modules and configure the application with some credentials that is provisioned on Bluemix.
+To run the application locally (your own computer), you have to install additional Node.js modules and configure the application with some credentials that is provisioned on IBM Cloud.
 
 ### Starting the application
 
@@ -260,11 +260,11 @@ There are a few quick steps required to stand up the application. In general, th
 
 ## The Local VCAP file
 
-The vcap-local.json file consist of your Bluemix service credentials when you run the application locally.
+The vcap-local.json file consist of your IBM Cloud service credentials when you run the application locally.
 
 This file must be updated with your service credentials before the application can be executed.
 
-1. On the Bluemix Application page, select the Connections option on the left.
+1. On the IBM Cloud Application page, select the Connections option on the left.
 2. Select each of the services you provisioned earlier and view the credentials.
 3. Copy the credentials using the 'copy' icon.
 4. Edit the vcap-local.json file.
@@ -322,7 +322,7 @@ The following information is sent to a [Deployment Tracker](https://github.com/I
 * Labels of bound services
 * Number of instances for each bound service and associated plan information
 
-This data is collected from the `package.json` file in the sample application and the `VCAP_APPLICATION` and `VCAP_SERVICES` environment variables in IBM Bluemix and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Bluemix to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
+This data is collected from the `package.json` file in the sample application and the `VCAP_APPLICATION` and `VCAP_SERVICES` environment variables in IBM Cloud and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM IBM Cloud to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
 
 ## Disabling Deployment Tracking
 
