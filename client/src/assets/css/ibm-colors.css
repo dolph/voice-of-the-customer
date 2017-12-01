@@ -1,41 +1,41 @@
-/* IBM Watson Colors 
+/* IBM Watson Colors
 ======================================== */
-/* 
+/*
 
-Blue 60					#325C80   rgb(50,92,128)	
-Teal 60					#006D5D   rgb(0,109,93)		
-Orange 50				#D74108   rgb(215,65,8)		
+Blue 60					#325C80   rgb(50,92,128)
+Teal 60					#006D5D   rgb(0,109,93)
+Orange 50				#D74108   rgb(215,65,8)
 
-Blue 40					#5596E6   rgb(85,150,230)		
-Teal 40					#00B4A0   rgb(0,180,160)		
-Orange 30				#FF7832   rgb(255,120,50)		
-Yellow 30				#EFC100   rgb(239,193,0)		
+Blue 40					#5596E6   rgb(85,150,230)
+Teal 40					#00B4A0   rgb(0,180,160)
+Orange 30				#FF7832   rgb(255,120,50)
+Yellow 30				#EFC100   rgb(239,193,0)
 
-Gray 90					#121212   rgb(18,18,18)			 	
-Gray 80					#323232   rgb(50,50,50)					
-Gray 70					#464646   rgb(70,70,70)					
-Gray 60					#5A5A5A   rgb(90,90,90)					
-Gray 50					#777677   rgb(118,119,118)			
-Gray 40					#959595   rgb(149,149,149)	
-Gray 30					#AEAEAE   rgb(174,174,174)			
-Gray 20					#C7C7C7   rgb(199,199,199)	
-Gray 10					#E0E0E0   rgb(224,224,224)	 	
+Gray 90					#121212   rgb(18,18,18)
+Gray 80					#323232   rgb(50,50,50)
+Gray 70					#464646   rgb(70,70,70)
+Gray 60					#5A5A5A   rgb(90,90,90)
+Gray 50					#777677   rgb(118,119,118)
+Gray 40					#959595   rgb(149,149,149)
+Gray 30					#AEAEAE   rgb(174,174,174)
+Gray 20					#C7C7C7   rgb(199,199,199)
+Gray 10					#E0E0E0   rgb(224,224,224)
 
-Neutral 4       #ECECEC   rgb(236,236,236)     
-Neutral 3       #F4F4F4   rgb(244,244,244)     
-Neutral 2				#F9F9F9   rgb(249,249,249)	
-Neutral 1       #fdfdfd   rgb(253,253,253)  
+Neutral 4       #ECECEC   rgb(236,236,236)
+Neutral 3       #F4F4F4   rgb(244,244,244)
+Neutral 2				#F9F9F9   rgb(249,249,249)
+Neutral 1       #fdfdfd   rgb(253,253,253)
 */
 
 
 
-/* IBM Design Colors 
+/* IBM Design Colors
 ======================================== */
-/* 
+/*
 
 $palettes: (
   'blue': (
-    core: #4178BE,   
+    core: #4178BE,
     10: #C0E6FF,    rgb(192,230,255)
     20: #7CC7FF,    rgb(124,199,255)
     30: #5AAAFA,    rgb(90,170,250)
@@ -74,7 +74,7 @@ $palettes: (
     100: #000202    rgb(0,2,2)
   ),
   'purple': (
-    core: #9855D4,  
+    core: #9855D4,
     10: #EED2FF,    rgb(238,210,255)
     20: #D7AAFF,    rgb(215,170,255)
     30: #BA8FF7,    rgb(186,143,247)
@@ -100,7 +100,7 @@ $palettes: (
     100: #040102    rgb(4,1,2)
   ),
   'red': (
-    core: #E71D32,   
+    core: #E71D32,
     10: #FFD2DD,    rgb(255,210,221)
     20: #FFA5B4,    rgb(255,165,180)
     30: #FF7D87,    rgb(255,125,135)
@@ -119,14 +119,14 @@ $palettes: (
     30: #FF7832,    rgb(255,120,50)
     40: #FF5003,    rgb(255,80,3)
     50: #D74108,    rgb(215,65,8)
-    60: #A53725,    rgb(165,55,37) 
+    60: #A53725,    rgb(165,55,37)
     70: #872A0F,    rgb(35,42,15)
     80: #6D120F,    rgb(109,18,15)
     90: #43100B,    rgb(67,16,11)
     100: #030100    rgb(3,1,0)
   ),
   'yellow': (
-    core: #FDD600,   
+    core: #FDD600,
     10: #FDE876,    rgb(253,232,118)
     20: #FDD600,    rgb(253,214,0)
     30: #EFC100,    rgb(239,193,0)
